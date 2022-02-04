@@ -1,8 +1,19 @@
-import {Schema, model} from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
-const TokenSchema = new Schema({
-  user: {type: Schema.Types.ObjectId, ref: 'User'},
-  refreshToken: {type: String, required: true}
+export interface Token {
+  refreshToken: string;
+  user: Types.ObjectId;
+}
+
+const TokenSchema = new Schema<Token>({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  refreshToken: {
+    type: String,
+    required: true,
+  },
 });
 
-export default model('User', TokenSchema);
+export default model<Token>('Token', TokenSchema);
