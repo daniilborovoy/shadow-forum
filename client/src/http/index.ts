@@ -1,35 +1,47 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import {
+  BaseQueryFn,
+  FetchArgs,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+} from '@reduxjs/toolkit/dist/query/react';
+import { authApi } from '../services/auth.service';
+import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
 import { AuthResponse } from '../models/authResponse.model';
 
-export const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = 'http://localhost:5000/api/';
 
-const $api = axios.create({
-  withCredentials: true,
-  baseURL: API_URL,
+const baseQuery = fetchBaseQuery({
+  baseUrl: API_URL,
+  prepareHeaders: (headers, {
+    endpoint,
+  }) => {
+    const token = localStorage.getItem('token');
+    if (token && endpoint !== 'refresh') {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  },
+  credentials: 'include',
 });
 
-$api.interceptors.request.use((config: AxiosRequestConfig) => {
-  config.headers = {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-  };
-  return config;
-});
-
-$api.interceptors.response.use((config: AxiosResponse) => {
-  return config;
-}, async (error) => {
-  const originalRequest = error.config;
-  if (error.response.status == 401 && error.config && !error.config._isRetry) {
-    originalRequest._isRetry = true;
-    try {
-      const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, { withCredentials: true });
-      localStorage.setItem('token', response.data.accessToken);
-      return $api.request(originalRequest);
-    } catch (e) {
-      console.log('НЕ АВТОРИЗОВАН');
+export const baseQueryWithRefresh: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+  args,
+  api,
+  extraOptions,
+) => {
+  let result = await baseQuery(args, api, extraOptions);
+  if (result.error && result.error.status === 401) {
+    type refreshResult = QueryReturnValue<AuthResponse, FetchBaseQueryError, FetchBaseQueryMeta>;
+    const refreshResult = await baseQuery('refresh', api, extraOptions) as refreshResult;
+    if (refreshResult.data) {
+      // повторяем запрос
+      localStorage.setItem('token', refreshResult.data.accessToken);
+      result = await baseQuery(args, api, extraOptions);
+    } else {
+      console.warn('Срок действия refresh токена истёк, необходимо заново авторизоваться!');
+      api.dispatch(authApi.endpoints.logout.initiate());
     }
   }
-  throw error;
-});
-
-export default $api;
+  return result;
+};

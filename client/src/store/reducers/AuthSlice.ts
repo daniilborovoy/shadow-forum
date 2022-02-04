@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../models/user.model';
 import { AuthResponse } from '../../models/authResponse.model';
-import { authApi } from '../../services/auth.service'
+import { authApi } from '../../services/auth.service';
 
 interface AuthState {
   isLoading: boolean;
@@ -33,23 +33,31 @@ const AuthSlice = createSlice({
       .addMatcher(
         authApi.endpoints.login.matchFulfilled,
         (state: AuthState, action: PayloadAction<AuthResponse>) => {
-          state.accessToken = action.payload.accessToken;
+          localStorage.setItem('token', action.payload.accessToken);
           state.refreshToken = action.payload.refreshToken;
           state.user = action.payload.user;
         })
       .addMatcher(
         authApi.endpoints.registration.matchFulfilled,
         (state: AuthState, action: PayloadAction<AuthResponse>) => {
-          state.accessToken = action.payload.accessToken;
+          localStorage.setItem('token', action.payload.accessToken);
           state.refreshToken = action.payload.refreshToken;
           state.user = action.payload.user;
         })
       .addMatcher(
         authApi.endpoints.refresh.matchFulfilled,
         (state: AuthState, action: PayloadAction<AuthResponse>) => {
-          state.accessToken = action.payload.accessToken;
+          localStorage.setItem('token', action.payload.accessToken);
           state.refreshToken = action.payload.refreshToken;
           state.user = action.payload.user;
+        })
+      .addMatcher(
+        authApi.endpoints.logout.matchFulfilled,
+        (state: AuthState, action: PayloadAction<AuthResponse>) => {
+          localStorage.removeItem('token');
+          state.refreshToken = null;
+          state.accessToken = null;
+          state.user = null;
         });
   },
 });

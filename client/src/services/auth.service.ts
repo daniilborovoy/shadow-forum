@@ -1,12 +1,19 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from '../store';
+import { createApi, fetchBaseQuery, FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
 import { AuthResponse, RegistrationRequest, LoginRequest } from '../models/authResponse.model';
+import { RootState } from '../store';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:5000/api/',
     credentials: 'include',
+    prepareHeaders: (headers, { endpoint }) => {
+      const token = localStorage.getItem('token');
+      if (token && endpoint === 'logout') {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, LoginRequest>({
@@ -27,6 +34,12 @@ export const authApi = createApi({
       query: () => ({
         url: 'refresh',
         method: 'GET',
+      }),
+    }),
+    logout: builder.mutation<AuthResponse, void>({
+      query: () => ({
+        url: 'logout',
+        method: 'POST',
       }),
     }),
   }),

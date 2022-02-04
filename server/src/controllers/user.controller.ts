@@ -19,7 +19,8 @@ class UserController {
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
-        secure: false, // при https
+        secure: false, // при https поменять на true
+        sameSite: 'strict'
       });
       return res.json(userData);
     } catch (err) {
@@ -38,6 +39,7 @@ class UserController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: false, // при https поменять на true
+        sameSite: 'strict'
       });
       return res.json(userData);
 
@@ -61,12 +63,12 @@ class UserController {
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
       const { refreshToken } = req.cookies;
-      console.log(refreshToken)
       const userData = await userService.refresh(refreshToken);
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: false, // при https поменять на true
+        sameSite: 'strict'
       });
       return res.status(200)
         .json(userData);

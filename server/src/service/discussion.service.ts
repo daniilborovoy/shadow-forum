@@ -29,7 +29,7 @@ class DiscussionService {
 
   async getAllDiscussions(limit: number | undefined) {
 
-    const discussions = await DiscussionModel.find({ }, null, { limit });
+    const discussions = await DiscussionModel.find({}, null, { limit });
     const discussionsDto: DiscussionDto[] = discussions.map(discussion => new DiscussionDto(discussion));
     return discussionsDto;
   }

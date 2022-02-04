@@ -1,16 +1,17 @@
-import React, { FC, FormEvent, FormEventHandler, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { TextField, Button } from '@mui/material';
-import AuthSlice from '../../store/reducers/AuthSlice';
 import { useAppDispatch } from '../../hooks/redux';
-import { LoginData, RegistrationData } from '../../models/user.model';
 import { authApi } from '../../services/auth.service';
 import { LoginRequest, RegistrationRequest } from '../../models/authResponse.model';
+import { userApi } from '../../services/user.service';
 
 const AuthentificationPage: FC = () => {
 
   const [value, setValue] = useState<string>('');
   const [login, { isLoading: loginLoading }] = authApi.useLoginMutation();
   const [registration, { isLoading: registrationLoading }] = authApi.useRegistrationMutation();
+  const [logout, { isLoading: logoutLoading }] = authApi.useLogoutMutation();
+  const [fetchUsers] = userApi.useFetchAllUsersMutation();
 
   const dispatch = useAppDispatch();
 
@@ -33,6 +34,13 @@ const AuthentificationPage: FC = () => {
     await login(userData);
   };
 
+  const logoutHandler = async () => {
+    await logout();
+  };
+  const usersHandler = async () => {
+    await fetchUsers();
+  };
+
   return (
     <div>
       <form onSubmit={submitHandler}>
@@ -46,6 +54,8 @@ const AuthentificationPage: FC = () => {
         <TextField id='password' label='Пароль' variant='outlined' type='password' />
         <Button variant='contained' type='submit'>Войти</Button>
       </form>
+      <Button variant='contained' onClick={logoutHandler}>ВЫЙТИ</Button>
+      <Button variant='contained' onClick={usersHandler}>Скачать юзеров</Button>
     </div>
   );
 };

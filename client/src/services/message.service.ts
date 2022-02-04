@@ -1,23 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { User } from '../models/user.model';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { Discussion } from '../models/discussions.model';
-import { RootState } from '../store';
+import { baseQueryWithRefresh } from '../http';
 
-const API_URL = 'http://localhost:5000/api/';
-
+// TODO Сделать back для клиента
 export const messagesApi = createApi({
-  reducerPath: 'discussionsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
-    prepareHeaders: (headers, { getState }) => {
-      // By default, if we have a token in the store, use that for authenticated requests
-      const token = (getState() as RootState).authReducer.accessToken;
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  reducerPath: 'messageApi',
+  baseQuery: baseQueryWithRefresh,
   endpoints: (build) => ({
     fetchMessagesByDiscussionId: build.query<Discussion, string>({
       query: (discussionId: string) => ({

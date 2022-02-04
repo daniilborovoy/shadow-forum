@@ -3,6 +3,7 @@ import { userApi } from '../services/user.service';
 import { authApi } from '../services/auth.service';
 import { discussionsApi } from '../services/discussions.service';
 import { messagesApi } from '../services/message.service';
+import { unexpectedErrorMiddleware } from '../middlewares/loginError.middleware';
 import userReducer from './reducers/UserSlice';
 import authReducer from './reducers/AuthSlice';
 
@@ -19,7 +20,7 @@ export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
-      .concat([authApi.middleware, userApi.middleware, discussionsApi.middleware, messagesApi.middleware]),
+      .concat([authApi.middleware, userApi.middleware, discussionsApi.middleware, messagesApi.middleware, unexpectedErrorMiddleware]),
 });
 
 export type AppDispatch = typeof store.dispatch;
