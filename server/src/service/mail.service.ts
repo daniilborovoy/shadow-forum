@@ -1,4 +1,7 @@
 import nodeMailer from 'nodemailer';
+import path from 'path';
+import { readFile } from 'fs/promises';
+import handlebars from 'handlebars';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 class MailService {
@@ -21,18 +24,15 @@ class MailService {
   }
 
   async sendActivationMail(to: string, link: string) {
+    const html = await readFile(path.join(__dirname, '..', 'templates', 'activationMessage.hbs'), 'utf-8');
+    let template = handlebars.compile(html);
+    let htmlToSend = template({ link });
     await this.transporter.sendMail({
       from: this.user,
       to,
       subject: `Активация аккаунта на SHADOW FORUM.`,
       text: '',
-      html:
-        `
-          <div>
-            <h1>Для активации перейдите по следующей ссылке:</h1>
-            <a href='${link}' >${link}</a>
-          </div>    
-        `,
+      html: htmlToSend,
     });
   }
 }

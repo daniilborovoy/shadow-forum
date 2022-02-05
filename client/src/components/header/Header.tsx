@@ -1,5 +1,4 @@
-import React, { FC } from 'react';
-import { Container } from '@mui/material';
+import React, { FC, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -16,6 +15,9 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { authApi } from '../../services/auth.service';
+import { useAppSelector } from '../../hooks/redux';
+import { Link } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -58,12 +60,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header: FC = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
+  const [logout, { isLoading: logoutLoading }] = authApi.useLogoutMutation();
+  const user = useAppSelector(state => state.authReducer.user);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const logoutHandler = async (): Promise<void> => {
+    await logout();
+  };
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -99,8 +106,21 @@ const Header: FC = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Профиль</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Мой аккаунт</MenuItem>
+      {user &&
+        (
+          [
+            <MenuItem key={1} onClick={handleMenuClose}>Мой аккаунт</MenuItem>,
+            <MenuItem key={2} onClick={() => {
+              handleMenuClose();
+              logoutHandler();
+            }}>Выйти из аккаунта</MenuItem>,
+          ]
+        )
+      }
+      {!user && (<Link to='authorize' style={{
+        textDecoration: 'none',
+        color: '#000',
+      }} onClick={handleMenuClose}><MenuItem>Войти</MenuItem></Link>)}
     </Menu>
   );
 
@@ -127,7 +147,7 @@ const Header: FC = () => {
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Сообщения</p>
       </MenuItem>
       <MenuItem>
         <IconButton
@@ -139,7 +159,7 @@ const Header: FC = () => {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        <p>Уведомления</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -151,24 +171,15 @@ const Header: FC = () => {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>Профиль</p>
       </MenuItem>
     </Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
+      <AppBar position='fixed'>
         <Toolbar>
-          <IconButton
-            size='large'
-            edge='start'
-            color='inherit'
-            aria-label='open drawer'
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant='h6'
             noWrap
@@ -247,6 +258,6 @@ const Header: FC = () => {
       {renderMenu}
     </Box>
   );
-}
+};
 
 export default Header;

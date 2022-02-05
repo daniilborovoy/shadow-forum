@@ -1,18 +1,27 @@
 import React, { FC, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import styles from './App.module.scss';
+import { Routes, Route } from 'react-router-dom';
 import HomePage from '../home/HomePage';
 import Header from '../header/Header';
-import { useAppSelector } from '../../hooks/redux';
+import { Container, createTheme, ThemeProvider } from '@mui/material';
 import { authApi } from '../../services/auth.service';
+import { grey, blue } from '@mui/material/colors';
+import LinearProgress from '@mui/material/LinearProgress';
+import AuthorizePage from '../authentification/AuthorizePage';
 
 const App: FC = () => {
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: grey[900],
+      },
+      secondary: {
+        main: blue[100],
+      },
+    },
+  });
+
   const [checkAuth, { isLoading }] = authApi.useRefreshMutation();
-  const {
-    user,
-    error,
-  } = useAppSelector(state => state.authReducer);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -21,21 +30,20 @@ const App: FC = () => {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className={styles.app}>
-        Загрузка...
-      </div>
-    );
+    return <LinearProgress color='inherit' />;
   }
 
   return (
-    <div className={styles.app}>
+    <ThemeProvider theme={theme}>
       <Header />
-      <div>{JSON.stringify(user)}</div>
-      <Routes>
-        <Route path='/' element={<HomePage />}></Route>
-      </Routes>
-    </div>
+      <Container>
+        <Routes>
+          <Route path='/' element={<HomePage />}></Route>
+          <Route path='/authorize' element={<AuthorizePage />}></Route>
+          <Route path='/discussion/:id' element={null}></Route>
+        </Routes>
+      </Container>
+    </ThemeProvider>
   );
 };
 

@@ -1,6 +1,8 @@
 {
   "short_name": "shadow-forum",
-  "name": "Shadow forum web site",
+  "name": "Shadow Forum",
+  "lang": "ru-RU",
+  "orientation": "any",
   "icons": [
     {
       "src": "favicon.ico",
