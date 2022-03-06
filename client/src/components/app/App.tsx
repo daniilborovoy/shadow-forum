@@ -1,27 +1,38 @@
-import React, { FC, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import HomePage from '../home/HomePage';
+import { FC, useEffect, useState, SyntheticEvent, createContext } from 'react';
 import Header from '../header/Header';
-import { Container, createTheme, ThemeProvider } from '@mui/material';
+import AppRouter from '../app-router/AppRouter';
 import { authApi } from '../../services/auth.service';
+import { Alert, createTheme, Snackbar, ThemeProvider, LinearProgress } from '@mui/material';
 import { grey, blue } from '@mui/material/colors';
-import LinearProgress from '@mui/material/LinearProgress';
-import AuthorizePage from '../authentification/AuthorizePage';
+import type { AuthAlert } from '../../models/auth.model';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: grey[900],
+    },
+    secondary: {
+      main: blue[100],
+    },
+  },
+  typography: {
+    fontFamily: ['Montserrat', 'sans-serif'].join(','),
+  },
+});
+
+export const PageStyleContext = createContext({
+  width: '100%',
+  minHeight: '100vh',
+});
 
 const App: FC = () => {
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: grey[900],
-      },
-      secondary: {
-        main: blue[100],
-      },
-    },
-  });
+  const [checkAuth, { isLoading: checkAuthLoading }] = authApi.useRefreshMutation();
 
-  const [checkAuth, { isLoading }] = authApi.useRefreshMutation();
+  const [authAlert, setAuthAlert] = useState<AuthAlert>({
+    showMessage: false,
+    message: '',
+  });
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -29,20 +40,33 @@ const App: FC = () => {
     }
   }, []);
 
-  if (isLoading) {
+  const closeAuthAlertHandler = (event?: SyntheticEvent | Event, reason?: string): void => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAuthAlert((prev) => ({
+      ...prev,
+      showMessage: false,
+    }));
+  };
+
+  if (checkAuthLoading) {
     return <LinearProgress color='inherit' />;
   }
 
   return (
     <ThemeProvider theme={theme}>
       <Header />
-      <Container>
-        <Routes>
-          <Route path='/' element={<HomePage />}></Route>
-          <Route path='/authorize' element={<AuthorizePage />}></Route>
-          <Route path='/discussion/:id' element={null}></Route>
-        </Routes>
-      </Container>
+      <AppRouter setAuthAlert={setAuthAlert} />
+      <Snackbar open={authAlert.showMessage}
+                autoHideDuration={6000}
+                onClose={closeAuthAlertHandler}>
+        <Alert onClose={closeAuthAlertHandler}
+               severity='success'
+               sx={{ width: '100%' }}>
+          {authAlert.message}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 };

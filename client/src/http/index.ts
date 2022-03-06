@@ -7,12 +7,10 @@ import {
 import { authApi } from '../services/auth.service';
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
-import { AuthResponse } from '../models/authResponse.model';
-
-const API_URL = 'http://localhost:5000/api/';
+import { AuthResponse } from '../models/auth.model';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: API_URL,
+  baseUrl: process.env.REACT_APP_API_URL,
   prepareHeaders: (headers, {
     endpoint,
   }) => {
@@ -30,18 +28,18 @@ export const baseQueryWithRefresh: BaseQueryFn<string | FetchArgs, unknown, Fetc
   api,
   extraOptions,
 ) => {
-  let result = await baseQuery(args, api, extraOptions);
-  if (result.error && result.error.status === 401) {
-    type refreshResult = QueryReturnValue<AuthResponse, FetchBaseQueryError, FetchBaseQueryMeta>;
-    const refreshResult = await baseQuery('refresh', api, extraOptions) as refreshResult;
-    if (refreshResult.data) {
-      // повторяем запрос
-      localStorage.setItem('token', refreshResult.data.accessToken);
-      result = await baseQuery(args, api, extraOptions);
+  let request = await baseQuery(args, api, extraOptions);
+  if (request.error && request.error.status === 401) {
+    type refreshRequest = QueryReturnValue<AuthResponse, FetchBaseQueryError, FetchBaseQueryMeta>;
+    const refresh: refreshRequest = await baseQuery('refresh', api, extraOptions) as refreshRequest;
+    if (refresh.data) {
+      localStorage.setItem('token', refresh.data.accessToken);
+      // повторяем наш начальный запрос
+      request = await baseQuery(args, api, extraOptions);
     } else {
-      console.warn('Срок действия refresh токена истёк, необходимо заново авторизоваться!');
+      console.warn('Срок действия refresh токена истёк, необходимо авторизоваться!');
       api.dispatch(authApi.endpoints.logout.initiate());
     }
   }
-  return result;
+  return request;
 };

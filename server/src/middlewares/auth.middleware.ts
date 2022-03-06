@@ -6,7 +6,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   try {
     const authorizationHeader: string | undefined = req.headers.authorization;
     if (!authorizationHeader) {
-      return next(ApiError.UnauthorizedError('Не авторизован!'));
+      return next(ApiError.UnauthorizedError('access token missing!'));
     }
 
     const accessToken = authorizationHeader.split(' ')[1];

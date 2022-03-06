@@ -1,8 +1,7 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import tokenModel, { Token } from '../models/token.model';
+import jwt from 'jsonwebtoken';
+import tokenModel from '../models/token.model';
 import { Types } from 'mongoose';
 import { UserDto } from '../dtos/user.dto';
-import ApiError from '../exceptions/api.error';
 
 interface tokens {
   accessToken: string;
@@ -10,7 +9,8 @@ interface tokens {
 }
 
 class TokenService {
-  private secret: string | null = process.env.JWT_ACCESS_SECRET || null;
+
+  private secret: string | undefined = process.env.JWT_ACCESS_SECRET;
 
   generateTokens(payload: UserDto): tokens | null {
     if (this.secret) {
@@ -42,21 +42,26 @@ class TokenService {
     return tokenData;
   }
 
-  validateAccessToken(token: string) {
+  validateAccessToken(token: string): UserDto | null {
     try {
-      const userData = jwt.verify(token, this.secret!);
-      return userData;
-    } catch (err: any) {
+      if (this.secret) {
+        const userData = jwt.verify(token, this.secret) as UserDto;
+        return userData;
+      }
+      return null;
+    } catch (err: unknown) {
       return null;
     }
   }
 
-  validateRefreshToken(token: string) {
+  validateRefreshToken(token: string): UserDto | null {
     try {
-      if (!this.secret) throw ApiError.ServerError('Отсутсвует секретный ключ приложения!');
-      const userData = jwt.verify(token, this.secret);
-      return userData;
-    } catch (err) {
+      if (this.secret) {
+        const userData = jwt.verify(token, this.secret) as UserDto;
+        return userData;
+      }
+      return null;
+    } catch (err: unknown) {
       return null;
     }
   }

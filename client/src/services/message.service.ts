@@ -1,27 +1,28 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Discussion } from '../models/discussions.model';
 import { baseQueryWithRefresh } from '../http';
+import { MessageResponse, MessageRequest } from '../models/message.model';
 
 // TODO Сделать back для клиента
 export const messagesApi = createApi({
   reducerPath: 'messageApi',
   baseQuery: baseQueryWithRefresh,
   endpoints: (build) => ({
-    fetchMessagesByDiscussionId: build.query<Discussion, string>({
-      query: (discussionId: string) => ({
+    fetchMessagesByDiscussionId: build.query<MessageResponse[] | null, string | null>({
+      query: (discussionId: string | null) => ({
         url: `messages/${discussionId}`,
       }),
     }),
-    sendMessage: build.mutation<Discussion, string>({
-      query: (discussionId: string) => ({
+    sendMessage: build.mutation<MessageResponse, MessageRequest>({
+      query: (userMessage: MessageRequest) => ({
         url: `messages`,
         method: 'POST',
         body: {
-          id: discussionId,
+          message: userMessage.message,
+          discussionId: userMessage.discussionId,
         },
       }),
     }),
-    editMessage: build.mutation<Discussion, string>({
+    editMessage: build.mutation<MessageResponse, string>({
       query: (discussionId: string) => ({
         url: `messages`,
         method: 'PUT',
@@ -31,7 +32,7 @@ export const messagesApi = createApi({
         },
       }),
     }),
-    deleteMessage: build.mutation<Discussion, string>({
+    deleteMessage: build.mutation<MessageResponse, string>({
       query: (messageId: string) => ({
         url: `messages`,
         method: 'DELETE',

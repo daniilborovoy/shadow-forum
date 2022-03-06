@@ -1,6 +1,5 @@
-import { createApi, fetchBaseQuery, FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
-import { AuthResponse, RegistrationRequest, LoginRequest } from '../models/authResponse.model';
-import { RootState } from '../store';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { AuthResponse, RegistrationRequest, LoginRequest } from '../models/auth.model';
 
 export const authApi = createApi({
   reducerPath: 'authApi',

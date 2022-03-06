@@ -14,6 +14,16 @@ class MessageService {
     const messageDto: MessageDto = new MessageDto(userMessage);
     return messageDto;
   }
+
+  async getMessagesByDiscussionId(discussion: string) {
+    const messages = await MessageModel.find({ discussion });
+    if (messages) {
+      const messagesDto = messages.map((message) => new MessageDto(message));
+      return messagesDto;
+    }
+    return null;
+  }
+
 }
 
 export default new MessageService();

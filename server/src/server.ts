@@ -7,6 +7,7 @@ import authRouter from './routes/auth.routes';
 import usersRouter from './routes/users.routes';
 import discussionsRouter from './routes/discussions.routes';
 import errorMiddleware from './middlewares/error.middleware';
+import messagesRouter from './routes/messages.routes';
 
 const app = express();
 const PORT: number = Number(process.env.PORT) || 5000;
@@ -18,7 +19,10 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
-app.use('/api', authRouter, usersRouter, discussionsRouter);
+// if (process.env.PRODUCTION) {
+//   app.use(express.static(path.join(__dirname, '..', '..', 'client', 'build', 'index.html')));
+// }
+app.use('/api', authRouter, usersRouter, discussionsRouter, messagesRouter);
 app.use(errorMiddleware);
 
 const start = async (): Promise<void> => {

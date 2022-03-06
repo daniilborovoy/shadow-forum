@@ -17,10 +17,10 @@ class UserService {
     const candidateEmail = await UserModel.findOne({ email });
     const candidateName = await UserModel.findOne({ name });
     if (candidateEmail) {
-      throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует!`);
+      throw ApiError.BadRequestError(`Пользователь с почтовым адресом ${email} уже существует!`);
     }
     if (candidateName) {
-      throw ApiError.BadRequest(`Пользователь с именем ${name} уже существует!`);
+      throw ApiError.BadRequestError(`Пользователь с именем ${name} уже существует!`);
     }
     const hashPassword: string = await bcrypt.hash(password, 3);
     const activationLink: string = uuid.v4();
@@ -32,7 +32,7 @@ class UserService {
       creationDate: new Date(),
     });
     const apiUrl: string | undefined = process.env.API_URL;
-    if (!apiUrl) throw ApiError.ServerError('Отсутствует ссылка на апи в конфигурационном файле!');
+    if (!apiUrl) throw ApiError.InternalServerError('Отсутствует ссылка на апи в конфигурационном файле!');
 
     await mailService.sendActivationMail(email, `${apiUrl}/activate/${activationLink}`);
     const userDto = new UserDto(user);
@@ -40,7 +40,7 @@ class UserService {
     if (tokens) {
       await tokenService.saveToken(userDto.id, tokens.refreshToken);
     } else {
-      throw ApiError.ServerError('Отсутсвует секретный ключ приложения!');
+      throw ApiError.InternalServerError('Отсутсвует секретный ключ приложения!');
     }
     return {
       ...tokens,
@@ -51,7 +51,7 @@ class UserService {
   async activate(activationLink: string) {
     const user = await UserModel.findOne({ activationLink });
     if (!user) {
-      throw ApiError.BadRequest('Неккоректная ссылка активации!');
+      throw ApiError.BadRequestError('Неккоректная ссылка активации!');
     }
     user.isActivated = true;
     await user.save();
@@ -60,18 +60,18 @@ class UserService {
   async login(email: string, password: string) {
     const user = await userModel.findOne({ email });
     if (!user) {
-      throw ApiError.BadRequest('Пользователь не найден!');
+      throw ApiError.BadRequestError('Пользователь не найден!');
     }
     const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) {
-      throw ApiError.BadRequest('Неверный пароль');
+      throw ApiError.BadRequestError('Неверный пароль');
     }
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
     if (tokens) {
       await tokenService.saveToken(userDto.id, tokens.refreshToken);
     } else {
-      throw ApiError.ServerError('Отсутсвует секретный ключ приложения!');
+      throw ApiError.InternalServerError('Отсутсвует секретный ключ приложения!');
     }
     return {
       ...tokens,
@@ -99,7 +99,7 @@ class UserService {
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
 
-    if (!tokens) throw ApiError.ServerError('Не удалось сгенерировать токены!');
+    if (!tokens) throw ApiError.InternalServerError('Не удалось сгенерировать токены!');
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
     return {
@@ -116,7 +116,7 @@ class UserService {
 
   async getUserById(userId: string) {
     const user: HydratedDocument<User> | null = await UserModel.findById(userId);
-    if (!user) throw ApiError.BadRequest(`Пользователя с id:${userId} не существет!`);
+    if (!user) throw ApiError.BadRequestError(`user with id: ${userId} does not exist!`);
     const userDto: UserDto = new UserDto(user);
     return userDto;
   }

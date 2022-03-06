@@ -3,13 +3,11 @@ import { userApi } from '../services/user.service';
 import { authApi } from '../services/auth.service';
 import { discussionsApi } from '../services/discussions.service';
 import { messagesApi } from '../services/message.service';
-import { unexpectedErrorMiddleware } from '../middlewares/loginError.middleware';
-import userReducer from './reducers/UserSlice';
+import { unexpectedErrorMiddleware } from '../middlewares/unexpectedErrors.middleware';
 import authReducer from './reducers/AuthSlice';
 
 const rootReducer = combineReducers({
   authReducer,
-  userReducer,
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [discussionsApi.reducerPath]: discussionsApi.reducer,

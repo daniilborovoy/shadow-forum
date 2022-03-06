@@ -1,6 +1,6 @@
 export default class ApiError extends Error {
-  status;
-  errors;
+  public status;
+  public errors;
 
   constructor(status: number, message: string, errors: any[] = []) {
     super(message);
@@ -8,15 +8,19 @@ export default class ApiError extends Error {
     this.status = status;
   }
 
+  static BadRequestError(message: string, errors: any[] = []) {
+    return new ApiError(400, `Error: ${message}`, errors);
+  }
+
   static UnauthorizedError(message?: string, errors: any[] = []) {
-    return new ApiError(401, message || 'Пользователь не авторизован!');
+    return new ApiError(401, `Error: ${message}` || 'Error: not authorized!', errors);
   }
 
-  static ServerError(message: string, errors: any[] = []) {
-    return new ApiError(500, `Ошибка сервера: ${message}`);
+  static InternalServerError(message: string, errors: any[] = []) {
+    return new ApiError(500, `Error: ${message}`, errors);
   }
 
-  static BadRequest(message: string, errors: any[] = []) {
-    return new ApiError(400, message, errors);
+  static NotImplementedError(message: string) {
+    return new ApiError(501, `Error: ${message}`);
   }
 }

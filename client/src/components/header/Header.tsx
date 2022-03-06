@@ -1,23 +1,29 @@
-import React, { FC, useState } from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
+import React, { FC, useState, MouseEvent } from 'react';
 import { authApi } from '../../services/auth.service';
 import { useAppSelector } from '../../hooks/redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  Badge, MenuItem,
+  Menu,
+} from '@mui/material';
+import {
+  Search as SearchIcon,
+  AccountCircle,
+  Mail as MailIcon,
+  Notifications as NotificationsIcon,
+  MoreVert as MoreIcon,
+} from '@mui/icons-material';
+import { styled, alpha } from '@mui/material/styles';
+import { getUser } from '../../store/selectors/authSelectors';
+import {
+  CreateDiscussionFormDialog,
+} from '../forms/create-discussion-form-dialog/CreateDiscussionFormDialog';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -60,36 +66,45 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header: FC = () => {
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
-  const [logout, { isLoading: logoutLoading }] = authApi.useLogoutMutation();
-  const user = useAppSelector(state => state.authReducer.user);
+
+  const [logout, {
+    isLoading: logoutLoading,
+    error: logoutError,
+  }] = authApi.useLogoutMutation();
+
+  const user = useAppSelector(getUser);
 
   const isMenuOpen = Boolean(anchorEl);
+
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const logoutHandler = async (): Promise<void> => {
     await logout();
   };
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const openProfileMenuHandler = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const openMobileMenuHandler = (event: MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = 'primary-search-account-menu';
+  const closeMobileMenuHandler = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const closeMenuHandler = () => {
+    setAnchorEl(null);
+    closeMobileMenuHandler();
+  };
+
+  const menuId = 'shadow-forum-menu';
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -104,15 +119,20 @@ const Header: FC = () => {
         horizontal: 'right',
       }}
       open={isMenuOpen}
-      onClose={handleMenuClose}
+      onClose={closeMenuHandler}
     >
       {user &&
         (
           [
-            <MenuItem key={1} onClick={handleMenuClose}>Мой аккаунт</MenuItem>,
-            <MenuItem key={2} onClick={() => {
-              handleMenuClose();
-              logoutHandler();
+            <MenuItem key={1} onClick={() => {
+              closeMenuHandler();
+              navigate('/account');
+            }}>Мой аккаунт</MenuItem>,
+            <MenuItem key={321}
+            >Мои обсуждения</MenuItem>,
+            <MenuItem key={2} onClick={async () => {
+              closeMenuHandler();
+              await logoutHandler();
             }}>Выйти из аккаунта</MenuItem>,
           ]
         )
@@ -120,11 +140,11 @@ const Header: FC = () => {
       {!user && (<Link to='authorize' style={{
         textDecoration: 'none',
         color: '#000',
-      }} onClick={handleMenuClose}><MenuItem>Войти</MenuItem></Link>)}
+      }} onClick={closeMenuHandler}><MenuItem>Войти</MenuItem></Link>)}
     </Menu>
   );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const mobileMenuId = 'shadow-forum-menu-mobile';
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -139,7 +159,7 @@ const Header: FC = () => {
         horizontal: 'right',
       }}
       open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
+      onClose={closeMobileMenuHandler}
     >
       <MenuItem>
         <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
@@ -161,7 +181,7 @@ const Header: FC = () => {
         </IconButton>
         <p>Уведомления</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={openProfileMenuHandler}>
         <IconButton
           size='large'
           aria-label='account of current user'
@@ -184,11 +204,13 @@ const Header: FC = () => {
             variant='h6'
             noWrap
             component='div'
+            onClick={() => navigate('/')}
             sx={{
               display: {
                 xs: 'none',
                 sm: 'block',
               },
+              cursor: 'pointer',
             }}
           >
             SHADOW FORUM
@@ -199,27 +221,26 @@ const Header: FC = () => {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder='Поиск…'
-              inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
+          {user && <CreateDiscussionFormDialog />}
           <Box sx={{
             display: {
               xs: 'none',
               md: 'flex',
             },
           }}>
-            <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+            <IconButton size='large' color='inherit'>
               <Badge badgeContent={4} color='error'>
                 <MailIcon />
               </Badge>
             </IconButton>
             <IconButton
               size='large'
-              aria-label='show 17 new notifications'
               color='inherit'
             >
-              <Badge badgeContent={17} color='error'>
+              <Badge badgeContent={1} color='error'>
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -227,9 +248,8 @@ const Header: FC = () => {
               size='large'
               edge='end'
               aria-label='account of current user'
-              aria-controls={menuId}
               aria-haspopup='true'
-              onClick={handleProfileMenuOpen}
+              onClick={openProfileMenuHandler}
               color='inherit'
             >
               <AccountCircle />
@@ -244,9 +264,8 @@ const Header: FC = () => {
             <IconButton
               size='large'
               aria-label='show more'
-              aria-controls={mobileMenuId}
               aria-haspopup='true'
-              onClick={handleMobileMenuOpen}
+              onClick={openMobileMenuHandler}
               color='inherit'
             >
               <MoreIcon />

@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user.service';
-import { validationResult } from 'express-validator';
+import { validationResult, ValidationError, Result } from 'express-validator';
 import ApiError from '../exceptions/api.error';
 
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
     try {
-      const errors = validationResult(req);
+      const errors: Result<ValidationError> = validationResult(req);
       if (!errors.isEmpty()) {
-        return next(ApiError.BadRequest('Ошибка при валидации', errors.array()));
+        return next(ApiError.BadRequestError('validation error!', errors.array()));
       }
       const {
         email,
@@ -19,8 +19,8 @@ class UserController {
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
-        secure: false, // при https поменять на true
-        sameSite: 'strict'
+        secure: false, // TODO при https поменять на true
+        sameSite: 'strict',
       });
       return res.json(userData);
     } catch (err) {
@@ -30,6 +30,10 @@ class UserController {
 
   async login(req: Request, res: Response, next: NextFunction) {
     try {
+      const errors: Result<ValidationError> = validationResult(req);
+      if (!errors.isEmpty()) {
+        return next(ApiError.BadRequestError('validation error!', errors.array()));
+      }
       const {
         email,
         password,
@@ -38,11 +42,11 @@ class UserController {
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
-        secure: false, // при https поменять на true
-        sameSite: 'strict'
+        secure: false, // TODO при https поменять на true
+        sameSite: 'strict',
       });
-      return res.json(userData);
-
+      return res.status(200)
+        .json(userData);
     } catch (err) {
       next(err);
     }
@@ -51,12 +55,13 @@ class UserController {
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
       const { refreshToken } = req.cookies;
+      if (!refreshToken) throw ApiError.UnauthorizedError();
       const token = await userService.logout(refreshToken);
       res.clearCookie('refreshToken');
       return res.status(200)
         .json(token);
-    } catch (e) {
-      next(e);
+    } catch (err: unknown) {
+      next(err);
     }
   }
 
@@ -68,23 +73,24 @@ class UserController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: false, // при https поменять на true
-        sameSite: 'strict'
+        sameSite: 'strict',
       });
       return res.status(200)
         .json(userData);
-    } catch (e) {
-      next(e);
+    } catch (err: unknown) {
+      next(err);
     }
   }
 
   async activate(req: Request, res: Response, next: NextFunction) {
     try {
       const activationLink = req.params.link;
+      if (!activationLink) throw ApiError.BadRequestError('activation link missing!');
       await userService.activate(activationLink);
-      if (!process.env.CLIENT_URL) throw ApiError.ServerError('Отсутсвует клиентский url!');
+      if (!process.env.CLIENT_URL) throw ApiError.InternalServerError('client url missing!');
       return res.redirect(process.env.CLIENT_URL);
-    } catch (e) {
-      next(e);
+    } catch (err: unknown) {
+      next(err);
     }
   }
 
@@ -93,19 +99,20 @@ class UserController {
       const users = await userService.getAllUsers();
       return res.status(200)
         .json(users);
-    } catch (e) {
-      next(e);
+    } catch (err: unknown) {
+      next(err);
     }
   }
 
   async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id: userId } = req.params;
+      const userId: string = req.params.id;
+      if (!userId) throw ApiError.BadRequestError('user id missing!');
       const user = await userService.getUserById(userId);
       return res.status(200)
         .json(user);
-    } catch (e) {
-      next(e);
+    } catch (err: unknown) {
+      next(err);
     }
   }
 }

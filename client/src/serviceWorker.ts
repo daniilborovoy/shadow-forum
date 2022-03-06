@@ -99,7 +99,7 @@ function registerValidSW(swUrl: string, config?: Config) {
       };
     })
     .catch((error) => {
-      console.error('Error during service worker authentification:', error);
+      console.error('Error during service worker authorize-page:', error);
     });
 }
 

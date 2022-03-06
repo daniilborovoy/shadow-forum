@@ -2,9 +2,11 @@ import { Schema, model, Types } from 'mongoose';
 
 export interface Discussion {
   title: string;
-  creator: Types.ObjectId;
+  creatorId: Types.ObjectId;
   body: string;
   creationDate: Date;
+  viewsCount: number;
+  messagesCount: number;
 }
 
 const DiscussionSchema = new Schema<Discussion>({
@@ -16,13 +18,22 @@ const DiscussionSchema = new Schema<Discussion>({
     type: String,
     required: true,
   },
-  creator: {
+  creatorId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
   creationDate: {
     type: Date,
     required: true,
+  },
+  viewsCount: {
+    type: Number,
+    default: 0,
+  },
+  messagesCount: {
+    type: Number,
+    default: 0,
   },
 });
 

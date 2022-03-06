@@ -1,6 +1,6 @@
-import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, isAnyOf } from '@reduxjs/toolkit';
 import { User } from '../../models/user.model';
-import { AuthResponse } from '../../models/authResponse.model';
+import { AuthResponse } from '../../models/auth.model';
 import { authApi } from '../../services/auth.service';
 
 interface AuthState {
@@ -12,8 +12,8 @@ interface AuthState {
 }
 
 interface AuthResponseError {
-  message: string,
-  error: any
+  message: string;
+  error: any;
 }
 
 const initialState: AuthState = {
@@ -29,23 +29,10 @@ const AuthSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    const isSuccessAuthAction = isAnyOf(authApi.endpoints.login.matchFulfilled, authApi.endpoints.registration.matchFulfilled, authApi.endpoints.refresh.matchFulfilled);
     builder
       .addMatcher(
-        authApi.endpoints.login.matchFulfilled,
-        (state: AuthState, action: PayloadAction<AuthResponse>) => {
-          localStorage.setItem('token', action.payload.accessToken);
-          state.refreshToken = action.payload.refreshToken;
-          state.user = action.payload.user;
-        })
-      .addMatcher(
-        authApi.endpoints.registration.matchFulfilled,
-        (state: AuthState, action: PayloadAction<AuthResponse>) => {
-          localStorage.setItem('token', action.payload.accessToken);
-          state.refreshToken = action.payload.refreshToken;
-          state.user = action.payload.user;
-        })
-      .addMatcher(
-        authApi.endpoints.refresh.matchFulfilled,
+        isSuccessAuthAction,
         (state: AuthState, action: PayloadAction<AuthResponse>) => {
           localStorage.setItem('token', action.payload.accessToken);
           state.refreshToken = action.payload.refreshToken;
@@ -53,7 +40,7 @@ const AuthSlice = createSlice({
         })
       .addMatcher(
         authApi.endpoints.logout.matchFulfilled,
-        (state: AuthState, action: PayloadAction<AuthResponse>) => {
+        (state: AuthState) => {
           localStorage.removeItem('token');
           state.refreshToken = null;
           state.accessToken = null;
