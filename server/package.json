@@ -5,10 +5,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "node build/bin/www.js",
     "dev": "nodemon",
     "build": "tsc",
-    "start:dev": "ts-node src/server.ts",
+    "start:dev": "ts-node src/bin/www.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "nodemonConfig": {
@@ -37,7 +37,9 @@
     "mongoose": "^6.1.8",
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
-    "uuid": "^8.3.2"
+    "socket.io": "^4.4.1",
+    "uuid": "^8.3.2",
+    "@socket.io/mongo-adapter": "^0.1.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

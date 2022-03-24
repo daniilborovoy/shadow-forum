@@ -18,12 +18,12 @@ class DiscussionController {
         if (userData && userData.id) {
           const discussion = await DiscussionService.getDiscussion(discussionId, userData.id.toString());
           return res.status(200)
-            .send(discussion);
+            .json(discussion);
         }
       }
       const discussion = await DiscussionService.getDiscussion(discussionId);
       return res.status(200)
-        .send(discussion);
+        .json(discussion);
     } catch (err: unknown) {
       next(err);
     }
@@ -47,7 +47,7 @@ class DiscussionController {
         body: discussionBody,
       } = req.body;
       const userId = req.body.user.id; // req.user
-      const discussion = await DiscussionService.createDiscussion(discussionTitle, userId, discussionBody);
+      const discussion = await DiscussionService.createDiscussion(userId, discussionTitle, discussionBody);
       res.status(200)
         .json(discussion);
     } catch (err: unknown) {

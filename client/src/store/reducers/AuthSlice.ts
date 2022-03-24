@@ -34,14 +34,14 @@ const AuthSlice = createSlice({
       .addMatcher(
         isSuccessAuthAction,
         (state: AuthState, action: PayloadAction<AuthResponse>) => {
-          localStorage.setItem('token', action.payload.accessToken);
+          localStorage.setItem('shadow-forum/access_token', action.payload.accessToken);
           state.refreshToken = action.payload.refreshToken;
           state.user = action.payload.user;
         })
       .addMatcher(
         authApi.endpoints.logout.matchFulfilled,
         (state: AuthState) => {
-          localStorage.removeItem('token');
+          localStorage.removeItem('shadow-forum/access_token');
           state.refreshToken = null;
           state.accessToken = null;
           state.user = null;

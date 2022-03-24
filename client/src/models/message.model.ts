@@ -1,7 +1,8 @@
 interface MessageResponse {
+  messageId: string;
   userId: string;
-  creationDate: Date;
   body: string;
+  creationDate: Date;
 }
 
 interface MessageRequest {

@@ -3,30 +3,36 @@ import { Avatar, FormControl, FormGroup, TextField } from '@mui/material';
 import { stringAvatar } from '../../../utils/Avatar';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Send } from '@mui/icons-material';
-import { messagesApi } from '../../../services/message.service';
 import { MessageRequest } from '../../../models/message.model';
+import { Socket } from 'socket.io-client';
+import { useAppSelector } from '../../../hooks/redux';
+import { getUser } from '../../../store/selectors/authSelectors';
 
-const MessageForm: FC<{ discussionId: string, userName: string }> = ({
+const MessageInputForm: FC<{ discussionId: string, userName: string, socket: Socket }> = ({
   discussionId,
   userName,
+  socket,
 }) => {
+
+  const user = useAppSelector(getUser);
 
   const [userMessage, setUserMessage] = useState<MessageRequest>({
     message: '',
     discussionId: discussionId,
   });
 
-  const [sendMessage, {
-    data: myMessage,
-    isLoading: sendMessageLoading,
-    error: sendMessageLoadingError,
-  }] = messagesApi.useSendMessageMutation();
-
-  const sendMessageHandler = (event: FormEvent) => {
+  const sendMessageHandler = (event: FormEvent): void => {
     event.preventDefault();
-    if (userMessage.message.length && discussionId) {
-      sendMessage(userMessage);
+    if (user) {
+      socket.emit('message', userMessage.message, user.id, userMessage.discussionId);
+      setUserMessage({
+        message: '',
+        discussionId: discussionId,
+      });
+      return;
     }
+    alert('sending error');
+    return;
   };
 
   return (
@@ -45,13 +51,14 @@ const MessageForm: FC<{ discussionId: string, userName: string }> = ({
                      required={true} />
           <LoadingButton
             sx={{ marginTop: '15px' }}
-            loading={sendMessageLoading}
+            // loading={sendMessageLoading}
             loadingPosition='start'
             startIcon={<Send />}
             variant='contained'
             type='submit'
           >
-            {sendMessageLoading ? 'Сообщение отправляется' : 'Отправить ответ'}
+            Отправить ответ
+            {/* {sendMessageLoading ? 'Сообщение отправляется' : 'Отправить ответ'} */}
           </LoadingButton>
         </FormGroup>
       </FormControl>
@@ -59,4 +66,4 @@ const MessageForm: FC<{ discussionId: string, userName: string }> = ({
   );
 };
 
-export default MessageForm;
+export default MessageInputForm;

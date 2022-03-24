@@ -4,10 +4,10 @@ import { AuthResponse, RegistrationRequest, LoginRequest } from '../models/auth.
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_API_URL,
+    baseUrl: `http://${window.location.hostname}:5000/api/`,
     credentials: 'include',
     prepareHeaders: (headers, { endpoint }) => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('shadow-forum/access_token');
       if (token && endpoint === 'logout') {
         headers.set('Authorization', `Bearer ${token}`);
       }

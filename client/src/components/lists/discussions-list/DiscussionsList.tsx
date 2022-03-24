@@ -82,12 +82,10 @@ const DiscussionsList: FC = () => {
           >
             <ChatBubbleIcon sx={{ margin: '0 10px' }} />
             {discussion.messagesCount}
-            {/* // TODO кол-во ответов */}
             <AccessTimeFilledIcon sx={{ margin: '0 10px 0 10px' }} />
             {publicationDate}
             <RemoveRedEyeIcon sx={{ margin: '0 10px 0 10px' }} />
             {discussion.viewsCount}
-            {/*  // TODO кол-во просмотров */}
           </Typography>
         </Button>
       </ListItem>

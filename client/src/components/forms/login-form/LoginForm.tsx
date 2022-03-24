@@ -47,7 +47,7 @@ const LoginForm: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>> }> = ({ 
   };
 
   return (
-    <form method='POST' onSubmit={loginHandler}>
+    <form method='POST' style={{padding: '0 15px'}} onSubmit={loginHandler}>
       <FormControl>
         <FormGroup>
           <FormLabel sx={{ textAlign: 'center' }}>Вход</FormLabel>

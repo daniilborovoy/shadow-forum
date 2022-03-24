@@ -5,6 +5,7 @@ import { authApi } from '../../services/auth.service';
 import { Alert, createTheme, Snackbar, ThemeProvider, LinearProgress } from '@mui/material';
 import { grey, blue } from '@mui/material/colors';
 import type { AuthAlert } from '../../models/auth.model';
+import { io, Socket } from 'socket.io-client';
 
 const theme = createTheme({
   palette: {
@@ -26,19 +27,26 @@ export const PageStyleContext = createContext({
 });
 
 const App: FC = () => {
-
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [checkAuth, { isLoading: checkAuthLoading }] = authApi.useRefreshMutation();
-
   const [authAlert, setAuthAlert] = useState<AuthAlert>({
     showMessage: false,
     message: '',
   });
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if (localStorage.getItem('shadow-forum/access_token')) {
       checkAuth();
     }
   }, []);
+
+  useEffect(() => {
+    const newSocket = io(`http://${window.location.hostname}:5000`);
+    setSocket(newSocket);
+    return () => {
+      newSocket.close();
+    };
+  }, [setSocket]);
 
   const closeAuthAlertHandler = (event?: SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
@@ -48,27 +56,31 @@ const App: FC = () => {
       ...prev,
       showMessage: false,
     }));
+    return;
   };
 
   if (checkAuthLoading) {
     return <LinearProgress color='inherit' />;
   }
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Header />
-      <AppRouter setAuthAlert={setAuthAlert} />
-      <Snackbar open={authAlert.showMessage}
-                autoHideDuration={6000}
-                onClose={closeAuthAlertHandler}>
-        <Alert onClose={closeAuthAlertHandler}
-               severity='success'
-               sx={{ width: '100%' }}>
-          {authAlert.message}
-        </Alert>
-      </Snackbar>
-    </ThemeProvider>
-  );
+  if (socket) {
+    return (
+      <ThemeProvider theme={theme}>
+        <Header />
+        <AppRouter setAuthAlert={setAuthAlert} socket={socket} />
+        <Snackbar open={authAlert.showMessage}
+                  autoHideDuration={6000}
+                  onClose={closeAuthAlertHandler}>
+          <Alert onClose={closeAuthAlertHandler}
+                 severity='success'
+                 sx={{ width: '100%' }}>
+            {authAlert.message}
+          </Alert>
+        </Snackbar>
+      </ThemeProvider>
+    );
+  }
+  return null;
 };
 
 export default App;

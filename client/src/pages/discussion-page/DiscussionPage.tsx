@@ -1,32 +1,39 @@
-import { FC, FormEvent, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { discussionsApi } from '../../services/discussions.service';
 import {
   Box,
-  FormControl,
-  FormGroup,
-  FormLabel,
   LinearProgress,
-  Paper, TextField,
+  Paper,
   Typography,
-  Avatar,
 } from '@mui/material';
-import { messagesApi } from '../../services/message.service';
-import { MessageRequest } from '../../models/message.model';
-import { Send } from '@mui/icons-material';
-import LoadingButton from '@mui/lab/LoadingButton';
 import { useAppSelector } from '../../hooks/redux';
-import { getUser, getUserName } from '../../store/selectors/authSelectors';
-import { stringAvatar } from '../../utils/Avatar';
+import { getUserName } from '../../store/selectors/authSelectors';
 import { PageStyleContext } from '../../components/app/App';
 import setPageTitle from '../../utils/SetPageTitle';
-import MessageForm from '../../components/forms/message-form/MessageForm';
+import MessageInputForm from '../../components/forms/message-input-form/MessageInputForm';
+import MessagesList from '../../components/lists/discussion-messages-list/DiscussionMessagesList';
+import { io, Socket } from 'socket.io-client';
 
-const DiscussionPage: FC = () => {
+const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
   const params = useParams();
-  const pageStyle = useContext(PageStyleContext);
   const discussionId = params.id || null;
+  const pageStyle = useContext(PageStyleContext);
   const userName = useAppSelector(getUserName);
+  const [messages, setMessages] = useState<string[]>(['mock']);
+
+  // if (discussionId) {
+  //   socket.emit('join to discussion', discussionId);
+  //
+  //   socket.on('discussion message', (message) => {
+  //     setMessages(prevState => [...prevState, message]);
+  //   });
+  // }
+
+  // socket.on('private message', (anotherSocketId, msg) => {
+  //   console.log(anotherSocketId + ' ' + msg);
+  // });
+
   const {
     data: discussion,
     isLoading: discussionLoading,
@@ -45,6 +52,7 @@ const DiscussionPage: FC = () => {
   //   console.log(messages)
   //   subscribe();
   // }
+
   const [addView] = discussionsApi.useAddViewMutation();
 
   const addViewHandler = (timeOffset: number): void => {
@@ -59,6 +67,12 @@ const DiscussionPage: FC = () => {
 
   useEffect(() => {
     addViewHandler(8000);
+  }, [discussion]);
+
+  useEffect(() => {
+    return () => {
+      socket.emit('leave_discussion', discussionId);
+    };
   }, []);
 
   if (discussionLoadingError) {
@@ -89,8 +103,12 @@ const DiscussionPage: FC = () => {
           display: 'flex',
           justifyContent: 'center',
         }}>
-          {(discussionId && userName) &&
-            <MessageForm discussionId={discussionId} userName={userName} />}
+          <Box sx={{ flexDirection: 'column', width: '100%' }}>
+            {discussionId && <MessagesList discussionId={discussionId} socket={socket} />}
+
+            {(discussionId && userName) &&
+              <MessageInputForm discussionId={discussionId} userName={userName} socket={socket} />}
+          </Box>
         </Paper>
       </Box>
     );

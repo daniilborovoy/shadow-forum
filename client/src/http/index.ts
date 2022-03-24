@@ -10,11 +10,11 @@ import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
 import { AuthResponse } from '../models/auth.model';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.REACT_APP_API_URL,
+  baseUrl: `http://${window.location.hostname}:5000/api/`,
   prepareHeaders: (headers, {
     endpoint,
   }) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('shadow-forum/access_token');
     if (token && endpoint !== 'refresh') {
       headers.set('Authorization', `Bearer ${token}`);
     }
@@ -33,8 +33,8 @@ export const baseQueryWithRefresh: BaseQueryFn<string | FetchArgs, unknown, Fetc
     type refreshRequest = QueryReturnValue<AuthResponse, FetchBaseQueryError, FetchBaseQueryMeta>;
     const refresh: refreshRequest = await baseQuery('refresh', api, extraOptions) as refreshRequest;
     if (refresh.data) {
-      localStorage.setItem('token', refresh.data.accessToken);
-      // повторяем наш начальный запрос
+      localStorage.setItem('shadow-forum/access_token', refresh.data.accessToken);
+      // repeat our initial request
       request = await baseQuery(args, api, extraOptions);
     } else {
       console.warn('Срок действия refresh токена истёк, необходимо авторизоваться!');

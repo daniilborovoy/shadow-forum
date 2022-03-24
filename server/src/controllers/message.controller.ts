@@ -25,7 +25,6 @@ class MessageController {
     if (!discussionId) throw ApiError.BadRequestError('discussion id missing!');
     const userId = req.body.user.id;
     const userMessage: MessageDto = await MessageService.saveMessage(message, userId, discussionId);
-    emitter.emit(`messages/${discussionId}`, userMessage);
     res.status(200);
   }
 

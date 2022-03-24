@@ -6,9 +6,8 @@ import tokenService from './token.service';
 import { UserDto } from '../dtos/user.dto';
 import ApiError from '../exceptions/api.error';
 import userModel from '../models/user.model';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { Token } from '../models/token.model';
-import { Types } from 'mongoose';
 
 class UserService {
 

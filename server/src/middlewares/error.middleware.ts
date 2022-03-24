@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import ApiError from '../exceptions/api.error';
 
-export default (err: unknown, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof ApiError) {
-    return res.status(err.status)
+export default (error: unknown, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof ApiError) {
+    return res.status(error.status)
       .json({
-        message: err.message,
-        errors: err.errors,
+        message: error.message,
+        errors: error.errors,
       });
   } else {
     res.status(500)
-      .json({ message: `Произошла непредвиденная ошибка: ${err}` });
+      .json({ message: `Unexpected error: ${error}` });
   }
 }

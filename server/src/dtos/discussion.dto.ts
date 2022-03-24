@@ -9,6 +9,7 @@ export class DiscussionDto {
   readonly creatorId: Types.ObjectId;
   readonly viewsCount: number;
   readonly messagesCount: number;
+  readonly isCreator: boolean = false;
 
   constructor(model: HydratedDocument<Discussion>) {
     this.id = model._id;

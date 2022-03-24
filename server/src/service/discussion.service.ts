@@ -3,7 +3,6 @@ import DiscussionModel, { Discussion } from '../models/discussion.model';
 import { DiscussionDto } from '../dtos/discussion.dto';
 import ApiError from '../exceptions/api.error';
 
-// TODO комментарии
 class DiscussionService {
 
   verifyCreator(userId: string, creatorId: string): boolean {
@@ -15,20 +14,16 @@ class DiscussionService {
     if (!discussion) throw ApiError.BadRequestError('discussion not found!');
     const discussionDto = new DiscussionDto(discussion);
     if (userId) {
-      const isCreator: boolean = this.verifyCreator(userId, String(discussion.creatorId));
+      const creatorId: string = discussion.creatorId.toString();
       return {
         ...discussionDto,
-        isCreator,
+        isCreator: userId === creatorId, // authorship verification
       };
     }
-    return {
-      ...discussionDto,
-      isCreator: false,
-    };
+    return discussionDto;
   }
 
   async getAllDiscussions(limit: number | undefined) {
-
     const discussions = await DiscussionModel.find({}, null, {
       sort: { creationDate: -1 },
       limit,
@@ -37,7 +32,7 @@ class DiscussionService {
     return discussionsDto;
   }
 
-  async createDiscussion(discussionTitle: string, userId: string, discussionBody: string) {
+  async createDiscussion(userId: string, discussionTitle: string, discussionBody: string) {
     const discussion: HydratedDocument<Discussion> = await DiscussionModel.create({
       title: discussionTitle,
       creationDate: new Date(),

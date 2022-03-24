@@ -197,8 +197,8 @@ const Header: FC = () => {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='fixed'>
+    <Box sx={{ flexGrow: 1, position:'sticky', top: '0' }}>
+      <AppBar position='relative'>
         <Toolbar>
           <Typography
             variant='h6'

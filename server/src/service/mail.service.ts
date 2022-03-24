@@ -5,13 +5,17 @@ import handlebars from 'handlebars';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 class MailService {
-  private transporter: nodeMailer.Transporter<SMTPTransport.SentMessageInfo>;
-  private host: string | undefined = process.env.SMTP_HOST;
-  private port: number | undefined = Number(process.env.SMTP_PORT);
-  private user: string | undefined = process.env.SMTP_USER;
-  private pass: string | undefined = process.env.SMTP_PASSWORD;
+  private readonly transporter: nodeMailer.Transporter<SMTPTransport.SentMessageInfo>;
+  private readonly host: string | undefined;
+  private readonly port: number | undefined;
+  private readonly user: string | undefined;
+  private readonly pass: string | undefined;
 
   constructor() {
+    this.host = process.env.SMTP_HOST;
+    this.port = Number(process.env.SMTP_PORT);
+    this.user = process.env.SMTP_USER;
+    this.pass = process.env.SMTP_PASSWORD;
     this.transporter = nodeMailer.createTransport({
       host: this.host,
       port: this.port,
