@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import DiscussionService from '../service/discussion.service';
-import { Types } from 'mongoose';
 import { DiscussionDto } from '../dtos/discussion.dto';
 import tokenService from '../service/token.service';
 

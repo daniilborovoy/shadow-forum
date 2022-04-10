@@ -11,7 +11,7 @@ class Connection {
     this.io = io;
 
     socket.on('get_messages', (discussionId) => this.getMessages(discussionId));
-    socket.on('message', (value, userId, discussionId) => this.handleMessage(value, userId, discussionId));
+    socket.on('message', (value, userId, discussionId, callback) => this.handleMessage(value, userId, discussionId, callback));
     socket.on('leave_discussion', (discussionId) => this.leaveDiscussion(discussionId));
     socket.on('delete_message', (messageId) => this.deleteMessage(messageId));
     socket.on('disconnect', () => this.disconnect());
@@ -22,7 +22,7 @@ class Connection {
 
   sendMessage(message: MessageDto | string, room: string) {
     this.io.to(room)
-      .emit('message', [message]);
+      .emit('message', message);
   }
 
   leaveDiscussion(discussionId: string) {
@@ -38,9 +38,10 @@ class Connection {
     }
   }
 
-  async handleMessage(value: string, userId: string, discussionId: string) {
+  async handleMessage(value: string, userId: string, discussionId: string, callback: Function) {
     const message = await MessageService.saveMessage(value, userId, discussionId);
     this.sendMessage(message, discussionId);
+    callback();
   }
 
   async deleteMessage(messageId: string) {

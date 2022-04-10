@@ -1,6 +1,6 @@
-import { FC, useEffect, Dispatch, SetStateAction, useContext } from 'react';
+import { FC, useEffect, Dispatch, SetStateAction, useContext, useState } from 'react';
 import type { AuthAlert } from '../../models/auth.model';
-import { Stack, Divider } from '@mui/material';
+import { Stack, Divider, Grid } from '@mui/material';
 import setPageTitle from '../../utils/SetPageTitle';
 import RegistrationForm from '../../components/forms/registration-form/RegistrationForm';
 import LoginForm from '../../components/forms/login-form/LoginForm';
@@ -14,17 +14,27 @@ const AuthorizePage: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>> }> =
   }, []);
 
   return (
-    <Stack
-      direction={{ xs: 'column', sm: 'row' }}
-      justifyContent="center"
-      alignItems="center"
-      mt={{ xs: 10, sm: 0, md: 0 }}
-      spacing={{ xs: 2, sm: 5, md: 15 }}
-      divider={<Divider orientation="vertical" flexItem />}
-      sx={pageStyle}>
-      <LoginForm setAuthAlert={setAuthAlert} />
-      <RegistrationForm setAuthAlert={setAuthAlert} />
-    </Stack>
+    <Grid container
+          display='flex'
+          direction={{ xs: 'column', sm: 'row' }}
+          width='100%'
+          sx={pageStyle}>
+      <Grid xs={6} item sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <LoginForm setAuthAlert={setAuthAlert} />
+      </Grid>
+      <Divider flexItem sx={{ margin: '50px 0' }} />
+      <Grid sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }} xs={6} item>
+        <RegistrationForm setAuthAlert={setAuthAlert} />
+      </Grid>
+    </Grid>
   );
 };
 

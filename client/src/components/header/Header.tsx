@@ -8,15 +8,12 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  InputBase,
-  Badge, MenuItem,
+  InputBase, MenuItem,
   Menu,
 } from '@mui/material';
 import {
   Search as SearchIcon,
   AccountCircle,
-  Mail as MailIcon,
-  Notifications as NotificationsIcon,
   MoreVert as MoreIcon,
 } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
@@ -67,7 +64,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Header: FC = () => {
   const navigate = useNavigate();
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -83,8 +79,20 @@ const Header: FC = () => {
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const goToAccountHandler = () => {
+    closeMenuHandler();
+    navigate('/account');
+  };
+
   const logoutHandler = async (): Promise<void> => {
+    closeMenuHandler();
     await logout();
+    navigate('/authorize');
+  };
+
+  const goToMyDiscussionsHandler = () => {
+    closeMenuHandler();
+    navigate('/account/discussions');
   };
 
   const openProfileMenuHandler = (event: MouseEvent<HTMLElement>) => {
@@ -104,83 +112,57 @@ const Header: FC = () => {
     closeMobileMenuHandler();
   };
 
-  const menuId = 'shadow-forum-menu';
-  const renderMenu = (
+  const menu = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'right',
       }}
-      id={menuId}
-      keepMounted
       transformOrigin={{
         vertical: 'top',
         horizontal: 'right',
       }}
+      disableScrollLock
       open={isMenuOpen}
       onClose={closeMenuHandler}
     >
       {user &&
         (
-          [
-            <MenuItem key={1} onClick={() => {
-              closeMenuHandler();
-              navigate('/account');
-            }}>Мой аккаунт</MenuItem>,
-            <MenuItem key={321}
-            >Мои обсуждения</MenuItem>,
-            <MenuItem key={2} onClick={async () => {
-              closeMenuHandler();
-              await logoutHandler();
-            }}>Выйти из аккаунта</MenuItem>,
-          ]
+          <Box>
+            <MenuItem onClick={goToAccountHandler}>Настройки аккаунта</MenuItem>
+            <MenuItem onClick={goToMyDiscussionsHandler}>Мои обсуждения</MenuItem>
+            <MenuItem onClick={logoutHandler}>Выйти из аккаунта</MenuItem>
+          </Box>
         )
       }
-      {!user && (<Link to='authorize' style={{
-        textDecoration: 'none',
-        color: '#000',
-      }} onClick={closeMenuHandler}><MenuItem>Войти</MenuItem></Link>)}
+      {!user && (
+        <Link to='authorize' style={{
+          textDecoration: 'none',
+          color: 'inherit',
+        }} onClick={closeMenuHandler}>
+          <MenuItem>Войти</MenuItem>
+        </Link>)
+      }
     </Menu>
   );
 
-  const mobileMenuId = 'shadow-forum-menu-mobile';
-  const renderMobileMenu = (
+  const mobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'right',
       }}
-      id={mobileMenuId}
       keepMounted
       transformOrigin={{
         vertical: 'top',
         horizontal: 'right',
       }}
+      disableScrollLock
       open={isMobileMenuOpen}
       onClose={closeMobileMenuHandler}
     >
-      <MenuItem>
-        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-          <Badge badgeContent={4} color='error'>
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Сообщения</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size='large'
-          aria-label='show 17 new notifications'
-          color='inherit'
-        >
-          <Badge badgeContent={17} color='error'>
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Уведомления</p>
-      </MenuItem>
       <MenuItem onClick={openProfileMenuHandler}>
         <IconButton
           size='large'
@@ -193,11 +175,12 @@ const Header: FC = () => {
         </IconButton>
         <p>Профиль</p>
       </MenuItem>
+      {user && <CreateDiscussionFormDialog type='mobile' />}
     </Menu>
   );
 
   return (
-    <Box sx={{ flexGrow: 1, position:'sticky', top: '0' }}>
+    <Box sx={{ flexGrow: 1, position: 'fixed', width: '100%', top: '0', zIndex: '100' }}>
       <AppBar position='relative'>
         <Toolbar>
           <Typography
@@ -211,6 +194,7 @@ const Header: FC = () => {
                 sm: 'block',
               },
               cursor: 'pointer',
+              userSelect: 'none',
             }}
           >
             SHADOW FORUM
@@ -224,30 +208,18 @@ const Header: FC = () => {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          {user && <CreateDiscussionFormDialog />}
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            {user && <CreateDiscussionFormDialog type='desktop' />}
+          </Box>
           <Box sx={{
             display: {
               xs: 'none',
               md: 'flex',
             },
           }}>
-            <IconButton size='large' color='inherit'>
-              <Badge badgeContent={4} color='error'>
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size='large'
-              color='inherit'
-            >
-              <Badge badgeContent={1} color='error'>
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
             <IconButton
               size='large'
               edge='end'
-              aria-label='account of current user'
               aria-haspopup='true'
               onClick={openProfileMenuHandler}
               color='inherit'
@@ -263,7 +235,6 @@ const Header: FC = () => {
           }}>
             <IconButton
               size='large'
-              aria-label='show more'
               aria-haspopup='true'
               onClick={openMobileMenuHandler}
               color='inherit'
@@ -273,8 +244,8 @@ const Header: FC = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+      {mobileMenu}
+      {menu}
     </Box>
   );
 };

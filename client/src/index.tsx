@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.scss';
 import App from './components/app/App';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,7 +7,8 @@ import { store } from './store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('app')!);
+root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
@@ -15,9 +16,7 @@ ReactDOM.render(
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('app'),
-)
-;
+);
 
 // If you want your hooks to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

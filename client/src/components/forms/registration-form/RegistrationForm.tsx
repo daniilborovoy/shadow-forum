@@ -39,17 +39,23 @@ const RegistrationForm: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>> }
         setAuthAlert({
           showMessage: true,
           message: 'Успешная регистрация!',
+          severity: 'success'
         });
         window.history.go(-1);
         return;
       })
       .catch(() => {
+        setAuthAlert({
+          showMessage: true,
+          message: 'Ошибка регистрации!',
+          severity: 'error'
+        })
         return;
       });
   };
 
   return (
-    <form method='POST' style={{padding: '0 15px'}} onSubmit={registrationHandler}>
+    <form method='POST' style={{ padding: '0 15px' }} onSubmit={registrationHandler}>
       <FormControl variant='standard'>
         <FormGroup>
           <FormLabel sx={{ textAlign: 'center' }}>Регистрация</FormLabel>

@@ -23,7 +23,8 @@ const theme = createTheme({
 
 export const PageStyleContext = createContext({
   width: '100%',
-  minHeight: '100vh',
+  minHeight: '90vh',
+  padding: '81px 0'
 });
 
 const App: FC = () => {
@@ -32,6 +33,7 @@ const App: FC = () => {
   const [authAlert, setAuthAlert] = useState<AuthAlert>({
     showMessage: false,
     message: '',
+    severity: 'success'
   });
 
   useEffect(() => {
@@ -66,13 +68,13 @@ const App: FC = () => {
   if (socket) {
     return (
       <ThemeProvider theme={theme}>
-        <Header />
+        <Header/>
         <AppRouter setAuthAlert={setAuthAlert} socket={socket} />
         <Snackbar open={authAlert.showMessage}
                   autoHideDuration={6000}
                   onClose={closeAuthAlertHandler}>
-          <Alert onClose={closeAuthAlertHandler}
-                 severity='success'
+          <Alert closeText='Закрыть' onClose={closeAuthAlertHandler}
+                 severity={authAlert.severity}
                  sx={{ width: '100%' }}>
             {authAlert.message}
           </Alert>

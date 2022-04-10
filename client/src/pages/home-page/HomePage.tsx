@@ -22,7 +22,7 @@ const HomePage: FC = () => {
         <Typography
           sx={{
             color: 'text.primary',
-            fontSize: '5vmax',
+            fontSize: '2.5rem',
             textAlign: 'center',
             marginTop: '30px',
           }}>
@@ -32,7 +32,7 @@ const HomePage: FC = () => {
           mb={15}
           sx={{
             color: 'text.secondary',
-            fontSize: '3vmax',
+            fontSize: '1.5rem',
             textAlign: 'center',
           }}>
           Добро пожаловать на SHADOW FORUM
@@ -55,7 +55,7 @@ const HomePage: FC = () => {
         />
         <Typography mb={5} sx={{
           color: 'text.secondary',
-          fontSize: '2.5vmax',
+          fontSize: '1.5rem',
         }}>Свежие обсуждения:</Typography>
         <DiscussionsList />
       </Container>

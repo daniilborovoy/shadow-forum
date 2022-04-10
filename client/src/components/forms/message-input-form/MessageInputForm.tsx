@@ -21,10 +21,15 @@ const MessageInputForm: FC<{ discussionId: string, userName: string, socket: Soc
     discussionId: discussionId,
   });
 
+  const [sendLoading, setSendLoading] = useState<boolean>(false);
+
   const sendMessageHandler = (event: FormEvent): void => {
     event.preventDefault();
+    setSendLoading(true);
     if (user) {
-      socket.emit('message', userMessage.message, user.id, userMessage.discussionId);
+      socket.emit('message', userMessage.message, user.id, userMessage.discussionId, () => {
+        setSendLoading(false);
+      });
       setUserMessage({
         message: '',
         discussionId: discussionId,
@@ -51,14 +56,13 @@ const MessageInputForm: FC<{ discussionId: string, userName: string, socket: Soc
                      required={true} />
           <LoadingButton
             sx={{ marginTop: '15px' }}
-            // loading={sendMessageLoading}
+            loading={sendLoading}
             loadingPosition='start'
             startIcon={<Send />}
             variant='contained'
             type='submit'
           >
-            Отправить ответ
-            {/* {sendMessageLoading ? 'Сообщение отправляется' : 'Отправить ответ'} */}
+             {sendLoading ? 'Отправляем' : 'Отправить ответ'}
           </LoadingButton>
         </FormGroup>
       </FormControl>

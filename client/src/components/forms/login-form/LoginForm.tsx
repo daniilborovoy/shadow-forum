@@ -37,11 +37,17 @@ const LoginForm: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>> }> = ({ 
         setAuthAlert({
           showMessage: true,
           message: 'Успешный вход!',
+          severity: 'success'
         });
         window.history.go(-1);
         return;
       })
       .catch(() => {
+        setAuthAlert({
+          showMessage: true,
+          message: 'Ошибка входа!',
+          severity: 'error'
+        });
         return;
       });
   };

@@ -2,45 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0a598d52-9064-412b-afd4-51a0a32fb6ca" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/components/lists/discussion-messages-list/DiscussionMessagesList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/bin/www.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/service/connection.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/client/.env.example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/components/lists/discussion-messages-list/DiscussionEmpty.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/pages/not-found/NotFound.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/app-router/AppRouter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/app-router/AppRouter.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/app/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/app/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/discussion-message/DiscussionMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/discussion-message/DiscussionMessage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/forms/create-discussion-form-dialog/CreateDiscussionFormDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/forms/create-discussion-form-dialog/CreateDiscussionFormDialog.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/forms/login-form/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/forms/login-form/LoginForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/forms/message-form/MessageForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/forms/message-input-form/MessageInputForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/forms/message-input-form/MessageInputForm.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/forms/registration-form/RegistrationForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/forms/registration-form/RegistrationForm.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/header/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/lists/discussion-messages-list/DiscussionMessagesList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/lists/discussion-messages-list/DiscussionMessagesList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/lists/discussions-list/DiscussionsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/lists/discussions-list/DiscussionsList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/http/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/http/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/models/message.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/models/message.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/models/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/models/user.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/models/auth.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/models/auth.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/account-page/AccountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/account-page/AccountPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/authorize-page/AuthorizePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/authorize-page/AuthorizePage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/discussion-page/DiscussionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/discussion-page/DiscussionPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/services/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/store/reducers/AuthSlice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/store/reducers/AuthSlice.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/server/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/home-page/HomePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/home-page/HomePage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/controllers/discussion.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/discussion.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/message.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/message.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/dtos/discussion.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/dtos/discussion.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/dtos/message.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/dtos/message.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/middlewares/error.middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/middlewares/error.middleware.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/models/message.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/models/message.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/service/discussion.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/service/discussion.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/service/connection.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/service/connection.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/service/mail.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/service/mail.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/service/message.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/service/message.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/service/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/service/user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +36,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -68,6 +63,35 @@
     <property name="ts.external.directory.path" value="C:\Users\danii\OneDrive\Рабочий стол\projects\shadow-forum\client\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\danii\OneDrive\Рабочий стол\projects\shadow-forum\client\src\components\lists\discussion-messages-list" />
+      <recent name="C:\Users\danii\OneDrive\Рабочий стол\projects\shadow-forum\client\src\components\discussion-message" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.server">
+    <configuration name="client" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/client/package.json" />
+      <command value="start" />
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="server" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/server/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="npm.server" />
+      <item itemvalue="npm.client" />
+    </list>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -80,11 +104,30 @@
       <workItem from="1647871656406" duration="16000" />
       <workItem from="1647969773137" duration="783000" />
       <workItem from="1647975570432" duration="466000" />
-      <workItem from="1648132182260" duration="425000" />
+      <workItem from="1648132182260" duration="1189000" />
+      <workItem from="1648797549323" duration="4000" />
+      <workItem from="1648797843287" duration="4445000" />
+      <workItem from="1649054938300" duration="8587000" />
+      <workItem from="1649399109344" duration="7259000" />
+      <workItem from="1649415963671" duration="3305000" />
+      <workItem from="1649493523383" duration="6983000" />
+      <workItem from="1649509720178" duration="1124000" />
+      <workItem from="1649588317507" duration="10276000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

@@ -12,7 +12,8 @@ import {
   ListItemAvatar,
   ListItemText,
   Typography,
-  Button,
+  ListItemButton,
+  Box,
   Paper, LinearProgress,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -21,8 +22,8 @@ const DiscussionsList: FC = () => {
   const navigate = useNavigate();
   const [limit, setLimit] = useState<number>(5);
 
-  const navigateHandler = (id: string | undefined): void => {
-    navigate(`/discussions/${id}`);
+  const changeLimitHandler = () => {
+    setLimit(prevState => prevState + 5);
   };
 
   const {
@@ -37,21 +38,24 @@ const DiscussionsList: FC = () => {
   const discussionListItems = discussions && discussions.map((discussion) => {
     const publicationDate = new Date(discussion.creationDate).toLocaleDateString();
     const discussionDescription: string = discussion.body.slice(0, 20) + (discussion.body.length > 20 ? '...' : '');
+    const goToDiscussionHandler = (): void => {
+      navigate(`/discussions/${discussion.id}`);
+    };
 
     return (
-      <ListItem
+      <ListItemButton
         key={discussion.id}
-        alignItems='flex-start'>
-        <Button
-          variant='text'
-          sx={{
-            width: '100%',
-            alignItems: 'flex-start',
-            textAlign: 'start',
-            overflow: 'hidden',
-          }}
-          onClick={() => navigateHandler(discussion.id)}
-        >
+        sx={{
+          width: '100%',
+          alignItems: { xs: 'flex-start', sm: 'space-between' },
+          justifyContent: { xs: 'flex-start', sm: 'space-between' },
+          textAlign: 'start',
+          overflow: 'hidden',
+          flexDirection: { xs: 'column', sm: 'row' },
+        }}
+        onClick={goToDiscussionHandler}
+      >
+        <Box display='flex' flexDirection='row' alignItems='center'>
           <ListItemAvatar>
             <Avatar />
           </ListItemAvatar>
@@ -68,54 +72,56 @@ const DiscussionsList: FC = () => {
               </Typography>
             }
           />
-          <Typography
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            component='span'
-            variant='body2'
-            color='text.secondary'
-            fontSize='2vmin'
-          >
-            <ChatBubbleIcon sx={{ margin: '0 10px' }} />
+        </Box>
+        <Box display='flex' alignItems='flex-start' flexDirection='row' flexWrap='wrap'>
+          <Typography display='flex' justifyContent='center' alignItems='center' color='text.secondary'>
+            <ChatBubbleIcon sx={{ margin: '0 10px 0 0' }} />
             {discussion.messagesCount}
+          </Typography>
+          <Typography display='flex' justifyContent='center' alignItems='center' color='text.secondary'>
             <AccessTimeFilledIcon sx={{ margin: '0 10px 0 10px' }} />
             {publicationDate}
+          </Typography>
+          <Typography display='flex' justifyContent='center' alignItems='center' color='text.secondary'>
             <RemoveRedEyeIcon sx={{ margin: '0 10px 0 10px' }} />
             {discussion.viewsCount}
           </Typography>
-        </Button>
-      </ListItem>
+        </Box>
+      </ListItemButton>
     );
   });
 
   if (discussionsLoadingError) {
-    return <h1>Ошибка при загрузке обсуждений!</h1>;
+    return (
+      <>
+        <Typography textAlign='center' fontSize={20}>Ошибка при загрузке!</Typography>
+        <Typography sx={{ wordBreak: 'break-word' }}>Описание
+          ошибки: {JSON.stringify(discussionsLoadingError)}</Typography>
+      </>
+    );
   }
 
   return (
-    <Paper elevation={10}>
+    <Paper elevation={10} sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
       <List sx={{
+        width: '100%',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
-      }}>
+      }}
+      >
         {discussionsLoading && <LinearProgress />}
         {discussionListItems}
-        <LoadingButton
-          loading={discussionsLoading}
-          loadingPosition='center'
-          variant='outlined'
-          onClick={() => {
-            setLimit(prevState => prevState + 5);
-          }}>
-          <AddIcon />
-        </LoadingButton>
       </List>
+      <LoadingButton
+        sx={{ marginBottom: '15px' }}
+        loading={discussionsLoading}
+        loadingPosition='center'
+        variant='contained'
+        onClick={changeLimitHandler}>
+        <AddIcon />
+      </LoadingButton>
     </Paper>
   );
 };

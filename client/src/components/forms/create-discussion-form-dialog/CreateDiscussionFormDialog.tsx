@@ -11,19 +11,24 @@ import {
   Dialog,
   TextField,
   Button,
-  ButtonProps,
+  MenuItem,
+  ButtonProps, Box, Typography, IconButton,
 } from '@mui/material';
 import { FC } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import { blue, grey } from '@mui/material/colors';
+import AddIcon from '@mui/icons-material/Add';
 
 interface DiscussionCreateAlertType {
   show: boolean,
   severity: 'error' | 'success',
+  message: string
 }
 
-export const CreateDiscussionFormDialog: FC = () => {
+type CreateDiscussionFormDialogType = 'mobile' | 'desktop'
+
+export const CreateDiscussionFormDialog: FC<{ type: CreateDiscussionFormDialogType }> = ({ type }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const [createDiscussionAction, {
@@ -39,12 +44,14 @@ export const CreateDiscussionFormDialog: FC = () => {
   const [discussionCreateAlert, setDiscussionCreateAlert] = useState<DiscussionCreateAlertType>({
     severity: 'success',
     show: false,
+    message: '',
   });
 
   const createDiscussion = (e: FormEvent): void => {
     e.preventDefault();
     if (!discussionRequest.body || !discussionRequest.title) {
       alert('поля не заполнены!');
+      return;
     }
     createDiscussionAction(discussionRequest)
       .unwrap()
@@ -53,6 +60,7 @@ export const CreateDiscussionFormDialog: FC = () => {
         setDiscussionCreateAlert({
           severity: 'success',
           show: true,
+          message: `Обсуждение ${discussionRequest.title} создано успешно!`,
         });
       })
       .catch(() => {
@@ -60,6 +68,7 @@ export const CreateDiscussionFormDialog: FC = () => {
         setDiscussionCreateAlert({
           severity: 'error',
           show: true,
+          message: `Произошла ошибка при создании обсуждения! ${createDiscussionError}`,
         });
       });
   };
@@ -101,7 +110,7 @@ export const CreateDiscussionFormDialog: FC = () => {
   }));
 
   const closeDiscussionCreateAlert = (event?: SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
+    if (reason === 'clickable') {
       return;
     }
     setDiscussionCreateAlert((prevState) => ({
@@ -113,10 +122,29 @@ export const CreateDiscussionFormDialog: FC = () => {
   const createDiscussionAlertMessage: string = discussionCreateAlert.severity === 'success' ? `Обсуждение ${discussionRequest.title} создано успешно!` : 'Произошла ошибка при создании обсуждения!';
 
   return (
-    <div>
-      <ColorButton onClick={handleClickOpen}>
-        Создать обсуждение
-      </ColorButton>
+    <Box>
+      {type === 'desktop' ?
+        <ColorButton onClick={handleClickOpen}>
+          <Typography noWrap>
+            Создать обсуждение
+          </Typography>
+        </ColorButton>
+        :
+        <MenuItem onClick={handleClickOpen}>
+          <IconButton
+            size='large'
+            aria-label='account of current user'
+            aria-controls='primary-search-account-menu'
+            aria-haspopup='true'
+            color='inherit'
+          >
+            <AddIcon />
+          </IconButton>
+          <Typography>
+            Новое обсуждение
+          </Typography>
+        </MenuItem>
+      }
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{discussionRequest.title.length ? discussionRequest.title : 'Новое обсуждение'}</DialogTitle>
         <DialogContent>
@@ -159,12 +187,12 @@ export const CreateDiscussionFormDialog: FC = () => {
       <Snackbar open={discussionCreateAlert.show}
                 autoHideDuration={10000}
                 onClose={closeDiscussionCreateAlert}>
-        <Alert onClose={closeDiscussionCreateAlert}
+        <Alert closeText='Закрыть' onClose={closeDiscussionCreateAlert}
                severity={discussionCreateAlert.severity}
                sx={{ width: '100%' }}>
           {createDiscussionAlertMessage}
         </Alert>
       </Snackbar>
-    </div>
+    </Box>
   );
 };
