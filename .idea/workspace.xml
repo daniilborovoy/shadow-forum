@@ -2,32 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0a598d52-9064-412b-afd4-51a0a32fb6ca" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/components/lists/discussion-messages-list/DiscussionEmpty.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/pages/not-found/NotFound.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/app-router/AppRouter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/app-router/AppRouter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/app/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/app/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/discussion-message/DiscussionMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/discussion-message/DiscussionMessage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/forms/create-discussion-form-dialog/CreateDiscussionFormDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/forms/create-discussion-form-dialog/CreateDiscussionFormDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/forms/login-form/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/forms/login-form/LoginForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/forms/message-input-form/MessageInputForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/forms/message-input-form/MessageInputForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/forms/registration-form/RegistrationForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/forms/registration-form/RegistrationForm.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/header/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/lists/discussion-messages-list/DiscussionMessagesList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/lists/discussion-messages-list/DiscussionMessagesList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/lists/discussions-list/DiscussionsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/lists/discussions-list/DiscussionsList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/models/auth.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/models/auth.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/account-page/AccountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/account-page/AccountPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/authorize-page/AuthorizePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/authorize-page/AuthorizePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/discussion-page/DiscussionPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/discussion-page/DiscussionPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/home-page/HomePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/home-page/HomePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/discussion.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/discussion.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/service/connection.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/service/connection.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/service/mail.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/service/mail.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +92,9 @@
       <workItem from="1649415963671" duration="3305000" />
       <workItem from="1649493523383" duration="6983000" />
       <workItem from="1649509720178" duration="1124000" />
-      <workItem from="1649588317507" duration="10276000" />
+      <workItem from="1649588317507" duration="16358000" />
+      <workItem from="1649656050122" duration="518000" />
+      <workItem from="1649674071678" duration="1349000" />
     </task>
     <servers />
   </component>

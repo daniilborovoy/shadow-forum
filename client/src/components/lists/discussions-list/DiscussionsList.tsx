@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-const DiscussionsList: FC = () => {
+const DiscussionsList: FC<{ searchDiscussion: string }> = ({ searchDiscussion }) => {
   const navigate = useNavigate();
   const [limit, setLimit] = useState<number>(5);
 
@@ -35,7 +35,10 @@ const DiscussionsList: FC = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const discussionListItems = discussions && discussions.map((discussion) => {
+  const discussionListItems = discussions && discussions.filter((discussion) => {
+    if (!searchDiscussion.length) return true;
+    return discussion.title.includes(searchDiscussion);
+  }).map((discussion) => {
     const publicationDate = new Date(discussion.creationDate).toLocaleDateString();
     const discussionDescription: string = discussion.body.slice(0, 20) + (discussion.body.length > 20 ? '...' : '');
     const goToDiscussionHandler = (): void => {

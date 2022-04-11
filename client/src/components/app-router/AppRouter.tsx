@@ -10,16 +10,18 @@ import { CircularProgress } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import { getUser } from '../../store/selectors/authSelectors';
 
+interface AppRouterProps {
+  setAuthAlert: Dispatch<SetStateAction<AuthAlert>>;
+  socket: Socket;
+}
+
 const NotFoundPage = lazy(() => import('../../pages/not-found/NotFound'));
 const notFound =
   <Suspense fallback={<CircularProgress />}>
     <NotFoundPage message={'Проверьте правописание.'} />
   </Suspense>;
 
-const AppRouter: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>>, socket: Socket }> = ({
-                                                                                                setAuthAlert,
-                                                                                                socket,
-                                                                                              }) => {
+const AppRouter: FC<AppRouterProps> = ({ setAuthAlert, socket }) => {
   const user = useAppSelector(getUser);
   return (
     <Routes>

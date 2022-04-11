@@ -1,7 +1,7 @@
-import React, { FC, useState, MouseEvent } from 'react';
+import React, { FC, useState, MouseEvent, ChangeEvent } from 'react';
 import { authApi } from '../../services/auth.service';
 import { useAppSelector } from '../../hooks/redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -9,6 +9,7 @@ import {
   IconButton,
   Typography,
   InputBase, MenuItem,
+  Button,
   Menu,
 } from '@mui/material';
 import {
@@ -65,7 +66,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Header: FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
   const [logout, {
@@ -74,6 +74,11 @@ const Header: FC = () => {
   }] = authApi.useLogoutMutation();
 
   const user = useAppSelector(getUser);
+  const [settingsSearch, setSettingsSearch] = useState<string>('');
+
+  const changeSettingsSearchHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setSettingsSearch(event.target.value);
+  };
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -93,6 +98,11 @@ const Header: FC = () => {
   const goToMyDiscussionsHandler = () => {
     closeMenuHandler();
     navigate('/account/discussions');
+  };
+
+  const goToAuthorizeHandler = () => {
+    navigate('/authorize');
+    closeMobileMenuHandler();
   };
 
   const openProfileMenuHandler = (event: MouseEvent<HTMLElement>) => {
@@ -136,14 +146,6 @@ const Header: FC = () => {
           </Box>
         )
       }
-      {!user && (
-        <Link to='authorize' style={{
-          textDecoration: 'none',
-          color: 'inherit',
-        }} onClick={closeMenuHandler}>
-          <MenuItem>Войти</MenuItem>
-        </Link>)
-      }
     </Menu>
   );
 
@@ -163,19 +165,25 @@ const Header: FC = () => {
       open={isMobileMenuOpen}
       onClose={closeMobileMenuHandler}
     >
-      <MenuItem onClick={openProfileMenuHandler}>
-        <IconButton
-          size='large'
-          aria-label='account of current user'
-          aria-controls='primary-search-account-menu'
-          aria-haspopup='true'
-          color='inherit'
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Профиль</p>
-      </MenuItem>
-      {user && <CreateDiscussionFormDialog type='mobile' />}
+      {user ? (
+          <>
+            <MenuItem onClick={openProfileMenuHandler}>
+              <IconButton
+                size='large'
+                aria-label='account of current user'
+                aria-controls='primary-search-account-menu'
+                aria-haspopup='true'
+                color='inherit'
+              >
+                <AccountCircle />
+              </IconButton>
+              <p>Профиль</p>
+            </MenuItem>
+            <CreateDiscussionFormDialog type='mobile' />
+          </>
+        ) :
+        <Button onClick={goToAuthorizeHandler}>Войти</Button>
+      }
     </Menu>
   );
 
@@ -205,6 +213,8 @@ const Header: FC = () => {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder='Поиск…'
+              value={settingsSearch}
+              onChange={changeSettingsSearchHandler}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
@@ -217,15 +227,22 @@ const Header: FC = () => {
               md: 'flex',
             },
           }}>
-            <IconButton
-              size='large'
-              edge='end'
-              aria-haspopup='true'
-              onClick={openProfileMenuHandler}
-              color='inherit'
-            >
-              <AccountCircle />
-            </IconButton>
+            {user ? (
+                <>
+                  <IconButton
+                    size='large'
+                    edge='end'
+                    aria-haspopup='true'
+                    onClick={openProfileMenuHandler}
+                    color='inherit'
+                  >
+                    <AccountCircle />
+                  </IconButton>
+                </>
+              ) :
+              (window.location.pathname !== '/authorize' ?
+                <Button variant='contained' color='secondary' onClick={goToAuthorizeHandler}>Войти</Button> : null)
+            }
           </Box>
           <Box sx={{
             display: {

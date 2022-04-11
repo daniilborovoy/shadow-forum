@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect } from 'react';
+import { ChangeEvent, FC, SyntheticEvent, useContext, useEffect, useState } from 'react';
 import { Box, Container, Typography, Autocomplete, TextField } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import sayDayTime from '../../utils/SayDayTime';
@@ -6,14 +6,32 @@ import DiscussionsList from '../../components/lists/discussions-list/Discussions
 import setPageTitle from '../../utils/SetPageTitle';
 import { getUserName } from '../../store/selectors/authSelectors';
 import { PageStyleContext } from '../../components/app/App';
+import { discussionsApi } from '../../services/discussions.service';
 
 const HomePage: FC = () => {
   const userName: string | null = useAppSelector(getUserName);
   const pageStyle = useContext(PageStyleContext);
+  const [searchDiscussion, setSearchDiscussion] = useState<string>('');
+
+  const changeSearchDiscussionHandler = (event: SyntheticEvent, newValue: string | null) => {
+    if (newValue) {
+      setSearchDiscussion(newValue);
+    } else {
+      setSearchDiscussion('');
+    }
+  };
 
   useEffect(() => {
     setPageTitle();
   }, []);
+
+  const {
+    data: discussions,
+    isLoading: discussionsLoading,
+    error: discussionsLoadingError,
+  } = discussionsApi.useFetchAllDiscussionsQuery();
+
+  const discussionNames = discussions && discussions.map(discussion => discussion.title);
 
   return (
     <Box
@@ -39,7 +57,10 @@ const HomePage: FC = () => {
         </Typography>
         <Autocomplete
           sx={{ marginBottom: '30px' }}
-          options={[1, 2, 3, 5, 6]}
+          options={discussionNames || []}
+          inputValue={searchDiscussion}
+          onInputChange={changeSearchDiscussionHandler}
+          noOptionsText='Обсуждения не найдены'
           renderInput={(params) => (
             <TextField
               {...params}
@@ -56,8 +77,8 @@ const HomePage: FC = () => {
         <Typography mb={5} sx={{
           color: 'text.secondary',
           fontSize: '1.5rem',
-        }}>Свежие обсуждения:</Typography>
-        <DiscussionsList />
+        }}>{`${searchDiscussion.length ? 'Найденные' : 'Свежие'} обсуждения:`}</Typography>
+        <DiscussionsList searchDiscussion={searchDiscussion} />
       </Container>
     </Box>
   );
