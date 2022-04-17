@@ -4,7 +4,6 @@ import { DiscussionDto } from '../dtos/discussion.dto';
 import tokenService from '../service/token.service';
 
 class DiscussionController {
-
   async getDiscussion(req: Request, res: Response, next: NextFunction) {
     try {
       const discussionId: string = req.params.id;
@@ -15,25 +14,29 @@ class DiscussionController {
         const userData = tokenService.validateAccessToken(accessToken);
 
         if (userData && userData.id) {
-          const discussion = await DiscussionService.getDiscussion(discussionId, userData.id.toString());
-          return res.status(200)
-            .json(discussion);
+          const discussion = await DiscussionService.getDiscussion(
+            discussionId,
+            userData.id.toString(),
+          );
+          return res.status(200).json(discussion);
         }
       }
       const discussion = await DiscussionService.getDiscussion(discussionId);
-      return res.status(200)
-        .json(discussion);
+      return res.status(200).json(discussion);
     } catch (err: unknown) {
       next(err);
     }
   }
 
-  async getDiscussions(req: Request<null, null, null, { _limit: number }>, res: Response, next: NextFunction) {
+  async getDiscussions(
+    req: Request<null, null, null, { _limit: number; title: string }>,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
-      const limit = req.query._limit;
-      const discussions = await DiscussionService.getAllDiscussions(limit);
-      return res.status(200)
-        .json(discussions);
+      const { _limit: limit, title } = req.query;
+      const discussions = await DiscussionService.getAllDiscussions(limit, title);
+      return res.status(200).json(discussions);
     } catch (err: unknown) {
       next(err);
     }
@@ -41,14 +44,14 @@ class DiscussionController {
 
   async createDiscussion(req: Request, res: Response, next: NextFunction) {
     try {
-      const {
-        title: discussionTitle,
-        body: discussionBody,
-      } = req.body;
+      const { title: discussionTitle, body: discussionBody } = req.body;
       const userId = req.body.user.id; // req.user
-      const discussion = await DiscussionService.createDiscussion(userId, discussionTitle, discussionBody);
-      res.status(200)
-        .json(discussion);
+      const discussion = await DiscussionService.createDiscussion(
+        userId,
+        discussionTitle,
+        discussionBody,
+      );
+      res.status(200).json(discussion);
     } catch (err: unknown) {
       next(err);
     }
@@ -60,8 +63,7 @@ class DiscussionController {
       const userId: string = req.body.user.id;
       const discussion = await DiscussionService.deleteDiscussion(discussionId, userId);
       const discussionDto = new DiscussionDto(discussion);
-      res.status(200)
-        .json(discussionDto);
+      res.status(200).json(discussionDto);
     } catch (err: unknown) {
       next(err);
     }
@@ -69,15 +71,14 @@ class DiscussionController {
 
   async updateDiscussion(req: Request, res: Response, next: NextFunction) {
     try {
-      const {
-        id: discussionId,
-        title: discussionTitle,
-        body: discussionBody,
-      } = req.body;
-      const discussion = await DiscussionService.updateDiscussion(discussionId, discussionTitle, discussionBody);
+      const { id: discussionId, title: discussionTitle, body: discussionBody } = req.body;
+      const discussion = await DiscussionService.updateDiscussion(
+        discussionId,
+        discussionTitle,
+        discussionBody,
+      );
       const discussionDto = new DiscussionDto(discussion);
-      res.status(200)
-        .json(discussionDto);
+      res.status(200).json(discussionDto);
       return;
     } catch (err: unknown) {
       next(err);
@@ -86,9 +87,7 @@ class DiscussionController {
 
   async addView(req: Request, res: Response, next: NextFunction) {
     try {
-      const {
-        id: discussionId,
-      }: { id: string } = req.body;
+      const { id: discussionId }: { id: string } = req.body;
       const discussion = await DiscussionService.addView(discussionId);
       if (discussion) return res.status(200);
       res.status(500);

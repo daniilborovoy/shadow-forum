@@ -1,6 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { DiscussionRequest, DiscussionResponse } from '../models/discussion.model';
+import {
+  DiscussionRequest,
+  DiscussionResponse,
+  DiscussionsListResponse,
+} from '../models/discussion.model';
 import { baseQueryWithRefresh } from '../http';
+
+interface IFetchAllDiscussions {
+  limit: number | void;
+  title: string | void;
+}
 
 export const discussionsApi = createApi({
   reducerPath: 'discussionApi',
@@ -11,11 +20,12 @@ export const discussionsApi = createApi({
         url: `discussions/${id}`,
       }),
     }),
-    fetchAllDiscussions: build.query<DiscussionResponse[], number | void>({
-      query: (limit: number | void) => ({
+    fetchAllDiscussions: build.query<DiscussionResponse[], IFetchAllDiscussions>({
+      query: ({ limit, title }: IFetchAllDiscussions) => ({
         url: 'discussions',
         params: {
           _limit: limit,
+          title,
         },
       }),
     }),
@@ -64,6 +74,12 @@ export const discussionsApi = createApi({
         body: {
           id,
         },
+      }),
+    }),
+    fetchDiscussionsList: build.query<DiscussionsListResponse[], void>({
+      query: () => ({
+        url: 'discussions-list',
+        method: 'GET',
       }),
     }),
   }),

@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import authMiddleware from '../middlewares/auth.middleware';
 import MessageController from '../controllers/message.controller';
-import { body } from 'express-validator';
 import { validateMessageBody } from '../validators/messages.validators';
 
 const router = Router();

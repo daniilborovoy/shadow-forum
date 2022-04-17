@@ -5,7 +5,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node build/bin/www.js",
+    "start": "cross-env NODE_ENV=production node build/bin/www.js",
     "dev": "nodemon",
     "build": "tsc",
     "start:dev": "ts-node src/bin/www.ts",

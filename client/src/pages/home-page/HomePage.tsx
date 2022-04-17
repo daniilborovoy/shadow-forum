@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, SyntheticEvent, useContext, useEffect, useState } from 'react';
-import { Box, Container, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Container, Typography, TextField, LinearProgress } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import sayDayTime from '../../utils/SayDayTime';
 import DiscussionsList from '../../components/lists/discussions-list/DiscussionsList';
@@ -12,10 +12,11 @@ const HomePage: FC = () => {
   const userName: string | null = useAppSelector(getUserName);
   const pageStyle = useContext(PageStyleContext);
   const [searchDiscussion, setSearchDiscussion] = useState<string>('');
+  const [limit, setLimit] = useState<number>(5);
 
-  const changeSearchDiscussionHandler = (event: SyntheticEvent, newValue: string | null) => {
-    if (newValue) {
-      setSearchDiscussion(newValue);
+  const changeSearchDiscussionHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length) {
+      setSearchDiscussion(event.target.value);
     } else {
       setSearchDiscussion('');
     }
@@ -29,56 +30,83 @@ const HomePage: FC = () => {
     data: discussions,
     isLoading: discussionsLoading,
     error: discussionsLoadingError,
-  } = discussionsApi.useFetchAllDiscussionsQuery();
+    isFetching: discussionsFetching,
+  } = discussionsApi.useFetchAllDiscussionsQuery(
+    { limit, title: searchDiscussion },
+    { refetchOnMountOrArgChange: true },
+  );
 
-  const discussionNames = discussions && discussions.map(discussion => discussion.title);
+  const showDiscussionsListTitle = () => {
+    if (discussionsLoading) {
+      return <LinearProgress color='inherit' />;
+    }
+    if (discussionsFetching) {
+      return 'Ищем...';
+    }
+    return searchDiscussion.length
+      ? discussions?.length
+        ? 'Найденные обсуждения'
+        : 'Обсуждения не найдены!'
+      : 'Свежие обсуждения';
+  };
 
   return (
-    <Box
-      sx={pageStyle}>
+    <Box sx={pageStyle}>
       <Container>
-        <Typography
-          sx={{
-            color: 'text.primary',
-            fontSize: '2.5rem',
-            textAlign: 'center',
-            marginTop: '30px',
-          }}>
-          {sayDayTime(userName)}
-        </Typography>
-        <Typography
-          mb={15}
-          sx={{
-            color: 'text.secondary',
-            fontSize: '1.5rem',
-            textAlign: 'center',
-          }}>
-          Добро пожаловать на SHADOW FORUM
-        </Typography>
-        <Autocomplete
-          sx={{ marginBottom: '30px' }}
-          options={discussionNames || []}
-          inputValue={searchDiscussion}
-          onInputChange={changeSearchDiscussionHandler}
-          noOptionsText='Обсуждения не найдены'
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant='standard'
-              fullWidth
-              label='Название обсуждения'
-              InputProps={{
-                ...params.InputProps,
-                type: 'search',
-              }}
+        <Box component='section'>
+          <Typography
+            component='h1'
+            sx={{
+              color: 'text.primary',
+              fontSize: '2.5rem',
+              textAlign: 'center',
+              marginTop: '30px',
+            }}
+          >
+            {sayDayTime(userName)}
+          </Typography>
+          <Typography
+            mb={15}
+            component='h2'
+            sx={{
+              color: 'text.secondary',
+              fontSize: '1.5rem',
+              textAlign: 'center',
+            }}
+          >
+            Добро пожаловать на SHADOW FORUM
+          </Typography>
+          <TextField
+            fullWidth
+            type='search'
+            placeholder='Начните вводить название обсуждения...'
+            sx={{ marginBottom: '30px' }}
+            value={searchDiscussion}
+            onChange={changeSearchDiscussionHandler}
+          />
+        </Box>
+        <Box component='section'>
+          <Typography
+            mb={5}
+            component='h3'
+            sx={{
+              color: 'text.secondary',
+              fontSize: '1.5rem',
+              textAlign: 'center',
+            }}
+          >
+            {showDiscussionsListTitle()}
+          </Typography>
+          {discussions && (
+            <DiscussionsList
+              discussions={discussions}
+              discussionsFetching={discussionsFetching}
+              discussionsLoadingError={discussionsLoadingError}
+              searchDiscussion={searchDiscussion}
+              setLimit={setLimit}
             />
           )}
-        />
-        <Typography mb={5} sx={{
-          color: 'text.secondary',
-          fontSize: '1.5rem',
-        }}>{`${searchDiscussion.length ? 'Найденные' : 'Свежие'} обсуждения:`}</Typography>
-        <DiscussionsList searchDiscussion={searchDiscussion} />
+        </Box>
       </Container>
     </Box>
   );

@@ -9,18 +9,18 @@ export default class ApiError extends Error {
   }
 
   static BadRequestError(message: string, errors: any[] = []) {
-    return new ApiError(400, `Error: ${message}`, errors);
+    return new ApiError(400, message, errors);
   }
 
   static UnauthorizedError(message?: string, errors: any[] = []) {
-    return new ApiError(401, `Error: ${message}` || 'Error: not authorized!', errors);
+    return new ApiError(401, message || 'Error: not authorized!', errors);
   }
 
   static InternalServerError(message: string, errors: any[] = []) {
-    return new ApiError(500, `Error: ${message}`, errors);
+    return new ApiError(500, message, errors);
   }
 
   static NotImplementedError(message: string) {
-    return new ApiError(501, `Error: ${message}`);
+    return new ApiError(501, message);
   }
 }

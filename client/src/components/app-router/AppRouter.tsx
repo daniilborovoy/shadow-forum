@@ -16,10 +16,11 @@ interface AppRouterProps {
 }
 
 const NotFoundPage = lazy(() => import('../../pages/not-found/NotFound'));
-const notFound =
+const notFound = (
   <Suspense fallback={<CircularProgress />}>
-    <NotFoundPage message={'Проверьте правописание.'} />
-  </Suspense>;
+    <NotFoundPage message={'Такой страницы не существует.'} />
+  </Suspense>
+);
 
 const AppRouter: FC<AppRouterProps> = ({ setAuthAlert, socket }) => {
   const user = useAppSelector(getUser);

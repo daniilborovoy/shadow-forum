@@ -6,8 +6,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import * as dayjs from 'dayjs';
+import 'dayjs/locale/ru';
+dayjs.locale('ru');
 
-const root = createRoot(document.getElementById('app')!);
+const app = document.getElementById('app');
+if (!app) throw new Error('Application component is missing in DOM.');
+const root = createRoot(app);
 root.render(
   <React.StrictMode>
     <Provider store={store}>

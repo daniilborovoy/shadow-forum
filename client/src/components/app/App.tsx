@@ -2,8 +2,16 @@ import { FC, useEffect, useState, SyntheticEvent, createContext } from 'react';
 import Header from '../header/Header';
 import AppRouter from '../app-router/AppRouter';
 import { authApi } from '../../services/auth.service';
-import { Alert, createTheme, Snackbar, ThemeProvider, LinearProgress } from '@mui/material';
-import { grey, blue } from '@mui/material/colors';
+import {
+  Alert,
+  createTheme,
+  Snackbar,
+  ThemeProvider,
+  LinearProgress,
+  CircularProgress,
+  Box,
+} from '@mui/material';
+import { grey } from '@mui/material/colors';
 import type { AuthAlert } from '../../models/auth.model';
 import { io, Socket } from 'socket.io-client';
 
@@ -13,7 +21,7 @@ const theme = createTheme({
       main: grey[900],
     },
     secondary: {
-      main: blue[100],
+      main: grey[300],
     },
   },
   typography: {
@@ -24,7 +32,7 @@ const theme = createTheme({
 export const PageStyleContext = createContext({
   width: '100%',
   minHeight: '90vh',
-  padding: '81px 0'
+  padding: '81px 0',
 });
 
 const App: FC = () => {
@@ -33,7 +41,7 @@ const App: FC = () => {
   const [authAlert, setAuthAlert] = useState<AuthAlert>({
     showMessage: false,
     message: '',
-    severity: 'success'
+    severity: 'success',
   });
 
   useEffect(() => {
@@ -68,21 +76,38 @@ const App: FC = () => {
   if (socket) {
     return (
       <ThemeProvider theme={theme}>
-        <Header/>
+        <Header />
         <AppRouter setAuthAlert={setAuthAlert} socket={socket} />
-        <Snackbar open={authAlert.showMessage}
-                  autoHideDuration={6000}
-                  onClose={closeAuthAlertHandler}>
-          <Alert closeText='Закрыть' onClose={closeAuthAlertHandler}
-                 severity={authAlert.severity}
-                 sx={{ width: '100%' }}>
+        <Snackbar
+          open={authAlert.showMessage}
+          autoHideDuration={6000}
+          onClose={closeAuthAlertHandler}
+        >
+          <Alert
+            closeText='Закрыть'
+            onClose={closeAuthAlertHandler}
+            severity={authAlert.severity}
+            sx={{ width: '100%' }}
+          >
             {authAlert.message}
           </Alert>
         </Snackbar>
       </ThemeProvider>
     );
   }
-  return null;
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <CircularProgress color='inherit' size={50} />
+    </Box>
+  );
 };
 
 export default App;

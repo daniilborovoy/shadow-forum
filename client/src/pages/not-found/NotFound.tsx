@@ -11,21 +11,31 @@ const NotFound: FC<{ message: string }> = ({ message }) => {
   };
 
   return (
-    <Box sx={{
-      width: '100%',
-      minHeight: '90vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'column',
-      padding: '0 15px',
-      boxSizing: 'border-box',
-    }}>
-      <Typography fontSize={30}>Страница не найдена!</Typography>
+    <Box
+      sx={{
+        width: '100%',
+        minHeight: '90vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        padding: '0 15px',
+        boxSizing: 'border-box',
+        textAlign: 'center',
+      }}
+    >
+      <Typography fontSize={30}>Упс! Страница не найдена!</Typography>
       <Typography sx={{ maxWidth: 600 }}>Описание ошибки: {message}</Typography>
-      <Box component='img' src={NotFoundImg} alt='Error 404'
-           sx={{ width: { xs: 300, sm: 500 }, pointerEvents: 'none', userSelect: 'none' }} />
-      <Button onClick={goBackHandler} variant='outlined'>Вернуться назад</Button>
+      <Typography sx={{ maxWidth: 600 }}>Обязательно проверьте правописание!</Typography>
+      <Box
+        component='img'
+        src={NotFoundImg}
+        alt='Error 404'
+        sx={{ width: { xs: 300, sm: 500 }, pointerEvents: 'none', userSelect: 'none' }}
+      />
+      <Button onClick={goBackHandler} variant='outlined'>
+        Вернуться назад
+      </Button>
     </Box>
   );
 };

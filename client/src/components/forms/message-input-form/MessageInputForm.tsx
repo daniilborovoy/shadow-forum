@@ -8,12 +8,11 @@ import { Socket } from 'socket.io-client';
 import { useAppSelector } from '../../../hooks/redux';
 import { getUser } from '../../../store/selectors/authSelectors';
 
-const MessageInputForm: FC<{ discussionId: string, userName: string, socket: Socket }> = ({
+const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Socket }> = ({
   discussionId,
   userName,
   socket,
 }) => {
-
   const user = useAppSelector(getUser);
 
   const [userMessage, setUserMessage] = useState<MessageRequest>({
@@ -27,7 +26,7 @@ const MessageInputForm: FC<{ discussionId: string, userName: string, socket: Soc
     event.preventDefault();
     setSendLoading(true);
     if (user) {
-      socket.emit('message', userMessage.message, user.id, userMessage.discussionId, () => {
+      socket.emit('msg', userMessage.message, user.id, userMessage.discussionId, () => {
         setSendLoading(false);
       });
       setUserMessage({
@@ -45,15 +44,20 @@ const MessageInputForm: FC<{ discussionId: string, userName: string, socket: Soc
       <FormControl variant='standard' sx={{ padding: '15px' }}>
         <FormGroup>
           <Avatar {...stringAvatar(userName)} />
-          <TextField value={userMessage.message}
-                     onChange={(e) => {
-                       setUserMessage((prev) => ({
-                         ...prev,
-                         message: e.target.value,
-                       }));
-                     }}
-                     margin='normal' label='Сообщение' variant='outlined' type='text'
-                     required={true} />
+          <TextField
+            value={userMessage.message}
+            onChange={(e) => {
+              setUserMessage((prev) => ({
+                ...prev,
+                message: e.target.value,
+              }));
+            }}
+            margin='normal'
+            label='Сообщение'
+            variant='outlined'
+            type='text'
+            required={true}
+          />
           <LoadingButton
             sx={{ marginTop: '15px' }}
             loading={sendLoading}
@@ -62,7 +66,7 @@ const MessageInputForm: FC<{ discussionId: string, userName: string, socket: Soc
             variant='contained'
             type='submit'
           >
-             {sendLoading ? 'Отправляем' : 'Отправить ответ'}
+            {sendLoading ? 'Отправляем' : 'Отправить ответ'}
           </LoadingButton>
         </FormGroup>
       </FormControl>

@@ -7,8 +7,18 @@ const router = Router();
 
 router.get('/discussions', DiscussionController.getDiscussions);
 router.get('/discussions/:id', DiscussionController.getDiscussion);
-router.post('/discussions', authMiddleware, validateDiscussionBody(), DiscussionController.createDiscussion);
-router.put('/discussions', authMiddleware, validateDiscussionBody(), DiscussionController.updateDiscussion);
+router.post(
+  '/discussions',
+  authMiddleware,
+  validateDiscussionBody(),
+  DiscussionController.createDiscussion,
+);
+router.put(
+  '/discussions',
+  authMiddleware,
+  validateDiscussionBody(),
+  DiscussionController.updateDiscussion,
+);
 router.put('/discussions/viewed', DiscussionController.addView);
 router.delete('/discussions', authMiddleware, DiscussionController.deleteDiscussion);
 

@@ -8,20 +8,15 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  InputBase, MenuItem,
+  InputBase,
+  MenuItem,
   Button,
   Menu,
 } from '@mui/material';
-import {
-  Search as SearchIcon,
-  AccountCircle,
-  MoreVert as MoreIcon,
-} from '@mui/icons-material';
+import { Search as SearchIcon, AccountCircle, MoreVert as MoreIcon } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import { getUser } from '../../store/selectors/authSelectors';
-import {
-  CreateDiscussionFormDialog,
-} from '../forms/create-discussion-form-dialog/CreateDiscussionFormDialog';
+import { CreateDiscussionFormDialog } from '../forms/create-discussion-form-dialog/CreateDiscussionFormDialog';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,10 +63,7 @@ const Header: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
-  const [logout, {
-    isLoading: logoutLoading,
-    error: logoutError,
-  }] = authApi.useLogoutMutation();
+  const [logout, { isLoading: logoutLoading, error: logoutError }] = authApi.useLogoutMutation();
 
   const user = useAppSelector(getUser);
   const [settingsSearch, setSettingsSearch] = useState<string>('');
@@ -83,6 +75,10 @@ const Header: FC = () => {
   const isMenuOpen = Boolean(anchorEl);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const goHomeHandler = () => {
+    navigate('/');
+  };
 
   const goToAccountHandler = () => {
     closeMenuHandler();
@@ -137,15 +133,13 @@ const Header: FC = () => {
       open={isMenuOpen}
       onClose={closeMenuHandler}
     >
-      {user &&
-        (
-          <Box>
-            <MenuItem onClick={goToAccountHandler}>Настройки аккаунта</MenuItem>
-            <MenuItem onClick={goToMyDiscussionsHandler}>Мои обсуждения</MenuItem>
-            <MenuItem onClick={logoutHandler}>Выйти из аккаунта</MenuItem>
-          </Box>
-        )
-      }
+      {user && (
+        <Box>
+          <MenuItem onClick={goToAccountHandler}>Настройки аккаунта</MenuItem>
+          <MenuItem onClick={goToMyDiscussionsHandler}>Мои обсуждения</MenuItem>
+          <MenuItem onClick={logoutHandler}>Выйти из аккаунта</MenuItem>
+        </Box>
+      )}
     </Menu>
   );
 
@@ -166,24 +160,24 @@ const Header: FC = () => {
       onClose={closeMobileMenuHandler}
     >
       {user ? (
-          <>
-            <MenuItem onClick={openProfileMenuHandler}>
-              <IconButton
-                size='large'
-                aria-label='account of current user'
-                aria-controls='primary-search-account-menu'
-                aria-haspopup='true'
-                color='inherit'
-              >
-                <AccountCircle />
-              </IconButton>
-              <p>Профиль</p>
-            </MenuItem>
-            <CreateDiscussionFormDialog type='mobile' />
-          </>
-        ) :
+        <Box>
+          <MenuItem onClick={openProfileMenuHandler}>
+            <IconButton
+              size='large'
+              aria-label='account of current user'
+              aria-controls='primary-search-account-menu'
+              aria-haspopup='true'
+              color='inherit'
+            >
+              <AccountCircle />
+            </IconButton>
+            <p>Профиль</p>
+          </MenuItem>
+          <CreateDiscussionFormDialog type='mobile' />
+        </Box>
+      ) : (
         <Button onClick={goToAuthorizeHandler}>Войти</Button>
-      }
+      )}
     </Menu>
   );
 
@@ -192,10 +186,10 @@ const Header: FC = () => {
       <AppBar position='relative'>
         <Toolbar>
           <Typography
-            variant='h6'
+            fontSize='20px'
             noWrap
-            component='div'
-            onClick={() => navigate('/')}
+            component='a'
+            onClick={goHomeHandler}
             sx={{
               display: {
                 xs: 'none',
@@ -213,6 +207,7 @@ const Header: FC = () => {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder='Поиск…'
+              type='search'
               value={settingsSearch}
               onChange={changeSettingsSearchHandler}
             />
@@ -221,44 +216,51 @@ const Header: FC = () => {
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {user && <CreateDiscussionFormDialog type='desktop' />}
           </Box>
-          <Box sx={{
-            display: {
-              xs: 'none',
-              md: 'flex',
-            },
-          }}>
+          <Box
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'flex',
+              },
+            }}
+          >
             {user ? (
-                <>
-                  <IconButton
-                    size='large'
-                    edge='end'
-                    aria-haspopup='true'
-                    onClick={openProfileMenuHandler}
-                    color='inherit'
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                </>
-              ) :
-              (window.location.pathname !== '/authorize' ?
-                <Button variant='contained' color='secondary' onClick={goToAuthorizeHandler}>Войти</Button> : null)
-            }
+              <>
+                <IconButton
+                  size='large'
+                  edge='end'
+                  aria-haspopup='true'
+                  onClick={openProfileMenuHandler}
+                  color='inherit'
+                >
+                  <AccountCircle />
+                </IconButton>
+              </>
+            ) : window.location.pathname !== '/authorize' ? (
+              <Button variant='contained' color='secondary' onClick={goToAuthorizeHandler}>
+                Войти
+              </Button>
+            ) : null}
           </Box>
-          <Box sx={{
-            display: {
-              xs: 'flex',
-              md: 'none',
-            },
-          }}>
-            <IconButton
-              size='large'
-              aria-haspopup='true'
-              onClick={openMobileMenuHandler}
-              color='inherit'
+          {window.location.pathname !== '/authorize' && (
+            <Box
+              sx={{
+                display: {
+                  xs: 'flex',
+                  md: 'none',
+                },
+              }}
             >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+              <IconButton
+                size='large'
+                aria-haspopup='true'
+                onClick={openMobileMenuHandler}
+                color='inherit'
+              >
+                <MoreIcon />
+              </IconButton>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
       {mobileMenu}
