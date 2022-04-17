@@ -1,11 +1,27 @@
+import { Box, Typography } from '@mui/material';
 import React from 'react';
+import iMac from './iMac.png'
 
-// TODO сделать футер
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
   return (
-    <div>
-
-    </div>
+    <footer>
+      <Box display='flex' flexDirection={{xs: 'column', sm: 'row'}} justifyContent='space-around' alignItems='center' padding='15px'>
+        <Box display='flex' flexDirection='row' alignItems='center' marginBottom={{xs: '15px', sm: 0}}>
+          <Typography color='text.secondary' textAlign='center'>
+            SHADOW FORUM
+          </Typography>
+          <Box
+            component='img'
+            src={iMac}
+            sx={{ width: { xs: 50, sm: 70 }, pointerEvents: 'none', userSelect: 'none' }}
+          />
+        </Box>
+        <Typography color='text.secondary' textAlign='center'>
+          {`© 2021-${currentYear}, «Shadow Forum».`}
+        </Typography>
+      </Box>
+    </footer>
   );
 };
 

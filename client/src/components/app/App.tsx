@@ -14,6 +14,7 @@ import {
 import { grey } from '@mui/material/colors';
 import type { AuthAlert } from '../../models/auth.model';
 import { io, Socket } from 'socket.io-client';
+import Footer from '../footer/Footer';
 
 const theme = createTheme({
   palette: {
@@ -78,6 +79,7 @@ const App: FC = () => {
       <ThemeProvider theme={theme}>
         <Header />
         <AppRouter setAuthAlert={setAuthAlert} socket={socket} />
+        <Footer />
         <Snackbar
           open={authAlert.showMessage}
           autoHideDuration={6000}
