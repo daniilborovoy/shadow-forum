@@ -2,10 +2,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.scss';
 import App from './components/app/App';
-import { BrowserRouter } from 'react-router-dom';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import { ThemeProvider, ChosenThemeProvider } from './providers';
 import * as dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 dayjs.locale('ru');
@@ -16,9 +16,11 @@ const root = createRoot(app);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ChosenThemeProvider>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </ChosenThemeProvider>
     </Provider>
   </React.StrictMode>,
 );

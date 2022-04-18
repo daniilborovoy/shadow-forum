@@ -12,7 +12,10 @@ import {
   TextField,
   Button,
   MenuItem,
-  ButtonProps, Box, Typography, IconButton,
+  ButtonProps,
+  Box,
+  Typography,
+  IconButton,
 } from '@mui/material';
 import { FC } from 'react';
 import { LoadingButton } from '@mui/lab';
@@ -21,20 +24,22 @@ import { blue, grey } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 
 interface DiscussionCreateAlertType {
-  show: boolean,
-  severity: 'error' | 'success',
-  message: string
+  show: boolean;
+  severity: 'error' | 'success';
+  message: string;
 }
 
-type CreateDiscussionFormDialogType = 'mobile' | 'desktop'
+type CreateDiscussionFormDialogType = 'mobile' | 'desktop';
 
-export const CreateDiscussionFormDialog: FC<{ type: CreateDiscussionFormDialogType }> = ({ type }) => {
+export const CreateDiscussionFormDialog: FC<{ type: CreateDiscussionFormDialogType }> = ({
+  type,
+}) => {
   const [open, setOpen] = useState<boolean>(false);
 
-  const [createDiscussionAction, {
-    isLoading: createDiscussionLoading,
-    error: createDiscussionError,
-  }] = discussionsApi.useCreateDiscussionMutation();
+  const [
+    createDiscussionAction,
+    { isLoading: createDiscussionLoading, error: createDiscussionError },
+  ] = discussionsApi.useCreateDiscussionMutation();
 
   const [discussionRequest, setDiscussionRequest] = useState<DiscussionRequest>({
     title: '',
@@ -73,15 +78,19 @@ export const CreateDiscussionFormDialog: FC<{ type: CreateDiscussionFormDialogTy
       });
   };
 
-  const handleThemeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    setDiscussionRequest(prevState => ({
+  const handleThemeChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ): void => {
+    setDiscussionRequest((prevState) => ({
       ...prevState,
       title: event.target.value,
     }));
   };
 
-  const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    setDiscussionRequest(prevState => ({
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ): void => {
+    setDiscussionRequest((prevState) => ({
       ...prevState,
       body: event.target.value,
     }));
@@ -119,17 +128,18 @@ export const CreateDiscussionFormDialog: FC<{ type: CreateDiscussionFormDialogTy
     }));
   };
 
-  const createDiscussionAlertMessage: string = discussionCreateAlert.severity === 'success' ? `Обсуждение ${discussionRequest.title} создано успешно!` : 'Произошла ошибка при создании обсуждения!';
+  const createDiscussionAlertMessage: string =
+    discussionCreateAlert.severity === 'success'
+      ? `Обсуждение ${discussionRequest.title} создано успешно!`
+      : 'Произошла ошибка при создании обсуждения!';
 
   return (
     <Box>
-      {type === 'desktop' ?
+      {type === 'desktop' ? (
         <ColorButton onClick={handleClickOpen}>
-          <Typography noWrap>
-            Создать обсуждение
-          </Typography>
+          <Typography noWrap>Создать обсуждение</Typography>
         </ColorButton>
-        :
+      ) : (
         <MenuItem onClick={handleClickOpen}>
           <IconButton
             size='large'
@@ -140,13 +150,13 @@ export const CreateDiscussionFormDialog: FC<{ type: CreateDiscussionFormDialogTy
           >
             <AddIcon />
           </IconButton>
-          <Typography>
-            Новое обсуждение
-          </Typography>
+          <Typography>Новое обсуждение</Typography>
         </MenuItem>
-      }
+      )}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{discussionRequest.title.length ? discussionRequest.title : 'Новое обсуждение'}</DialogTitle>
+        <DialogTitle>
+          {discussionRequest.title.length ? discussionRequest.title : 'Новое обсуждение'}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Введите короткое название темы и подробное описание для вашего будущего обсуждения.
@@ -175,8 +185,11 @@ export const CreateDiscussionFormDialog: FC<{ type: CreateDiscussionFormDialogTy
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Отмена</Button>
+          <Button color='inherit' onClick={handleClose}>
+            Отмена
+          </Button>
           <LoadingButton
+            color='inherit'
             onClick={createDiscussion}
             loading={createDiscussionLoading}
           >
@@ -184,12 +197,17 @@ export const CreateDiscussionFormDialog: FC<{ type: CreateDiscussionFormDialogTy
           </LoadingButton>
         </DialogActions>
       </Dialog>
-      <Snackbar open={discussionCreateAlert.show}
-                autoHideDuration={10000}
-                onClose={closeDiscussionCreateAlert}>
-        <Alert closeText='Закрыть' onClose={closeDiscussionCreateAlert}
-               severity={discussionCreateAlert.severity}
-               sx={{ width: '100%' }}>
+      <Snackbar
+        open={discussionCreateAlert.show}
+        autoHideDuration={10000}
+        onClose={closeDiscussionCreateAlert}
+      >
+        <Alert
+          closeText='Закрыть'
+          onClose={closeDiscussionCreateAlert}
+          severity={discussionCreateAlert.severity}
+          sx={{ width: '100%' }}
+        >
           {createDiscussionAlertMessage}
         </Alert>
       </Snackbar>

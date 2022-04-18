@@ -1,5 +1,5 @@
 import { RootState } from '../index';
-import { User } from '../../models/user.model';
+import { User, userTheme } from '../../models/user.model';
 
 const getUser = (state: RootState): User | null => {
   return state.authReducer.user;
@@ -13,4 +13,8 @@ const getUserName = (state: RootState): string | null => {
   return null;
 };
 
-export { getUser, getUserName };
+const getUserTheme = (state: RootState): userTheme => {
+  return state.authReducer.userTheme;
+};
+
+export { getUser, getUserName, getUserTheme };

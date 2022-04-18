@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 
+export type userTheme = 'dark' | 'light' | 'none';
+
 export interface User {
   name: string;
   email: string;
@@ -7,6 +9,7 @@ export interface User {
   creationDate: Date;
   isActivated: boolean;
   activationLink?: string;
+  userTheme: userTheme;
 }
 
 const UserSchema = new Schema<User>({
@@ -33,6 +36,10 @@ const UserSchema = new Schema<User>({
     required: true,
   },
   activationLink: { type: String },
+  userTheme: {
+    type: String,
+    default: 'none',
+  },
 });
 
 export default model<User>('User', UserSchema);

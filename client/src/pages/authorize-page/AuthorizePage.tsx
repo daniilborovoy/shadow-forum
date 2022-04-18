@@ -6,7 +6,9 @@ import RegistrationForm from '../../components/forms/registration-form/Registrat
 import LoginForm from '../../components/forms/login-form/LoginForm';
 import { PageStyleContext } from '../../components/app/App';
 
-const AuthorizePage: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>> }> = ({ setAuthAlert }) => {
+const AuthorizePage: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>> }> = ({
+  setAuthAlert,
+}) => {
   const pageStyle = useContext(PageStyleContext);
 
   useEffect(() => {
@@ -14,24 +16,34 @@ const AuthorizePage: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>> }> =
   }, []);
 
   return (
-    <Grid container
-          display='flex'
-          direction={{ xs: 'column', sm: 'row' }}
-          width='100%'
-          sx={pageStyle}>
-      <Grid xs={6} item sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+    <Grid
+      container
+      display='flex'
+      direction={{ xs: 'column', sm: 'row' }}
+      width='100%'
+      sx={pageStyle}
+    >
+      <Grid
+        xs={6}
+        item
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <LoginForm setAuthAlert={setAuthAlert} />
       </Grid>
       <Divider flexItem sx={{ margin: '50px 0' }} />
-      <Grid sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }} xs={6} item>
+      <Grid
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        xs={6}
+        item
+      >
         <RegistrationForm setAuthAlert={setAuthAlert} />
       </Grid>
     </Grid>
