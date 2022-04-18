@@ -10,11 +10,7 @@ class UserController {
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequestError('validation error!', errors.array()));
       }
-      const {
-        email,
-        password,
-        name,
-      } = req.body;
+      const { email, password, name } = req.body;
       const userData = await userService.registration(email, name, password);
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -34,10 +30,7 @@ class UserController {
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequestError('validation error!', errors.array()));
       }
-      const {
-        email,
-        password,
-      } = req.body;
+      const { email, password } = req.body;
       const userData = await userService.login(email, password);
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -45,8 +38,7 @@ class UserController {
         secure: false, // TODO при https поменять на true
         sameSite: 'strict',
       });
-      return res.status(200)
-        .json(userData);
+      return res.status(200).json(userData);
     } catch (err) {
       next(err);
     }
@@ -58,8 +50,7 @@ class UserController {
       if (!refreshToken) throw ApiError.UnauthorizedError();
       const token = await userService.logout(refreshToken);
       res.clearCookie('refreshToken');
-      return res.status(200)
-        .json(token);
+      return res.status(200).json(token);
     } catch (err: unknown) {
       next(err);
     }
@@ -75,8 +66,7 @@ class UserController {
         secure: false, // при https поменять на true
         sameSite: 'strict',
       });
-      return res.status(200)
-        .json(userData);
+      return res.status(200).json(userData);
     } catch (err: unknown) {
       next(err);
     }
@@ -97,8 +87,7 @@ class UserController {
   async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await userService.getAllUsers();
-      return res.status(200)
-        .json(users);
+      return res.status(200).json(users);
     } catch (err: unknown) {
       next(err);
     }
@@ -109,8 +98,19 @@ class UserController {
       const userId: string = req.params.id;
       if (!userId) throw ApiError.BadRequestError('user id missing!');
       const user = await userService.getUserById(userId);
-      return res.status(200)
-        .json(user);
+      return res.status(200).json(user);
+    } catch (err: unknown) {
+      next(err);
+    }
+  }
+
+  async changeTheme(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.body.user.id;
+      const theme: 'dark' | 'light' = req.body.theme;
+      if (!userId) throw ApiError.BadRequestError('user id missing!');
+      await userService.changeTheme(userId, theme);
+      return res.send();
     } catch (err: unknown) {
       next(err);
     }

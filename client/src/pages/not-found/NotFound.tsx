@@ -33,7 +33,7 @@ const NotFound: FC<{ message: string }> = ({ message }) => {
         alt='Error 404'
         sx={{ width: { xs: 300, sm: 500 }, pointerEvents: 'none', userSelect: 'none' }}
       />
-      <Button onClick={goBackHandler} variant='outlined'>
+      <Button color='inherit' onClick={goBackHandler} variant='outlined'>
         Вернуться назад
       </Button>
     </Box>
