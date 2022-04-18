@@ -182,8 +182,11 @@ const Header: FC = () => {
   );
 
   return (
-    <Box sx={{ flexGrow: 1, position: 'fixed', width: '100%', top: '0', zIndex: '100' }}>
-      <AppBar position='relative'>
+    <Box
+      component='header'
+      sx={{ flexGrow: 1, position: 'fixed', width: '100%', top: '0', zIndex: '100' }}
+    >
+      <AppBar component='div' position='relative'>
         <Toolbar>
           <Typography
             fontSize='20px'
@@ -213,7 +216,7 @@ const Header: FC = () => {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex', marginRight: '15px' } }}>
             {user && <CreateDiscussionFormDialog type='desktop' />}
           </Box>
           <Box

@@ -7,18 +7,16 @@ import AddIcon from '@mui/icons-material/Add';
 import {
   Avatar,
   List,
-  ListItem,
   ListItemAvatar,
   ListItemText,
   Typography,
   ListItemButton,
   Box,
   Paper,
-  LinearProgress,
-  Divider,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { DiscussionResponse, DiscussionsListResponse } from '../../../models/discussion.model';
+import { DiscussionResponse } from '../../../models/discussion.model';
+import dayjs from 'dayjs';
 
 interface DiscussionsListProps {
   discussions: DiscussionResponse[];
@@ -44,7 +42,7 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
   const discussionListItems =
     discussions &&
     discussions.map((discussion) => {
-      const publicationDate = new Date(discussion.creationDate).toLocaleDateString();
+      const publicationDate = dayjs(discussion.creationDate).format('DD MMMM YYYY');
       const discussionDescription: string =
         discussion.body.slice(0, 20) + (discussion.body.length > 20 ? '...' : '');
       const goToDiscussionHandler = (): void => {
@@ -172,7 +170,6 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
           padding: 0,
         }}
       >
-        {discussionsFetching && <LinearProgress />}
         {discussionListItems}
       </List>
       <LoadingButton

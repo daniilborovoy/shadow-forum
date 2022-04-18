@@ -90,7 +90,6 @@ const DiscussionMessagesList: FC<{
 
   return (
     <Stack
-      component='main'
       alignItems={discussionMessages ? 'flex-start' : 'center'}
       width='100%'
       flexDirection='column'

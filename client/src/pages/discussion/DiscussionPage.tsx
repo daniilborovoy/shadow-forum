@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, lazy, Suspense, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { discussionsApi } from '../../services/discussions.service';
 import { Box, Container, LinearProgress, Paper, Typography } from '@mui/material';
@@ -9,8 +9,9 @@ import setPageTitle from '../../utils/SetPageTitle';
 import MessageInputForm from '../../components/forms/message-input-form/MessageInputForm';
 import MessagesList from '../../components/lists/discussion-messages-list/DiscussionMessagesList';
 import { Socket } from 'socket.io-client';
-import NotFound from '../not-found/NotFound';
 import dayjs from 'dayjs';
+import AppLoader from '../../components/app-loader/AppLoader';
+const NotFoundPage = lazy(() => import('../../pages/not-found/NotFound'));
 
 const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
   const params = useParams();
@@ -48,15 +49,19 @@ const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
   }, []);
 
   if (discussionLoadingError) {
-    // @ts-ignore
-    return <NotFound message={discussionLoadingError.data.message} />;
+    return (
+      <Suspense fallback={<AppLoader />}>
+        {/* @ts-ignore */}
+        <NotFoundPage message={discussionLoadingError.data.message} />
+      </Suspense>
+    );
   }
 
   if (!discussionLoading && discussion) {
     setPageTitle(discussion.title);
 
     return (
-      <Box sx={pageStyle}>
+      <Box component='main' sx={pageStyle}>
         <Container>
           <Box
             component='section'
@@ -83,7 +88,7 @@ const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
               </Typography>
               <time dateTime={discussion.creationDate.toString()}>
                 <Typography color='text.secondary' component='p'>
-                  {dayjs(discussion.creationDate).format('DD MMMM YYYY в H:mm:ss')}
+                  {dayjs(discussion.creationDate).format('DD MMMM YYYY в H:mm')}
                 </Typography>
               </time>
               <Typography color='text.secondary' component='p'>
@@ -91,32 +96,42 @@ const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
               </Typography>
             </Box>
           </Box>
-          <Typography component='h3' marginBottom={2} textAlign='center' fontSize={30}>
-            Ответы
-          </Typography>
-          <Paper
-            component='section'
-            elevation={1}
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}
+          <Box component='section'>
+            <Typography component='h3' marginBottom={2} textAlign='center' fontSize={30}>
+              Ответы
+            </Typography>
+            <Paper
+              elevation={1}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
             >
-              {discussionId && (
-                <MessagesList
-                  setClientsSize={setClientsSize}
-                  discussionId={discussionId}
-                  socket={socket}
-                />
-              )}
-              {discussionId && userName && (
-                <MessageInputForm discussionId={discussionId} userName={userName} socket={socket} />
-              )}
-            </Box>
-          </Paper>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                  alignItems: 'center',
+                }}
+              >
+                {discussionId && (
+                  <MessagesList
+                    setClientsSize={setClientsSize}
+                    discussionId={discussionId}
+                    socket={socket}
+                  />
+                )}
+                {discussionId && userName && (
+                  <MessageInputForm
+                    discussionId={discussionId}
+                    userName={userName}
+                    socket={socket}
+                  />
+                )}
+              </Box>
+            </Paper>
+          </Box>
         </Container>
       </Box>
     );

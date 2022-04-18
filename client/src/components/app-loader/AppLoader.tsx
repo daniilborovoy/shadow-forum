@@ -11,7 +11,7 @@ const AppLoader = () => (
       alignItems: 'center',
     }}
   >
-    <CircularProgress color='inherit' size={50} />
+    <CircularProgress color='inherit' disableShrink />
   </Box>
 );
 

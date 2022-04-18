@@ -28,11 +28,10 @@ class UserService {
       activationLink,
       creationDate: new Date(),
     });
-    const apiUrl: string | undefined = process.env.API_URL;
-    if (!apiUrl)
-      throw ApiError.InternalServerError('Отсутствует ссылка на апи в конфигурационном файле!');
-
-    await mailService.sendActivationMail(email, `${apiUrl}/activate/${activationLink}`);
+    const origin: string | undefined = process.env.ORIGIN;
+    if (!origin)
+      throw ApiError.InternalServerError('Отсутствует ссылка на origin в конфигурационном файле!');
+    await mailService.sendActivationMail(email, `${origin}/activation/${activationLink}`);
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
     if (tokens) {
@@ -51,8 +50,10 @@ class UserService {
     if (!user) {
       throw ApiError.BadRequestError('Неккоректная ссылка активации!');
     }
-    user.isActivated = true;
-    await user.save();
+    if (!user.isActivated) {
+      user.isActivated = true;
+      await user.save();
+    }
   }
 
   async login(email: string, password: string) {

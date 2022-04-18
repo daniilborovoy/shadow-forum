@@ -77,8 +77,8 @@ class UserController {
       const activationLink = req.params.link;
       if (!activationLink) throw ApiError.BadRequestError('activation link missing!');
       await userService.activate(activationLink);
-      if (!process.env.CLIENT_URL) throw ApiError.InternalServerError('client url missing!');
-      return res.redirect(process.env.CLIENT_URL);
+      if (!process.env.ORIGIN) throw ApiError.InternalServerError('origin missing!');
+      return res.redirect(process.env.ORIGIN);
     } catch (err: unknown) {
       next(err);
     }

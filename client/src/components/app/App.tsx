@@ -53,7 +53,7 @@ const App: FC = () => {
     return <AppRouter socket={socket} />;
   }
 
-  return <AppLoader />;
+  return null;
 };
 
 export default App;

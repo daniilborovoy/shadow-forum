@@ -51,7 +51,7 @@ const HomePage: FC = () => {
   };
 
   return (
-    <Box sx={pageStyle}>
+    <Box component='main' sx={pageStyle}>
       <Container>
         <Box component='section'>
           <Typography
