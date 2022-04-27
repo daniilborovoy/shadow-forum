@@ -115,6 +115,17 @@ class UserController {
       next(err);
     }
   }
+
+  async updateAvatar(req: Request, res: Response, next: NextFunction) {
+    try {
+      console.log('ok');
+      res.send('OK');
+      // if (!userId) throw ApiError.BadRequestError('user id missing!');
+      // await userService.uploadAvatar(userId, imageFile);
+    } catch (err: unknown) {
+      next(err);
+    }
+  }
 }
 
 export default new UserController();

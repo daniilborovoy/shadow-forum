@@ -1,20 +1,17 @@
-import { FC, lazy, Suspense, useState } from 'react';
+import { FC, lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from '../../pages/home/HomePage';
 import DiscussionPage from '../../pages/discussion/DiscussionPage';
-import type { AuthAlert } from '../../models/auth.model';
+import Header from '../header/Header';
+import AppLoader from '../app-loader/AppLoader';
 import { Socket } from 'socket.io-client';
 import { useAppSelector } from '../../hooks/redux';
 import { getUser } from '../../store/selectors/authSelectors';
-import Header from '../header/Header';
-import AppLoader from '../app-loader/AppLoader';
-import Footer from '../footer/Footer';
-import AuthorizationAlert from '../authorization-alert/AuthorizationAlert';
 
-const NotFoundPage = lazy(() => import('../../pages/not-found/NotFound'));
+const NotFoundPage = lazy(() => import('../../pages/not-found/NotFoundPage'));
 const AuthorizePage = lazy(() => import('../../pages/authorize/AuthorizePage'));
-const AccountPage = lazy(() => import('../../pages/account/AccountPage'));
-const EmailActivation = lazy(() => import('../../pages/email-activation/EmailActivation'));
+const SettingsPage = lazy(() => import('../../pages/settings/SettingsPage'));
+const EmailActivation = lazy(() => import('../../pages/email-activation/EmailActivationPage'));
 
 const emailActivation = (
   <Suspense fallback={<AppLoader />}>
@@ -31,12 +28,6 @@ const notFound = (
 const AppRouter: FC<{ socket: Socket }> = ({ socket }) => {
   const user = useAppSelector(getUser);
 
-  const [authAlert, setAuthAlert] = useState<AuthAlert>({
-    showMessage: false,
-    message: '',
-    severity: 'success',
-  });
-
   return (
     <BrowserRouter>
       <Header />
@@ -47,7 +38,7 @@ const AppRouter: FC<{ socket: Socket }> = ({ socket }) => {
             path='/authorize'
             element={
               <Suspense fallback={<AppLoader />}>
-                <AuthorizePage setAuthAlert={setAuthAlert} />
+                <AuthorizePage />
               </Suspense>
             }
           />
@@ -55,19 +46,17 @@ const AppRouter: FC<{ socket: Socket }> = ({ socket }) => {
         <Route path='/discussions/:id' element={<DiscussionPage socket={socket} />} />
         {user && (
           <Route
-            path='/account'
+            path='/settings'
             element={
               <Suspense fallback={<AppLoader />}>
-                <AccountPage user={user} />
+                <SettingsPage user={user} />
               </Suspense>
             }
           />
         )}
-        <Route path='/activation/:uuid' element={emailActivation} />
+        <Route path='/activation/:activationLink' element={emailActivation} />
         <Route path='*' element={notFound} />
       </Routes>
-      <Footer />
-      <AuthorizationAlert authAlert={authAlert} setAuthAlert={setAuthAlert} />
     </BrowserRouter>
   );
 };

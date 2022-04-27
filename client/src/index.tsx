@@ -6,8 +6,10 @@ import { store } from './store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider, ChosenThemeProvider } from './providers';
+import { SnackbarKey, SnackbarMessage, SnackbarProvider } from 'notistack';
 import * as dayjs from 'dayjs';
 import 'dayjs/locale/ru';
+import Snackbar from './components/snackbar/Snackbar';
 dayjs.locale('ru');
 
 const app = document.getElementById('app');
@@ -18,7 +20,15 @@ root.render(
     <Provider store={store}>
       <ChosenThemeProvider>
         <ThemeProvider>
-          <App />
+          <SnackbarProvider
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            dense
+          >
+            <App />
+          </SnackbarProvider>
         </ThemeProvider>
       </ChosenThemeProvider>
     </Provider>

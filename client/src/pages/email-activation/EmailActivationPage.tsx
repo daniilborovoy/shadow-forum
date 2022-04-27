@@ -5,14 +5,16 @@ import Box from '@mui/material/Box';
 import { ReportGmailerrorred, Done } from '@mui/icons-material';
 import { Button, CircularProgress, Dialog, Typography } from '@mui/material';
 
-const EmailActivation = () => {
+const EmailActivationPage = () => {
   const params = useParams();
-  const uuid = params.uuid;
+  const activationLink = params.activationLink;
   const navigate = useNavigate();
 
   const activate = async () => {
     return await axios.get(
-      `${window.location.protocol + '//' + window.location.hostname}:5000/api/activate/${uuid}`,
+      `${
+        window.location.protocol + '//' + window.location.hostname
+      }:5000/api/activate/${activationLink}`,
     );
   };
   const [error, setError] = useState<null | string>(null);
@@ -99,4 +101,4 @@ const EmailActivation = () => {
   );
 };
 
-export default EmailActivation;
+export default EmailActivationPage;

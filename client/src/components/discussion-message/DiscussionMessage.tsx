@@ -1,30 +1,32 @@
 import React, { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Avatar, Box, Typography } from '@mui/material';
 import { MessageResponse } from '../../models/message.model';
-import { userApi } from '../../services/user.service';
 import dayjs from 'dayjs';
+import { stringAvatar } from '../../utils/Avatar';
 
 const DiscussionMessage: FC<{ message: MessageResponse }> = ({ message }) => {
   const creationDate = dayjs(message.creationDate).format('DD MMMM YYYY в H:mm');
-  const { data: answererCredentials } = userApi.useFetchUserByIdQuery(message.userId);
-  if (answererCredentials) {
-    return (
-      <Box
-        sx={{
-          padding: '15px',
-          margin: '15px 0',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
-      >
-        <Typography fontSize={20}>Ответ от {answererCredentials.name}</Typography>
+  return (
+    <Box
+      sx={{
+        padding: '15px',
+        margin: '15px 0',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      <Avatar {...stringAvatar(message.createdBy.name)} />
+      <Box sx={{ marginLeft: '15px' }}>
+        <Typography fontSize={20}>Ответ от {message.createdBy.name}</Typography>
         <Typography sx={{ wordBreak: 'break-word' }}>{message.body}</Typography>
-        <Typography>{creationDate}</Typography>
+        <time dateTime={message.creationDate.toString()}>
+          <Typography>{creationDate}</Typography>
+        </time>
       </Box>
-    );
-  }
-  return null;
+    </Box>
+  );
 };
 
 export default DiscussionMessage;

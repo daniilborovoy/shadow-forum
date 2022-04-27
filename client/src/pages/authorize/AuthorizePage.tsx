@@ -1,52 +1,47 @@
-import { FC, useEffect, Dispatch, SetStateAction, useContext, useState } from 'react';
-import type { AuthAlert } from '../../models/auth.model';
-import { Stack, Divider, Grid } from '@mui/material';
+import { FC, useEffect } from 'react';
+import { Box, Divider, Grid } from '@mui/material';
 import setPageTitle from '../../utils/SetPageTitle';
-import RegistrationForm from '../../components/forms/registration-form/RegistrationForm';
-import LoginForm from '../../components/forms/login-form/LoginForm';
-import { PageStyleContext } from '../../components/app/App';
+import RegistrationForm from '../../components/forms/registration/RegistrationForm';
+import LoginForm from '../../components/forms/login/LoginForm';
 
-const AuthorizePage: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>> }> = ({
-  setAuthAlert,
-}) => {
-  const pageStyle = useContext(PageStyleContext);
-
+const AuthorizePage: FC = () => {
   useEffect(() => {
     setPageTitle('Авторизация');
   }, []);
 
   return (
-    <Grid
-      container
-      display='flex'
-      direction={{ xs: 'column', sm: 'row' }}
-      width='100%'
-      sx={pageStyle}
-    >
+    <Box>
       <Grid
-        xs={6}
-        item
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+        sx={{ width: '100%', minHeight: '100vh', padding: '79px 15px' }}
+        container
+        display='flex'
+        direction={{ xs: 'column', sm: 'row' }}
       >
-        <LoginForm setAuthAlert={setAuthAlert} />
+        <Grid
+          xs={6}
+          item
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <LoginForm />
+        </Grid>
+        <Divider flexItem sx={{ margin: '50px 0' }} />
+        <Grid
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          xs={6}
+          item
+        >
+          <RegistrationForm />
+        </Grid>
       </Grid>
-      <Divider flexItem sx={{ margin: '50px 0' }} />
-      <Grid
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        xs={6}
-        item
-      >
-        <RegistrationForm setAuthAlert={setAuthAlert} />
-      </Grid>
-    </Grid>
+    </Box>
   );
 };
 

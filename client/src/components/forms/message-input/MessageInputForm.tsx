@@ -1,5 +1,5 @@
 import React, { FC, FormEvent, useState } from 'react';
-import { Avatar, FormControl, FormGroup, TextField } from '@mui/material';
+import { Avatar, Box, FormControl, FormGroup, TextField } from '@mui/material';
 import { stringAvatar } from '../../../utils/Avatar';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Send } from '@mui/icons-material';
@@ -36,11 +36,10 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
       return;
     }
     alert('sending error');
-    return;
   };
 
   return (
-    <form method='POST' onSubmit={sendMessageHandler}>
+    <Box component='form' method='POST' onSubmit={sendMessageHandler}>
       <FormControl variant='standard' sx={{ padding: '15px' }}>
         <FormGroup>
           <Avatar {...stringAvatar(userName)} />
@@ -70,7 +69,7 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
           </LoadingButton>
         </FormGroup>
       </FormControl>
-    </form>
+    </Box>
   );
 };
 

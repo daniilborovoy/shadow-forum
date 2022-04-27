@@ -1,30 +1,7 @@
-import { FC, useEffect, useState, createContext } from 'react';
+import { FC, useEffect, useState } from 'react';
 import AppRouter from '../app-router/AppRouter';
 import { authApi } from '../../services/auth.service';
-import { createTheme, LinearProgress } from '@mui/material';
-import { grey } from '@mui/material/colors';
 import { io, Socket } from 'socket.io-client';
-import AppLoader from '../app-loader/AppLoader';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: grey[900],
-    },
-    secondary: {
-      main: grey[300],
-    },
-  },
-  typography: {
-    fontFamily: ['Montserrat', 'sans-serif'].join(','),
-  },
-});
-
-export const PageStyleContext = createContext({
-  width: '100%',
-  minHeight: '90vh',
-  padding: '81px 0',
-});
 
 const App: FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -37,16 +14,19 @@ const App: FC = () => {
   }, []);
 
   useEffect(() => {
-    const apiUrl = `http://${window.location.hostname}:5000`;
-    const newSocket = io(apiUrl);
+    const webSocketServerUrl: string = `http://${window.location.hostname}:5000`;
+    const newSocket = io(webSocketServerUrl);
     setSocket(newSocket);
+
     return () => {
-      newSocket.close();
+      if (socket) {
+        socket.close();
+      }
     };
   }, [setSocket]);
 
   if (checkAuthLoading) {
-    return <LinearProgress color='inherit' />;
+    return null;
   }
 
   if (socket) {

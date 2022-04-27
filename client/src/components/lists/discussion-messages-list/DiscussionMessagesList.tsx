@@ -2,7 +2,7 @@ import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { MessageResponse } from '../../../models/message.model';
 import { Socket } from 'socket.io-client';
 import DiscussionMessage from '../../discussion-message/DiscussionMessage';
-import { Divider, CircularProgress, Stack, Box, Typography } from '@mui/material';
+import { Divider, Stack, Box, Typography, LinearProgress } from '@mui/material';
 import EmptyImg from './DiscussionEmpty.svg';
 
 const DiscussionMessagesList: FC<{
@@ -85,8 +85,13 @@ const DiscussionMessagesList: FC<{
         return EmptyMessage;
       }
     }
-    return <CircularProgress sx={{ padding: 10 }} />;
   };
+
+  if (loading) {
+    return (
+      <LinearProgress sx={{ width: '90%', borderRadius: '5px', margin: '15px' }} color='info' />
+    );
+  }
 
   return (
     <Stack
@@ -94,7 +99,7 @@ const DiscussionMessagesList: FC<{
       width='100%'
       flexDirection='column'
       overflow='hidden'
-      divider={<Divider orientation='horizontal' flexItem />}
+      divider={<Divider flexItem />}
     >
       {showMessages()}
     </Stack>

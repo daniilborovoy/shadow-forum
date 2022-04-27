@@ -25,5 +25,12 @@ export const userApi = createApi({
         },
       }),
     }),
+    updateUserAvatar: build.mutation<any, FormData>({
+      query: (imageFile) => ({
+        url: 'avatar',
+        method: 'PUT',
+        body: imageFile,
+      }),
+    }),
   }),
 });

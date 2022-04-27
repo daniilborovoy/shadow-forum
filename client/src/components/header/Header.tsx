@@ -2,6 +2,9 @@ import React, { FC, useState, MouseEvent, ChangeEvent } from 'react';
 import { authApi } from '../../services/auth.service';
 import { useAppSelector } from '../../hooks/redux';
 import { useNavigate } from 'react-router-dom';
+import Settings from '@mui/icons-material/Settings';
+import Logout from '@mui/icons-material/Logout';
+import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
 import {
   AppBar,
   Box,
@@ -12,11 +15,15 @@ import {
   MenuItem,
   Button,
   Menu,
+  ListItemIcon,
+  Avatar,
+  Divider,
 } from '@mui/material';
 import { Search as SearchIcon, AccountCircle, MoreVert as MoreIcon } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import { getUser } from '../../store/selectors/authSelectors';
-import { CreateDiscussionFormDialog } from '../forms/create-discussion-form-dialog/CreateDiscussionFormDialog';
+import { CreateDiscussionDialog } from '../forms/create-discussion-dialog/CreateDiscussionDialog';
+import { stringAvatar } from '../../utils/Avatar';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -80,9 +87,9 @@ const Header: FC = () => {
     navigate('/');
   };
 
-  const goToAccountHandler = () => {
+  const goToSettingsHandler = () => {
     closeMenuHandler();
-    navigate('/account');
+    navigate('/settings');
   };
 
   const logoutHandler = async (): Promise<void> => {
@@ -93,7 +100,7 @@ const Header: FC = () => {
 
   const goToMyDiscussionsHandler = () => {
     closeMenuHandler();
-    navigate('/account/discussions');
+    navigate('/settings/discussions');
   };
 
   const goToAuthorizeHandler = () => {
@@ -135,9 +142,35 @@ const Header: FC = () => {
     >
       {user && (
         <Box>
-          <MenuItem onClick={goToAccountHandler}>Настройки аккаунта</MenuItem>
-          <MenuItem onClick={goToMyDiscussionsHandler}>Мои обсуждения</MenuItem>
-          <MenuItem onClick={logoutHandler}>Выйти из аккаунта</MenuItem>
+          <Box
+            display='flex'
+            flexDirection='row'
+            justifyContent='center'
+            alignItems='center'
+            sx={{ padding: '10px 15px', textAlign: 'center' }}
+          >
+            <Avatar {...stringAvatar(user.name)} />
+            <Typography sx={{ marginLeft: '15px' }}>{user.email}</Typography>
+          </Box>
+          <Divider flexItem />
+          <MenuItem onClick={goToSettingsHandler}>
+            <ListItemIcon>
+              <Settings fontSize='small' />
+            </ListItemIcon>
+            Настройки аккаунта
+          </MenuItem>
+          <MenuItem onClick={goToMyDiscussionsHandler}>
+            <ListItemIcon>
+              <FeaturedPlayListIcon fontSize='small' />
+            </ListItemIcon>
+            Мои обсуждения
+          </MenuItem>
+          <MenuItem onClick={logoutHandler}>
+            <ListItemIcon>
+              <Logout fontSize='small' />
+            </ListItemIcon>
+            Выйти из аккаунта
+          </MenuItem>
         </Box>
       )}
     </Menu>
@@ -173,10 +206,12 @@ const Header: FC = () => {
             </IconButton>
             <p>Профиль</p>
           </MenuItem>
-          <CreateDiscussionFormDialog type='mobile' />
+          <CreateDiscussionDialog type='mobile' />
         </Box>
       ) : (
-        <Button onClick={goToAuthorizeHandler}>Войти</Button>
+        <Button color='secondary' variant='text' onClick={goToAuthorizeHandler}>
+          Войти
+        </Button>
       )}
     </Menu>
   );
@@ -184,9 +219,9 @@ const Header: FC = () => {
   return (
     <Box
       component='header'
-      sx={{ flexGrow: 1, position: 'fixed', width: '100%', top: '0', zIndex: '100' }}
+      sx={{ flexGrow: 1, position: 'fixed', width: '100vw', top: '0', left: 0, zIndex: '100' }}
     >
-      <AppBar component='div' position='relative'>
+      <AppBar component='div' position='relative' sx={{ padding: '0 15px' }}>
         <Toolbar>
           <Typography
             fontSize='20px'
@@ -217,7 +252,7 @@ const Header: FC = () => {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex', marginRight: '15px' } }}>
-            {user && <CreateDiscussionFormDialog type='desktop' />}
+            {user && <CreateDiscussionDialog type='desktop' />}
           </Box>
           <Box
             sx={{

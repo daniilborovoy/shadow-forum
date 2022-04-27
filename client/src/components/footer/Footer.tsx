@@ -1,9 +1,10 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 import iMac from './iMac.png';
+import dayjs from 'dayjs';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = dayjs().year();
   return (
     <Box
       component='footer'
@@ -24,6 +25,7 @@ const Footer = () => {
         </Typography>
         <Box
           component='img'
+          loading='lazy'
           src={iMac}
           sx={{ width: { xs: 50, sm: 70 }, pointerEvents: 'none', userSelect: 'none' }}
         />

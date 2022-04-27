@@ -4,21 +4,19 @@ import { discussionsApi } from '../../services/discussions.service';
 import { Box, Container, LinearProgress, Paper, Typography } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import { getUserName } from '../../store/selectors/authSelectors';
-import { PageStyleContext } from '../../components/app/App';
 import setPageTitle from '../../utils/SetPageTitle';
-import MessageInputForm from '../../components/forms/message-input-form/MessageInputForm';
+import MessageInputForm from '../../components/forms/message-input/MessageInputForm';
 import MessagesList from '../../components/lists/discussion-messages-list/DiscussionMessagesList';
 import { Socket } from 'socket.io-client';
 import dayjs from 'dayjs';
 import AppLoader from '../../components/app-loader/AppLoader';
-const NotFoundPage = lazy(() => import('../../pages/not-found/NotFound'));
+const NotFoundPage = lazy(() => import('../not-found/NotFoundPage'));
 
 const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
   const params = useParams();
   const discussionId = params.id || null;
-  const pageStyle = useContext(PageStyleContext);
   const userName = useAppSelector(getUserName);
-  const [clientsSize, setClientsSize] = useState<number>(0);
+  const [clientsSize, setClientsSize] = useState<number>(1);
 
   const {
     data: discussion,
@@ -59,9 +57,8 @@ const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
 
   if (!discussionLoading && discussion) {
     setPageTitle(discussion.title);
-
     return (
-      <Box component='main' sx={pageStyle}>
+      <Box component='main' sx={{ width: '100%', minHeight: '100vh', padding: '81px 0' }}>
         <Container>
           <Box
             component='section'

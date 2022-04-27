@@ -1,16 +1,15 @@
-import { ChangeEvent, FC, SyntheticEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { Box, Container, Typography, TextField, LinearProgress } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import sayDayTime from '../../utils/SayDayTime';
 import DiscussionsList from '../../components/lists/discussions-list/DiscussionsList';
 import setPageTitle from '../../utils/SetPageTitle';
 import { getUserName } from '../../store/selectors/authSelectors';
-import { PageStyleContext } from '../../components/app/App';
 import { discussionsApi } from '../../services/discussions.service';
+import Footer from '../../components/footer/Footer';
 
 const HomePage: FC = () => {
   const userName: string | null = useAppSelector(getUserName);
-  const pageStyle = useContext(PageStyleContext);
   const [searchDiscussion, setSearchDiscussion] = useState<string>('');
   const [limit, setLimit] = useState<number>(5);
 
@@ -51,7 +50,7 @@ const HomePage: FC = () => {
   };
 
   return (
-    <Box component='main' sx={pageStyle}>
+    <Box component='main' sx={{ width: '100%', minHeight: '100vh', padding: '64px 0' }}>
       <Container>
         <Box component='section'>
           <Typography
@@ -107,6 +106,7 @@ const HomePage: FC = () => {
             />
           )}
         </Box>
+        <Footer />
       </Container>
     </Box>
   );

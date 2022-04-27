@@ -7,6 +7,7 @@ import usersRouter from './routes/users.routes';
 import discussionsRouter from './routes/discussions.routes';
 import errorMiddleware from './middlewares/error.middleware';
 import messagesRouter from './routes/messages.routes';
+import path from 'path';
 
 const app = express();
 app.use(
@@ -19,5 +20,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', authRouter, usersRouter, discussionsRouter, messagesRouter);
+app.use('/static', express.static(path.resolve('uploads')));
 app.use(errorMiddleware);
 export default app;
