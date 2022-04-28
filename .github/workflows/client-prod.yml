@@ -4,13 +4,13 @@ on:
   push:
     branches: [ master ]
     
-defaults:
-      run:
-        working-directory: client
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: client
     
     strategy:
       matrix:
@@ -31,7 +31,7 @@ jobs:
       run: npm install
 
     - name: Build
-      run: npm run build
+      run: npm run build --if-present
       
     - name: Upload artifact (static content)
       uses: actions/upload-artifact@master
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: prod
-      url: http://shadow-forum.software
+      url: https://shadow-forum.software
 
     steps:
     - name: Install SSH Key
@@ -74,7 +74,7 @@ jobs:
         name: client-static
         path: build/
     - name: Deploy static content to local server (rsync)
-      run: rsync -avz build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/shadow-forum/
+      run: rsync -av build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/shadow-forum/
 
     - name: Update deployment status (success)
       if: success()
