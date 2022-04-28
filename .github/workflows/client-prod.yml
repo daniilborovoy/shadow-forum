@@ -1,4 +1,4 @@
-name: Client build
+name: Client-deploy
 
 on:
   push:
@@ -11,7 +11,7 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     strategy:
       matrix:
         node-version: [16.x]
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: prod
-      url: shadow-forum.software
+      url: http://shadow-forum.software
 
     steps:
     - name: Install SSH Key
@@ -66,7 +66,7 @@ jobs:
       id: deployment
       with:
         token: "${{ github.token }}"
-        target_url: shadow-forum.software
+        target_url: http://shadow-forum.software
         environment: prod
 
     - name: Download static content
@@ -82,7 +82,7 @@ jobs:
       uses: chrnorm/deployment-status@releases/v1
       with:
         token: "${{ github.token }}"
-        target_url: shadow-forum.software
+        target_url: http://shadow-forum.software
         state: "success"
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
     - name: Update deployment status (failure)
@@ -90,6 +90,6 @@ jobs:
       uses: chrnorm/deployment-status@releases/v1
       with:
         token: "${{ github.token }}"
-        target_url: shadow-forum.software
+        target_url: http://shadow-forum.software
         state: "failure"
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
