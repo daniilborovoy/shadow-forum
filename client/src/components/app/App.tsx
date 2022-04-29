@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import AppRouter from '../app-router/AppRouter';
 import { authApi } from '../../services/auth.service';
 import { io, Socket } from 'socket.io-client';
+import AppLoader from '../app-loader/AppLoader';
 
 const App: FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -26,13 +27,12 @@ const App: FC = () => {
   }, [setSocket]);
 
   if (checkAuthLoading) {
-    return null;
+    return <AppLoader />;
   }
 
   if (socket) {
     return <AppRouter socket={socket} />;
   }
-
   return null;
 };
 

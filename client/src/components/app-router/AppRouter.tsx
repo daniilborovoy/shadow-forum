@@ -7,6 +7,7 @@ import AppLoader from '../app-loader/AppLoader';
 import { Socket } from 'socket.io-client';
 import { useAppSelector } from '../../hooks/redux';
 import { getUser } from '../../store/selectors/authSelectors';
+import { User } from '../../models/user.model';
 
 const NotFoundPage = lazy(() => import('../../pages/not-found/NotFoundPage'));
 const AuthorizePage = lazy(() => import('../../pages/authorize/AuthorizePage'));

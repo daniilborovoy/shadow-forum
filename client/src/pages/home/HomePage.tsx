@@ -50,7 +50,7 @@ const HomePage: FC = () => {
   };
 
   return (
-    <Box component='main' sx={{ width: '100%', minHeight: '100vh', padding: '64px 0' }}>
+    <Box component='main' sx={{ width: '100%', minHeight: '100vh', padding: '64px 0 0 0' }}>
       <Container>
         <Box component='section'>
           <Typography
@@ -65,7 +65,7 @@ const HomePage: FC = () => {
             {sayDayTime(userName)}
           </Typography>
           <Typography
-            mb={15}
+            mb={10}
             component='h2'
             sx={{
               color: 'text.secondary',
