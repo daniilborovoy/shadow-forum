@@ -14,7 +14,7 @@ const App: FC = () => {
   }, []);
 
   useEffect(() => {
-    const webSocketServerUrl: string = `http://${window.location.hostname}:5000`;
+    const webSocketServerUrl: string = `${window.location.protocol}//${window.location.hostname}:5000`;
     const newSocket = io(webSocketServerUrl);
     setSocket(newSocket);
 

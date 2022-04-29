@@ -19,7 +19,7 @@ class MailService {
     this.transporter = nodeMailer.createTransport({
       host: this.host,
       port: this.port,
-      secure: false, // TODO
+      secure: false, // https
       auth: {
         user: this.user,
         pass: this.pass,
@@ -28,9 +28,12 @@ class MailService {
   }
 
   async sendActivationMail(to: string, link: string) {
-    const html = await readFile(path.join(__dirname, '..', 'templates', 'activationMessage.hbs'), 'utf-8');
+    const html = await readFile(
+      path.join(__dirname, '..', 'templates', 'activationMessage.hbs'),
+      'utf-8',
+    );
     let template = handlebars.compile(html);
-    const from = "Shadow Forum";
+    const from = 'Shadow Forum';
     let htmlToSend = template({ link });
     await this.transporter.sendMail({
       from,

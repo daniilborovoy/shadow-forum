@@ -42,7 +42,6 @@ class MessageService {
 
   async getMessagesByDiscussionId(discussionId: string): Promise<MessageDto[] | null> {
     const messages = await MessageModel.find({ discussionId }).populate('createdBy');
-    console.log(messages);
     if (messages) {
       const messagesDto: MessageDto[] = messages.map((message) => new MessageDto(message));
       return messagesDto;
