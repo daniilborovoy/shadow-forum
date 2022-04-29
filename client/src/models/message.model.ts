@@ -1,6 +1,8 @@
+import { User } from './user.model';
+
 interface MessageResponse {
   messageId: string;
-  userId: string;
+  createdBy: User;
   body: string;
   creationDate: Date;
 }

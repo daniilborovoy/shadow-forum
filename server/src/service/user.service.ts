@@ -1,4 +1,4 @@
-import UserModel, { User } from '../models/user.model';
+import UserModel, { User, userTheme } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import mailService from './mail.service';
@@ -10,9 +10,7 @@ import { HydratedDocument } from 'mongoose';
 import { Token } from '../models/token.model';
 
 class UserService {
-
   async registration(email: string, name: string, password: string) {
-
     const candidateEmail = await UserModel.findOne({ email });
     const candidateName = await UserModel.findOne({ name });
     if (candidateEmail) {
@@ -30,10 +28,10 @@ class UserService {
       activationLink,
       creationDate: new Date(),
     });
-    const apiUrl: string | undefined = process.env.API_URL;
-    if (!apiUrl) throw ApiError.InternalServerError('Отсутствует ссылка на апи в конфигурационном файле!');
-
-    await mailService.sendActivationMail(email, `${apiUrl}/activate/${activationLink}`);
+    const origin: string | undefined = process.env.ORIGIN;
+    if (!origin)
+      throw ApiError.InternalServerError('Отсутствует ссылка на origin в конфигурационном файле!');
+    await mailService.sendActivationMail(email, `${origin}/activation/${activationLink}`);
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
     if (tokens) {
@@ -52,8 +50,10 @@ class UserService {
     if (!user) {
       throw ApiError.BadRequestError('Неккоректная ссылка активации!');
     }
-    user.isActivated = true;
-    await user.save();
+    if (!user.isActivated) {
+      user.isActivated = true;
+      await user.save();
+    }
   }
 
   async login(email: string, password: string) {
@@ -109,7 +109,7 @@ class UserService {
 
   async getAllUsers() {
     const users = await UserModel.find();
-    const usersDto: UserDto[] = users.map(user => new UserDto(user));
+    const usersDto: UserDto[] = users.map((user) => new UserDto(user));
     return usersDto;
   }
 
@@ -118,6 +118,22 @@ class UserService {
     if (!user) throw ApiError.BadRequestError(`user with id: ${userId} does not exist!`);
     const userDto: UserDto = new UserDto(user);
     return userDto;
+  }
+
+  async changeTheme(userId: string, theme: 'dark' | 'light') {
+    const user: HydratedDocument<User> | null = await UserModel.findById(userId);
+    if (!user) throw ApiError.BadRequestError(`user with id: ${userId} does not exist!`);
+    user.userTheme = theme;
+    await user.save();
+    return;
+  }
+
+  async uploadAvatar(userId: string, imageFile: any) {
+    const user: HydratedDocument<User> | null = await UserModel.findById(userId);
+    if (!user) throw ApiError.BadRequestError(`user with id: ${userId} does not exist!`);
+
+    await user.save();
+    return;
   }
 }
 

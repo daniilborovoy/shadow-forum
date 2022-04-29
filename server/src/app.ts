@@ -7,18 +7,19 @@ import usersRouter from './routes/users.routes';
 import discussionsRouter from './routes/discussions.routes';
 import errorMiddleware from './middlewares/error.middleware';
 import messagesRouter from './routes/messages.routes';
+import path from 'path';
 
 const app = express();
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true,
-  optionsSuccessStatus: 200,
-}));
+app.use(
+  cors({
+    origin: process.env.ORIGIN,
+    credentials: true,
+    optionsSuccessStatus: 200,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
-// if (process.env.PRODUCTION) {
-//   app.use(express.static(path.join(__dirname, '..', '..', 'client', 'build', 'index.html')));
-// }
 app.use('/api', authRouter, usersRouter, discussionsRouter, messagesRouter);
+app.use('/static', express.static(path.resolve('uploads')));
 app.use(errorMiddleware);
 export default app;

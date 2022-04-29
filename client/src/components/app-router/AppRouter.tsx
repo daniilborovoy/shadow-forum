@@ -1,34 +1,63 @@
-import { Dispatch, SetStateAction, FC, lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import HomePage from '../../pages/home-page/HomePage';
-import AuthorizePage from '../../pages/authorize-page/AuthorizePage';
-import DiscussionPage from '../../pages/discussion-page/DiscussionPage';
-import AccountPage from '../../pages/account-page/AccountPage';
-import type { AuthAlert } from '../../models/auth.model';
+import { FC, lazy, Suspense } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import HomePage from '../../pages/home/HomePage';
+import DiscussionPage from '../../pages/discussion/DiscussionPage';
+import Header from '../header/Header';
+import AppLoader from '../app-loader/AppLoader';
 import { Socket } from 'socket.io-client';
-import { CircularProgress } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import { getUser } from '../../store/selectors/authSelectors';
 
-const NotFoundPage = lazy(() => import('../../pages/not-found/NotFound'));
-const notFound =
-  <Suspense fallback={<CircularProgress />}>
-    <NotFoundPage message={'Проверьте правописание.'} />
-  </Suspense>;
+const NotFoundPage = lazy(() => import('../../pages/not-found/NotFoundPage'));
+const AuthorizePage = lazy(() => import('../../pages/authorize/AuthorizePage'));
+const SettingsPage = lazy(() => import('../../pages/settings/SettingsPage'));
+const EmailActivation = lazy(() => import('../../pages/email-activation/EmailActivationPage'));
 
-const AppRouter: FC<{ setAuthAlert: Dispatch<SetStateAction<AuthAlert>>, socket: Socket }> = ({
-                                                                                                setAuthAlert,
-                                                                                                socket,
-                                                                                              }) => {
+const emailActivation = (
+  <Suspense fallback={<AppLoader />}>
+    <EmailActivation />
+  </Suspense>
+);
+
+const notFound = (
+  <Suspense fallback={<AppLoader />}>
+    <NotFoundPage message={'Такой страницы не существует.'} />
+  </Suspense>
+);
+
+const AppRouter: FC<{ socket: Socket }> = ({ socket }) => {
   const user = useAppSelector(getUser);
+
   return (
-    <Routes>
-      <Route path='/' element={<HomePage />} />
-      {!user && <Route path='/authorize' element={<AuthorizePage setAuthAlert={setAuthAlert} />} />}
-      <Route path='/discussions/:id' element={<DiscussionPage socket={socket} />} />
-      {user && <Route path='/account' element={<AccountPage user={user} />} />}
-      <Route path='*' element={notFound} />
-    </Routes>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        {!user && (
+          <Route
+            path='/authorize'
+            element={
+              <Suspense fallback={<AppLoader />}>
+                <AuthorizePage />
+              </Suspense>
+            }
+          />
+        )}
+        <Route path='/discussions/:id' element={<DiscussionPage socket={socket} />} />
+        {user && (
+          <Route
+            path='/settings'
+            element={
+              <Suspense fallback={<AppLoader />}>
+                <SettingsPage user={user} />
+              </Suspense>
+            }
+          />
+        )}
+        <Route path='/activation/:activationLink' element={emailActivation} />
+        <Route path='*' element={notFound} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

@@ -1,26 +1,29 @@
-import React, { FC, useState, MouseEvent } from 'react';
+import React, { FC, useState, MouseEvent, ChangeEvent } from 'react';
 import { authApi } from '../../services/auth.service';
 import { useAppSelector } from '../../hooks/redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Settings from '@mui/icons-material/Settings';
+import Logout from '@mui/icons-material/Logout';
+import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
 import {
   AppBar,
   Box,
   Toolbar,
   IconButton,
   Typography,
-  InputBase, MenuItem,
+  InputBase,
+  MenuItem,
+  Button,
   Menu,
+  ListItemIcon,
+  Avatar,
+  Divider,
 } from '@mui/material';
-import {
-  Search as SearchIcon,
-  AccountCircle,
-  MoreVert as MoreIcon,
-} from '@mui/icons-material';
+import { Search as SearchIcon, AccountCircle, MoreVert as MoreIcon } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import { getUser } from '../../store/selectors/authSelectors';
-import {
-  CreateDiscussionFormDialog,
-} from '../forms/create-discussion-form-dialog/CreateDiscussionFormDialog';
+import { CreateDiscussionDialog } from '../forms/create-discussion-dialog/CreateDiscussionDialog';
+import { stringAvatar } from '../../utils/Avatar';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -65,23 +68,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Header: FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
-  const [logout, {
-    isLoading: logoutLoading,
-    error: logoutError,
-  }] = authApi.useLogoutMutation();
+  const [logout, { isLoading: logoutLoading, error: logoutError }] = authApi.useLogoutMutation();
 
   const user = useAppSelector(getUser);
+  const [settingsSearch, setSettingsSearch] = useState<string>('');
+
+  const changeSettingsSearchHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setSettingsSearch(event.target.value);
+  };
 
   const isMenuOpen = Boolean(anchorEl);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const goToAccountHandler = () => {
+  const goHomeHandler = () => {
+    navigate('/');
+  };
+
+  const goToSettingsHandler = () => {
     closeMenuHandler();
-    navigate('/account');
+    navigate('/settings');
   };
 
   const logoutHandler = async (): Promise<void> => {
@@ -92,7 +100,12 @@ const Header: FC = () => {
 
   const goToMyDiscussionsHandler = () => {
     closeMenuHandler();
-    navigate('/account/discussions');
+    navigate('/settings/discussions');
+  };
+
+  const goToAuthorizeHandler = () => {
+    navigate('/authorize');
+    closeMobileMenuHandler();
   };
 
   const openProfileMenuHandler = (event: MouseEvent<HTMLElement>) => {
@@ -127,23 +140,39 @@ const Header: FC = () => {
       open={isMenuOpen}
       onClose={closeMenuHandler}
     >
-      {user &&
-        (
-          <Box>
-            <MenuItem onClick={goToAccountHandler}>Настройки аккаунта</MenuItem>
-            <MenuItem onClick={goToMyDiscussionsHandler}>Мои обсуждения</MenuItem>
-            <MenuItem onClick={logoutHandler}>Выйти из аккаунта</MenuItem>
+      {user && (
+        <Box>
+          <Box
+            display='flex'
+            flexDirection='row'
+            justifyContent='center'
+            alignItems='center'
+            sx={{ padding: '10px 15px', textAlign: 'center' }}
+          >
+            <Avatar {...stringAvatar(user.name)} />
+            <Typography sx={{ marginLeft: '15px' }}>{user.email}</Typography>
           </Box>
-        )
-      }
-      {!user && (
-        <Link to='authorize' style={{
-          textDecoration: 'none',
-          color: 'inherit',
-        }} onClick={closeMenuHandler}>
-          <MenuItem>Войти</MenuItem>
-        </Link>)
-      }
+          <Divider flexItem />
+          <MenuItem onClick={goToSettingsHandler}>
+            <ListItemIcon>
+              <Settings fontSize='small' />
+            </ListItemIcon>
+            Настройки аккаунта
+          </MenuItem>
+          <MenuItem onClick={goToMyDiscussionsHandler}>
+            <ListItemIcon>
+              <FeaturedPlayListIcon fontSize='small' />
+            </ListItemIcon>
+            Мои обсуждения
+          </MenuItem>
+          <MenuItem onClick={logoutHandler}>
+            <ListItemIcon>
+              <Logout fontSize='small' />
+            </ListItemIcon>
+            Выйти из аккаунта
+          </MenuItem>
+        </Box>
+      )}
     </Menu>
   );
 
@@ -163,31 +192,42 @@ const Header: FC = () => {
       open={isMobileMenuOpen}
       onClose={closeMobileMenuHandler}
     >
-      <MenuItem onClick={openProfileMenuHandler}>
-        <IconButton
-          size='large'
-          aria-label='account of current user'
-          aria-controls='primary-search-account-menu'
-          aria-haspopup='true'
-          color='inherit'
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Профиль</p>
-      </MenuItem>
-      {user && <CreateDiscussionFormDialog type='mobile' />}
+      {user ? (
+        <Box>
+          <MenuItem onClick={openProfileMenuHandler}>
+            <IconButton
+              size='large'
+              aria-label='account of current user'
+              aria-controls='primary-search-account-menu'
+              aria-haspopup='true'
+              color='inherit'
+            >
+              <AccountCircle />
+            </IconButton>
+            <p>Профиль</p>
+          </MenuItem>
+          <CreateDiscussionDialog type='mobile' />
+        </Box>
+      ) : (
+        <Button color='secondary' variant='text' onClick={goToAuthorizeHandler}>
+          Войти
+        </Button>
+      )}
     </Menu>
   );
 
   return (
-    <Box sx={{ flexGrow: 1, position: 'fixed', width: '100%', top: '0', zIndex: '100' }}>
-      <AppBar position='relative'>
+    <Box
+      component='header'
+      sx={{ flexGrow: 1, position: 'fixed', width: '100vw', top: '0', left: 0, zIndex: '100' }}
+    >
+      <AppBar component='div' position='relative' sx={{ padding: '0 15px' }}>
         <Toolbar>
           <Typography
-            variant='h6'
+            fontSize='20px'
             noWrap
-            component='div'
-            onClick={() => navigate('/')}
+            component='a'
+            onClick={goHomeHandler}
             sx={{
               display: {
                 xs: 'none',
@@ -205,43 +245,60 @@ const Header: FC = () => {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder='Поиск…'
+              type='search'
+              value={settingsSearch}
+              onChange={changeSettingsSearchHandler}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {user && <CreateDiscussionFormDialog type='desktop' />}
+          <Box sx={{ display: { xs: 'none', md: 'flex', marginRight: '15px' } }}>
+            {user && <CreateDiscussionDialog type='desktop' />}
           </Box>
-          <Box sx={{
-            display: {
-              xs: 'none',
-              md: 'flex',
-            },
-          }}>
-            <IconButton
-              size='large'
-              edge='end'
-              aria-haspopup='true'
-              onClick={openProfileMenuHandler}
-              color='inherit'
+          <Box
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'flex',
+              },
+            }}
+          >
+            {user ? (
+              <>
+                <IconButton
+                  size='large'
+                  edge='end'
+                  aria-haspopup='true'
+                  onClick={openProfileMenuHandler}
+                  color='inherit'
+                >
+                  <AccountCircle />
+                </IconButton>
+              </>
+            ) : window.location.pathname !== '/authorize' ? (
+              <Button variant='contained' color='secondary' onClick={goToAuthorizeHandler}>
+                Войти
+              </Button>
+            ) : null}
+          </Box>
+          {window.location.pathname !== '/authorize' && (
+            <Box
+              sx={{
+                display: {
+                  xs: 'flex',
+                  md: 'none',
+                },
+              }}
             >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{
-            display: {
-              xs: 'flex',
-              md: 'none',
-            },
-          }}>
-            <IconButton
-              size='large'
-              aria-haspopup='true'
-              onClick={openMobileMenuHandler}
-              color='inherit'
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+              <IconButton
+                size='large'
+                aria-haspopup='true'
+                onClick={openMobileMenuHandler}
+                color='inherit'
+              >
+                <MoreIcon />
+              </IconButton>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
       {mobileMenu}

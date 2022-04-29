@@ -13,4 +13,10 @@ interface DiscussionRequest {
   body: string;
 }
 
-export type { DiscussionRequest, DiscussionResponse };
+interface DiscussionsListResponse {
+  id: string;
+  title: string;
+  body: string;
+}
+
+export type { DiscussionRequest, DiscussionResponse, DiscussionsListResponse };

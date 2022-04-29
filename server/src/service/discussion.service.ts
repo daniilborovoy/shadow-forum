@@ -4,14 +4,18 @@ import { DiscussionDto } from '../dtos/discussion.dto';
 import ApiError from '../exceptions/api.error';
 
 class DiscussionService {
-
   verifyCreator(userId: string, creatorId: string): boolean {
     return userId === creatorId;
-  };
+  }
 
   async getDiscussion(discussionId: string, userId?: string) {
-    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(discussionId);
-    if (!discussion) throw ApiError.BadRequestError('discussion not found!');
+    const isValidDiscussionId = Types.ObjectId.isValid(discussionId);
+    if (!isValidDiscussionId)
+      throw ApiError.BadRequestError('Неверное значение идентификатора обсуждения!');
+    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(
+      discussionId,
+    );
+    if (!discussion) throw ApiError.BadRequestError('Обсуждение не найдено!');
     const discussionDto = new DiscussionDto(discussion);
     if (userId) {
       const creatorId: string = discussion.creatorId.toString();
@@ -23,12 +27,15 @@ class DiscussionService {
     return discussionDto;
   }
 
-  async getAllDiscussions(limit: number | undefined) {
-    const discussions = await DiscussionModel.find({}, null, {
+  async getAllDiscussions(limit: number | undefined, title: string) {
+    const filter = title.length ? { title: { $regex: title, $options: 'i' } } : {};
+    const discussions = await DiscussionModel.find(filter, null, {
       sort: { creationDate: -1 },
       limit,
     });
-    const discussionsDto: DiscussionDto[] = discussions.map(discussion => new DiscussionDto(discussion));
+    const discussionsDto: DiscussionDto[] = discussions.map(
+      (discussion) => new DiscussionDto(discussion),
+    );
     return discussionsDto;
   }
 
@@ -48,13 +55,21 @@ class DiscussionService {
     if (!isCreator) {
       throw ApiError.BadRequestError('you can not delete someone else`s discussion!');
     }
-    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findByIdAndDelete(discussionId);
+    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findByIdAndDelete(
+      discussionId,
+    );
     if (!discussion) throw ApiError.BadRequestError('nothing to delete!');
     return discussion;
   }
 
-  async updateDiscussion(discussionId: Types.ObjectId, discussionTitle: string, discussionBody: string) {
-    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(discussionId);
+  async updateDiscussion(
+    discussionId: Types.ObjectId,
+    discussionTitle: string,
+    discussionBody: string,
+  ) {
+    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(
+      discussionId,
+    );
     if (!discussion) throw new Error('Editable discussion not found!');
     discussion.title = discussionTitle;
     discussion.body = discussionBody;
@@ -64,7 +79,9 @@ class DiscussionService {
 
   async addView(discussionId: string) {
     if (!discussionId) throw ApiError.BadRequestError('discussion id missing!');
-    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(discussionId);
+    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(
+      discussionId,
+    );
     if (!discussion) throw ApiError.BadRequestError('discussion not found!');
     discussion.viewsCount++;
     await discussion.save();

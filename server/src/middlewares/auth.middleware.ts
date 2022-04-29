@@ -18,6 +18,5 @@ export default (req: Request, res: Response, next: NextFunction) => {
     }
     req.body.user = userData;
     next();
-  } catch (err) {
-  }
-}
+  } catch (err) {}
+};

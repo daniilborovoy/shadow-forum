@@ -19,10 +19,4 @@ interface RegistrationRequest {
   showPassword?: boolean;
 }
 
-interface AuthAlert {
-  showMessage: boolean;
-  message: string;
-  severity: 'success' | 'error'
-}
-
-export type { AuthResponse, LoginRequest, RegistrationRequest, AuthAlert };
+export type { AuthResponse, LoginRequest, RegistrationRequest };

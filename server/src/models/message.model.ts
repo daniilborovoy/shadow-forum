@@ -1,14 +1,14 @@
 import { Schema, model, Types } from 'mongoose';
 
 export interface Message {
-  creatorId: Types.ObjectId;
+  createdBy: Types.ObjectId;
   discussionId: Types.ObjectId;
   body: string;
   creationDate: Date;
 }
 
 const MessageSchema = new Schema<Message>({
-  creatorId: {
+  createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',
   },

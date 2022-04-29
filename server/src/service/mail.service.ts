@@ -17,10 +17,9 @@ class MailService {
     this.user = process.env.SMTP_USER;
     this.pass = process.env.SMTP_PASSWORD;
     this.transporter = nodeMailer.createTransport({
-      service: 'gmail',
       host: this.host,
       port: this.port,
-      secure: false,
+      secure: false, // TODO
       auth: {
         user: this.user,
         pass: this.pass,
@@ -31,9 +30,10 @@ class MailService {
   async sendActivationMail(to: string, link: string) {
     const html = await readFile(path.join(__dirname, '..', 'templates', 'activationMessage.hbs'), 'utf-8');
     let template = handlebars.compile(html);
+    const from = "Shadow Forum";
     let htmlToSend = template({ link });
     await this.transporter.sendMail({
-      from: this.user,
+      from,
       to,
       subject: `Активация аккаунта на SHADOW FORUM.`,
       text: '',
