@@ -10,10 +10,8 @@ import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
 import { AuthResponse } from '../models/auth.model';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `http://${window.location.hostname}:5000/api/`,
-  prepareHeaders: (headers, {
-    endpoint,
-  }) => {
+  baseUrl: `${window.location.protocol}//${window.location.hostname}:5000/api/`,
+  prepareHeaders: (headers, { endpoint }) => {
     const token = localStorage.getItem('shadow-forum/access_token');
     if (token && endpoint !== 'refresh') {
       headers.set('Authorization', `Bearer ${token}`);
@@ -23,15 +21,19 @@ const baseQuery = fetchBaseQuery({
   credentials: 'include',
 });
 
-export const baseQueryWithRefresh: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
-  args,
-  api,
-  extraOptions,
-) => {
+export const baseQueryWithRefresh: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
   let request = await baseQuery(args, api, extraOptions);
   if (request.error && request.error.status === 401) {
     type refreshRequest = QueryReturnValue<AuthResponse, FetchBaseQueryError, FetchBaseQueryMeta>;
-    const refresh: refreshRequest = await baseQuery('refresh', api, extraOptions) as refreshRequest;
+    const refresh: refreshRequest = (await baseQuery(
+      'refresh',
+      api,
+      extraOptions,
+    )) as refreshRequest;
     if (refresh.data) {
       localStorage.setItem('shadow-forum/access_token', refresh.data.accessToken);
       // repeat our initial request

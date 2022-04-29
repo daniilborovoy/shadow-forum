@@ -4,7 +4,7 @@ import { AuthResponse, RegistrationRequest, LoginRequest } from '../models/auth.
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${window.location.hostname}:5000/api/`,
+    baseUrl: `${window.location.protocol}//${window.location.hostname}:5000/api/`,
     credentials: 'include',
     prepareHeaders: (headers, { endpoint }) => {
       const token = localStorage.getItem('shadow-forum/access_token');
