@@ -10,7 +10,7 @@ const DB_URL: string | null = process.env.DB_URL || null;
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: process.env.ORIGIN,
     methods: ['GET', 'POST'],
   },
 });
@@ -19,12 +19,10 @@ chat(io);
 const start = (): void => {
   try {
     if (!DB_URL) throw new Error('Database connection link not found!');
-    mongoose.connect(DB_URL)
-      .then((): void => {
-        httpServer.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
-      });
-  } catch
-    (error: unknown) {
+    mongoose.connect(DB_URL).then((): void => {
+      httpServer.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
+    });
+  } catch (error: unknown) {
     console.error(`Server start error: ${error}`);
   }
 };

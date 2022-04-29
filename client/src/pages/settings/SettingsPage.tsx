@@ -1,5 +1,6 @@
 import React, {
   ChangeEvent,
+  ChangeEventHandler,
   FC,
   FormEvent,
   ReactNode,
@@ -41,6 +42,7 @@ import { useSnackbar } from 'notistack';
 import CloseIcon from '@mui/icons-material/Close';
 import AvatarUpload from '../../components/avatar-upload/AvatarUpload';
 import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
+import { useDropzone } from 'react-dropzone';
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -140,7 +142,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   const [changeThemeQuery, {}] = userApi.useChangeUserThemeMutation();
 
   const handleFileChange = (event: any) => {
-    let input = event.target.files[0];
+    const input = event.target.files[0];
     if (!input) return;
     setImageUrl(URL.createObjectURL(input));
     let data = new FormData();
@@ -173,6 +175,22 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
     setImageUrl(''); // TODO value from server
     setUploadImageFile(null);
   };
+
+  const onDropUploadAvatar = useCallback(
+    (acceptedFiles: any) => {
+      let input = acceptedFiles[0];
+      if (!input) return;
+      setImageUrl(URL.createObjectURL(input));
+      let data = new FormData();
+      data.append('avatar', input);
+      setUploadImageFile(data);
+    },
+    [uploadImageFile],
+  );
+
+  const { getRootProps, getInputProps, isDragAccept } = useDropzone({
+    onDrop: onDropUploadAvatar,
+  });
 
   return (
     <>
@@ -241,6 +259,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                   }
                 >
                   <InputLabel
+                    {...getRootProps()}
                     htmlFor='user-avatar-input'
                     sx={{
                       width: 'inherit',
@@ -248,11 +267,16 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                       borderRadius: '50%',
                     }}
                   >
-                    <AvatarUpload imageUrl={imageUrl} userName={currentUserName.current} />
+                    <AvatarUpload
+                      imageUrl={imageUrl}
+                      userName={currentUserName.current}
+                      isDragAccept={isDragAccept}
+                    />
                   </InputLabel>
                 </Badge>
                 <Input
                   id='user-avatar-input'
+                  {...getInputProps()}
                   sx={{
                     width: '100%',
                     height: '100%',
