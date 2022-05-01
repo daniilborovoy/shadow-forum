@@ -41,12 +41,17 @@ const RegistrationForm: FC = () => {
         enqueueSnackbar('Успешная регистрация!', {
           variant: 'success',
         });
+        enqueueSnackbar(
+          `Письмо с ссылкой для активации было отправлено на почту ${userData.email}.`,
+          {
+            variant: 'info',
+          },
+        );
         window.history.go(-1);
       })
       .catch(() => {
         console.log(registrationError);
         enqueueSnackbar('Ошибка при регистрации!', {
-          // TODO reg error возможна не строка
           variant: 'error',
         });
       });

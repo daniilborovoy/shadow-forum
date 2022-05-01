@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { User, userTheme } from '../models/user.model';
+import { User } from '../models/user.model';
 import { baseQueryWithRefresh } from '../http';
 
 export const userApi = createApi({

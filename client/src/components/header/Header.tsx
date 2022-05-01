@@ -149,7 +149,10 @@ const Header: FC = () => {
             alignItems='center'
             sx={{ padding: '10px 15px', textAlign: 'center' }}
           >
-            <Avatar {...stringAvatar(user.name)} />
+            <Avatar
+              src={`http://localhost:5000/static/${user.id}.webp`}
+              {...stringAvatar(user.name)}
+            />
             <Typography sx={{ marginLeft: '15px' }}>{user.email}</Typography>
           </Box>
           <Divider flexItem />
@@ -270,8 +273,9 @@ const Header: FC = () => {
                   aria-haspopup='true'
                   onClick={openProfileMenuHandler}
                   color='inherit'
+                  sx={{ padding: '5px' }}
                 >
-                  <AccountCircle />
+                  <Avatar src={`http://localhost:5000/static/${user.id}.webp`} />
                 </IconButton>
               </>
             ) : window.location.pathname !== '/authorize' ? (

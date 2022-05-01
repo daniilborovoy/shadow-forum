@@ -102,6 +102,7 @@ const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
+                overflow: 'hidden',
               }}
             >
               <Box

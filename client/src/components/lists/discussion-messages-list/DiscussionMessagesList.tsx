@@ -2,8 +2,9 @@ import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { MessageResponse } from '../../../models/message.model';
 import { Socket } from 'socket.io-client';
 import DiscussionMessage from '../../discussion-message/DiscussionMessage';
-import { Divider, Stack, Box, Typography, LinearProgress } from '@mui/material';
+import { Divider, Stack, Box, Typography, LinearProgress, Skeleton, Avatar } from '@mui/material';
 import EmptyImg from './DiscussionEmpty.svg';
+import { stringAvatar } from '../../../utils/Avatar';
 
 const DiscussionMessagesList: FC<{
   socket: Socket;
@@ -87,9 +88,18 @@ const DiscussionMessagesList: FC<{
     }
   };
 
-  if (loading) {
+  if (loading || !discussionMessages) {
     return (
-      <LinearProgress sx={{ width: '90%', borderRadius: '5px', margin: '15px' }} color='info' />
+      <Stack
+        width='100%'
+        flexDirection='column'
+        overflow='hidden'
+        divider={<Divider color='#000' flexItem />}
+      >
+        <Skeleton animation='wave' variant='rectangular' width='100%' height={108} />
+        <Skeleton animation='wave' variant='rectangular' width='100%' height={108} />
+        <Skeleton animation='wave' variant='rectangular' width='100%' height={108} />
+      </Stack>
     );
   }
 
@@ -101,7 +111,7 @@ const DiscussionMessagesList: FC<{
       overflow='hidden'
       divider={<Divider flexItem />}
     >
-      {showMessages()}
+      {discussionMessages.length ? discussionMessages : EmptyMessage}
     </Stack>
   );
 };

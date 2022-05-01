@@ -49,6 +49,8 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
         navigate(`/discussions/${discussion.id}`);
       };
 
+      const avatarUrl = `http://localhost:5000/static/${discussion.creatorId}.webp`;
+
       return (
         <ListItemButton
           divider
@@ -73,7 +75,7 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
             alignItems='center'
           >
             <ListItemAvatar>
-              <Avatar />
+              <Avatar src={avatarUrl} />
             </ListItemAvatar>
             <ListItemText
               sx={{ marginRight: '15px', wordBreak: 'break-word' }}

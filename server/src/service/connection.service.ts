@@ -41,7 +41,6 @@ class Connection {
 
   async handleMessage(value: string, userId: string, discussionId: string, callback: Function) {
     const message = await MessageService.saveMessage(value, userId, discussionId);
-    console.log(message);
     this.sendMessage(message, discussionId);
     callback();
   }

@@ -75,11 +75,11 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   const [userEmail, setUserEmail] = useState<string>(user.email);
   const [userAccountAddress, setUserAccountAddress] = useState<string>(user.id);
   const [uploadImageFile, setUploadImageFile] = useState<FormData | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>('');
+  const currentAvatarUrl = `http://localhost:5000/static/${user.id}.webp`;
+  const [imageUrl, setImageUrl] = useState<string>(currentAvatarUrl);
   const activated = user.isActivated;
   const currentUserName = useRef(userName);
   const currentUserEmail = useRef(userEmail);
-  const currentUserAccountAddress = useRef(user.id); // TODO Добавить поле с адресом аккаунта в базу, по дефолту равное id
   const { theme } = useContext(ChosenTheme);
   const matches = useMediaQuery('(min-width:600px)');
   const [loading, setLoading] = useState<boolean>(false);
@@ -107,7 +107,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
     }
   };
 
-  const [uploadUserAvatar, {}] = userApi.useUpdateUserAvatarMutation();
+  const [uploadUserAvatar] = userApi.useUpdateUserAvatarMutation();
 
   const updateAccountHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -115,13 +115,13 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
       setLoading(true);
       uploadUserAvatar(uploadImageFile)
         .unwrap()
-        .then((e) => {
-          enqueueSnackbar('Аккаунт успешно обновлён!', {
+        .then((res) => {
+          enqueueSnackbar(res, {
             variant: 'success',
           });
         })
-        .catch((e) => {
-          enqueueSnackbar('Ошибка при обновлении аккаунта!', {
+        .catch((err) => {
+          enqueueSnackbar(`Ошибка при загрузке аватара: ${err.data.message}`, {
             variant: 'error',
           });
         })
@@ -139,13 +139,13 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
 
   const disableBtn = showUpdateButton();
 
-  const [changeThemeQuery, {}] = userApi.useChangeUserThemeMutation();
+  const [changeThemeQuery] = userApi.useChangeUserThemeMutation();
 
   const handleFileChange = (event: any) => {
     const input = event.target.files[0];
     if (!input) return;
     setImageUrl(URL.createObjectURL(input));
-    let data = new FormData();
+    const data = new FormData();
     data.append('avatar', input);
     setUploadImageFile(data);
   };
@@ -172,16 +172,16 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   };
 
   const cancelChangeAvatarHandler = () => {
-    setImageUrl(''); // TODO value from server
+    setImageUrl(`http://localhost:5000/static/${user.id}.webp`); // TODO value from server
     setUploadImageFile(null);
   };
 
   const onDropUploadAvatar = useCallback(
     (acceptedFiles: any) => {
-      let input = acceptedFiles[0];
+      const input = acceptedFiles[0];
       if (!input) return;
       setImageUrl(URL.createObjectURL(input));
-      let data = new FormData();
+      const data = new FormData();
       data.append('avatar', input);
       setUploadImageFile(data);
     },
@@ -191,6 +191,8 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   const { getRootProps, getInputProps, isDragAccept } = useDropzone({
     onDrop: onDropUploadAvatar,
   });
+
+  const isNewUserAvatar = currentAvatarUrl !== imageUrl;
 
   return (
     <>
@@ -251,7 +253,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                   overlap='circular'
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   badgeContent={
-                    imageUrl && (
+                    isNewUserAvatar && (
                       <IconButton onClick={cancelChangeAvatarHandler}>
                         <CloseIcon />
                       </IconButton>

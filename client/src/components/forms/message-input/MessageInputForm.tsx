@@ -25,8 +25,9 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
   const sendMessageHandler = (event: FormEvent): void => {
     event.preventDefault();
     setSendLoading(true);
+    const sendingMessage = userMessage.message.trim();
     if (user) {
-      socket.emit('msg', userMessage.message, user.id, userMessage.discussionId, () => {
+      socket.emit('msg', sendingMessage, user.id, userMessage.discussionId, () => {
         setSendLoading(false);
       });
       setUserMessage({
@@ -35,15 +36,20 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
       });
       return;
     }
-    alert('sending error');
+    alert('Sending error!');
   };
 
+  const avatarUrl = `http://localhost:5000/static/${user?.id}.webp`;
+  const isNotValidMessage = userMessage.message.trim().length === 0;
+
   return (
-    <Box component='form' method='POST' onSubmit={sendMessageHandler}>
-      <FormControl variant='standard' sx={{ padding: '15px' }}>
+    <Box sx={{ width: '100%' }} component='form' method='POST' onSubmit={sendMessageHandler}>
+      <FormControl variant='standard' sx={{ padding: '15px', width: '100%' }}>
         <FormGroup>
-          <Avatar {...stringAvatar(userName)} />
+          <Avatar src={avatarUrl} {...stringAvatar(userName)} />
           <TextField
+            title='Введите сообщение'
+            fullWidth
             value={userMessage.message}
             onChange={(e) => {
               setUserMessage((prev) => ({
@@ -55,12 +61,13 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
             label='Сообщение'
             variant='outlined'
             type='text'
-            required={true}
           />
           <LoadingButton
+            title='Отправить сообщение'
             sx={{ marginTop: '15px' }}
             loading={sendLoading}
             loadingPosition='start'
+            disabled={isNotValidMessage}
             startIcon={<Send />}
             variant='contained'
             type='submit'

@@ -10,6 +10,7 @@ const AvatarUpload: FC<{ imageUrl: string; userName: string; isDragAccept: boole
   <IconButton
     component='div'
     sx={{
+      padding: '0',
       width: 'inherit',
       height: 'inherit',
       ':hover': {
