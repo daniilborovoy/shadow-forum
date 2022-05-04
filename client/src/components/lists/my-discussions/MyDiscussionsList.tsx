@@ -11,6 +11,7 @@ const StyledTransitionGroup = styled(TransitionGroup)(({ theme }) => ({
   display: 'flex',
   gap: '40px',
   flexWrap: 'wrap',
+  justifyContent: 'center',
 }));
 const MyDiscussionsList: FC<{ discussions: DiscussionResponse[] }> = ({ discussions }) => {
   if (!discussions.length) {

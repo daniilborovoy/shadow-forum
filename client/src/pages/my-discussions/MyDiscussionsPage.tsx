@@ -21,7 +21,6 @@ const MyDiscussionsPage = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          padding: '0 30px',
         }}
       >
         <Typography textAlign='center' mt={5} mb={5} fontSize={30}>

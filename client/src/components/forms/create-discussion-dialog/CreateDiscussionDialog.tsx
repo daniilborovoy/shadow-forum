@@ -125,7 +125,7 @@ export const CreateDiscussionDialog: FC<{
           <Typography>Новое обсуждение</Typography>
         </MenuItem>
       )}
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} scroll='body' onClose={handleClose}>
         <DialogTitle sx={{ wordWrap: 'break-word' }}>
           {newDiscussion.title.length ? newDiscussion.title : 'Новое обсуждение'}
         </DialogTitle>
