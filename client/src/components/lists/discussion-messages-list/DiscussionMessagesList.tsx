@@ -2,9 +2,18 @@ import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { MessageResponse } from '../../../models/message.model';
 import { Socket } from 'socket.io-client';
 import DiscussionMessage from '../../discussion-message/DiscussionMessage';
-import { Divider, Stack, Box, Typography, LinearProgress, Skeleton, Avatar } from '@mui/material';
+import { Divider, Stack, Box, Typography, Skeleton, Collapse } from '@mui/material';
 import EmptyImg from './DiscussionEmpty.svg';
-import { stringAvatar } from '../../../utils/Avatar';
+import { TransitionGroup } from 'react-transition-group';
+import { styled } from '@mui/material/styles';
+
+const StyledTransitionGroup = styled(TransitionGroup)(({ theme }) => ({
+  alignItems: 'flex-start',
+  display: 'flex',
+  width: '100%',
+  flexDirection: 'column',
+  overflow: 'hidden',
+}));
 
 const DiscussionMessagesList: FC<{
   socket: Socket;
@@ -55,7 +64,12 @@ const DiscussionMessagesList: FC<{
 
   const discussionMessages =
     messages &&
-    messages.map((message) => <DiscussionMessage key={message.messageId} message={message} />);
+    messages.map((message) => (
+      <Collapse sx={{ width: '100%' }}>
+        <DiscussionMessage key={message.messageId} message={message} />
+        <Divider />
+      </Collapse>
+    ));
   const EmptyMessage = (
     <Box
       padding='15px'
@@ -104,15 +118,9 @@ const DiscussionMessagesList: FC<{
   }
 
   return (
-    <Stack
-      alignItems={discussionMessages ? 'flex-start' : 'center'}
-      width='100%'
-      flexDirection='column'
-      overflow='hidden'
-      divider={<Divider flexItem />}
-    >
+    <StyledTransitionGroup>
       {discussionMessages.length ? discussionMessages : EmptyMessage}
-    </Stack>
+    </StyledTransitionGroup>
   );
 };
 

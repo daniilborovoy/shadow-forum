@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { User } from '../models/user.model';
+import { User, userTheme } from '../models/user.model';
 import { baseQueryWithRefresh } from '../http';
 
 export const userApi = createApi({
@@ -16,8 +16,8 @@ export const userApi = createApi({
         url: 'users',
       }),
     }),
-    changeUserTheme: build.mutation<void, 'dark' | 'light'>({
-      query: (theme: 'dark' | 'light') => ({
+    changeUserTheme: build.mutation<userTheme, userTheme>({
+      query: (theme: userTheme) => ({
         url: 'change-theme',
         method: 'PUT',
         body: {

@@ -22,7 +22,7 @@ const initialState: AuthState = {
   isLoading: false,
   accessToken: null,
   refreshToken: null,
-  userTheme: 'none',
+  userTheme: 'system',
   user: null,
   error: null,
 };
@@ -49,11 +49,14 @@ const AuthSlice = createSlice({
         state.refreshToken = null;
         state.accessToken = null;
         state.user = null;
-        state.userTheme = 'none';
+        state.userTheme = 'system';
       })
-      .addMatcher(userApi.endpoints.changeUserTheme.matchFulfilled, (state: AuthState, action) => {
-        state.userTheme = state.userTheme === 'dark' ? 'light' : 'dark';
-      });
+      .addMatcher(
+        userApi.endpoints.changeUserTheme.matchFulfilled,
+        (state: AuthState, action: PayloadAction<userTheme>) => {
+          state.userTheme = action.payload;
+        },
+      );
   },
 });
 

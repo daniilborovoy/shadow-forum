@@ -25,12 +25,16 @@ import { styled } from '@mui/material/styles';
 import { blue, grey } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import { useEnqueueSnackbar } from '../../../hooks/useEnqueueSnackbar';
+import { useNavigate } from 'react-router-dom';
 
 type CreateDiscussionFormDialogType = 'mobile' | 'desktop';
 
-export const CreateDiscussionDialog: FC<{ type: CreateDiscussionFormDialogType }> = ({ type }) => {
+export const CreateDiscussionDialog: FC<{
+  type: CreateDiscussionFormDialogType;
+}> = ({ type }) => {
   const [open, setOpen] = useState<boolean>(false);
   const enqueueSnackbar = useEnqueueSnackbar();
+  const navigate = useNavigate();
 
   const [
     createDiscussionAction,
@@ -50,8 +54,9 @@ export const CreateDiscussionDialog: FC<{ type: CreateDiscussionFormDialogType }
     }
     createDiscussionAction(newDiscussion)
       .unwrap()
-      .then(() => {
+      .then((res) => {
         handleClose();
+        navigate(`/discussions/${res.id}`);
         enqueueSnackbar(`Обсуждение ${newDiscussion.title} создано успешно!`, {
           variant: 'success',
         });

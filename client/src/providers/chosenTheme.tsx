@@ -14,6 +14,6 @@ export const ChosenTheme = createContext<IChosenTheme>({} as IChosenTheme);
 export const ChosenThemeProvider = ({ children }: { children: ReactNode }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', { noSsr: true });
   const userTheme = useAppSelector(getUserTheme);
-  const theme = userTheme === 'none' ? (prefersDarkMode ? 'dark' : 'light') : userTheme;
+  const theme = userTheme === 'system' ? (prefersDarkMode ? 'dark' : 'light') : userTheme;
   return <ChosenTheme.Provider value={{ theme }}>{children}</ChosenTheme.Provider>;
 };

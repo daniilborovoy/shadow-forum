@@ -1,4 +1,4 @@
-export type userTheme = 'dark' | 'light' | 'none';
+export type userTheme = 'dark' | 'light' | 'system';
 
 interface User {
   _id: string;

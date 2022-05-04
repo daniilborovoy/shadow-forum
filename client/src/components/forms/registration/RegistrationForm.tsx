@@ -15,9 +15,11 @@ import { RegistrationRequest } from '../../../models/auth.model';
 import { authApi } from '../../../services/auth.service';
 import { useSnackbar } from 'notistack';
 import { useEnqueueSnackbar } from '../../../hooks/useEnqueueSnackbar';
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm: FC = () => {
   const enqueueSnackbar = useEnqueueSnackbar();
+  const navigate = useNavigate();
   const [registration, { isLoading: registrationLoading, error: registrationError }] =
     authApi.useRegistrationMutation();
 
@@ -38,6 +40,7 @@ const RegistrationForm: FC = () => {
     registration(userData)
       .unwrap()
       .then(() => {
+        navigate('/');
         enqueueSnackbar('Успешная регистрация!', {
           variant: 'success',
         });
@@ -47,7 +50,6 @@ const RegistrationForm: FC = () => {
             variant: 'info',
           },
         );
-        window.history.go(-1);
       })
       .catch(() => {
         console.log(registrationError);

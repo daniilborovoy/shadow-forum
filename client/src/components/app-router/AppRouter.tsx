@@ -7,7 +7,7 @@ import AppLoader from '../app-loader/AppLoader';
 import { Socket } from 'socket.io-client';
 import { useAppSelector } from '../../hooks/redux';
 import { getUser } from '../../store/selectors/authSelectors';
-import { User } from '../../models/user.model';
+import MyDiscussionsPage from '../../pages/my-discussions/MyDiscussionsPage';
 
 const NotFoundPage = lazy(() => import('../../pages/not-found/NotFoundPage'));
 const AuthorizePage = lazy(() => import('../../pages/authorize/AuthorizePage'));
@@ -46,14 +46,17 @@ const AppRouter: FC<{ socket: Socket }> = ({ socket }) => {
         )}
         <Route path='/discussions/:id' element={<DiscussionPage socket={socket} />} />
         {user && (
-          <Route
-            path='/settings'
-            element={
-              <Suspense fallback={<AppLoader />}>
-                <SettingsPage user={user} />
-              </Suspense>
-            }
-          />
+          <>
+            <Route
+              path='/settings'
+              element={
+                <Suspense fallback={<AppLoader />}>
+                  <SettingsPage user={user} />
+                </Suspense>
+              }
+            />
+            <Route path='/my-discussions' element={<MyDiscussionsPage />} />
+          </>
         )}
         <Route path='/activation/:activationLink' element={emailActivation} />
         <Route path='*' element={notFound} />

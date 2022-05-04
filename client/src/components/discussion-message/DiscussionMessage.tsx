@@ -6,8 +6,8 @@ import { stringAvatar } from '../../utils/Avatar';
 
 const DiscussionMessage: FC<{ message: MessageResponse }> = ({ message }) => {
   const creationDate = dayjs(message.creationDate).format('DD MMMM YYYY в H:mm');
-
   const avatarUrl = `http://localhost:5000/static/${message.createdBy._id}.webp`;
+
   return (
     <Box
       sx={{
