@@ -122,12 +122,12 @@ class UserService {
     return userDto;
   }
 
-  async changeTheme(userId: string, theme: 'dark' | 'light') {
+  async changeTheme(userId: string, theme: 'dark' | 'light' | 'system') {
     const user: HydratedDocument<User> | null = await UserModel.findById(userId);
     if (!user) throw ApiError.BadRequestError(`user with id: ${userId} does not exist!`);
     user.userTheme = theme;
     await user.save();
-    return;
+    return theme;
   }
 
   async saveUserAvatar(imageFile: Express.Multer.File | undefined, uploadPath: string) {

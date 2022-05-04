@@ -110,10 +110,10 @@ class UserController {
   async changeTheme(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.body.user.id;
-      const theme: 'dark' | 'light' = req.body.theme;
+      const theme: 'dark' | 'light' | 'system' = req.body.theme;
       if (!userId) throw ApiError.BadRequestError('user id missing!');
-      await userService.changeTheme(userId, theme);
-      return res.send();
+      const newTheme = await userService.changeTheme(userId, theme);
+      return res.status(200).json(newTheme);
     } catch (err: unknown) {
       next(err);
     }

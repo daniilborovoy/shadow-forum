@@ -39,6 +39,16 @@ class DiscussionService {
     return discussionsDto;
   }
 
+  async fetchMyDiscussions(id: string) {
+    const discussions = await DiscussionModel.find({ creatorId: id }, null, {
+      sort: { creationDate: -1 },
+    });
+    const discussionsDto: DiscussionDto[] = discussions.map(
+      (discussion) => new DiscussionDto(discussion),
+    );
+    return discussionsDto;
+  }
+
   async createDiscussion(userId: string, discussionTitle: string, discussionBody: string) {
     const discussion: HydratedDocument<Discussion> = await DiscussionModel.create({
       title: discussionTitle,
