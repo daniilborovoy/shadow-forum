@@ -117,6 +117,7 @@ const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
                   <MessagesList
                     setClientsSize={setClientsSize}
                     discussionId={discussionId}
+                    isCreator={discussion.isCreator}
                     socket={socket}
                   />
                 )}

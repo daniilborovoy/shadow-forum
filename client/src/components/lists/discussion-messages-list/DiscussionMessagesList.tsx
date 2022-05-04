@@ -4,6 +4,7 @@ import { Socket } from 'socket.io-client';
 import DiscussionMessage from '../../discussion-message/DiscussionMessage';
 import { Divider, Stack, Box, Typography, Skeleton, Collapse } from '@mui/material';
 import EmptyImg from './DiscussionEmpty.svg';
+import EmptyImgCreator from './DiscussionEmptyCreator.svg';
 import { TransitionGroup } from 'react-transition-group';
 import { styled } from '@mui/material/styles';
 
@@ -19,7 +20,8 @@ const DiscussionMessagesList: FC<{
   socket: Socket;
   discussionId: string;
   setClientsSize: Dispatch<SetStateAction<number>>;
-}> = ({ socket, discussionId, setClientsSize }) => {
+  isCreator: boolean;
+}> = ({ socket, discussionId, setClientsSize, isCreator }) => {
   const [messages, setMessages] = useState<MessageResponse[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -81,26 +83,29 @@ const DiscussionMessagesList: FC<{
       boxSizing='border-box'
       textAlign='center'
     >
-      <Typography fontSize={30}>Будьте первыми!</Typography>
-      <Typography>Помогите другому человеку с ответом на его вопрос.</Typography>
-      <Box
-        component='img'
-        src={EmptyImg}
-        sx={{ width: { xs: 200, sm: 400 }, pointerEvents: 'none', userSelect: 'none' }}
-      />
+      {!isCreator ? (
+        <>
+          <Typography fontSize={30}>Будьте первыми!</Typography>
+          <Typography>Помогите другому человеку с ответом на его вопрос.</Typography>
+          <Box
+            component='img'
+            src={EmptyImg}
+            sx={{ width: { xs: 200, sm: 400 }, pointerEvents: 'none', userSelect: 'none' }}
+          />
+        </>
+      ) : (
+        <>
+          <Typography fontSize={30}>Пусто!</Typography>
+          <Typography>На ваш вопрос пока никто не ответил.</Typography>
+          <Box
+            component='img'
+            src={EmptyImgCreator}
+            sx={{ width: { xs: 200, sm: 400 }, pointerEvents: 'none', userSelect: 'none' }}
+          />
+        </>
+      )}
     </Box>
   );
-
-  const showMessages = () => {
-    if (!loading) {
-      if (discussionMessages) {
-        if (discussionMessages.length) {
-          return discussionMessages;
-        }
-        return EmptyMessage;
-      }
-    }
-  };
 
   if (loading || !discussionMessages) {
     return (
