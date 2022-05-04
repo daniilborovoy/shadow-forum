@@ -6,6 +6,7 @@ import { validateDiscussionBody } from '../validators/discussions.validators';
 const router = Router();
 
 router.get('/discussions', DiscussionController.getDiscussions);
+router.get('/discussions/me', authMiddleware, DiscussionController.getMyDiscussions);
 router.get('/discussions/:id', DiscussionController.getDiscussion);
 router.post(
   '/discussions',

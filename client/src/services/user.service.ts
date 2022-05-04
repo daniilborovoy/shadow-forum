@@ -16,8 +16,8 @@ export const userApi = createApi({
         url: 'users',
       }),
     }),
-    changeUserTheme: build.mutation<void, 'dark' | 'light'>({
-      query: (theme: 'dark' | 'light') => ({
+    changeUserTheme: build.mutation<userTheme, userTheme>({
+      query: (theme: userTheme) => ({
         url: 'change-theme',
         method: 'PUT',
         body: {

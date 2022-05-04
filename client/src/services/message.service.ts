@@ -2,7 +2,6 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithRefresh } from '../http';
 import { MessageResponse, MessageRequest } from '../models/message.model';
 
-// TODO Сделать back для клиента
 export const messagesApi = createApi({
   reducerPath: 'messageApi',
   baseQuery: baseQueryWithRefresh,

@@ -4,6 +4,7 @@ interface DiscussionResponse {
   body: string;
   creationDate: Date;
   viewsCount: number;
+  creatorId: string;
   messagesCount: number;
   isCreator: boolean;
 }

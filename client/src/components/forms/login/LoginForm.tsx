@@ -13,9 +13,11 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { authApi } from '../../../services/auth.service';
 import { LoginRequest } from '../../../models/auth.model';
 import { useEnqueueSnackbar } from '../../../hooks/useEnqueueSnackbar';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm: FC = () => {
   const enqueueSnackbar = useEnqueueSnackbar();
+  const navigate = useNavigate();
   const [login, { isLoading: loginLoading, error: loginError }] = authApi.useLoginMutation();
   const [loginRequest, setLoginRequest] = useState<LoginRequest>({
     email: '',
@@ -32,7 +34,7 @@ const LoginForm: FC = () => {
     login(userData)
       .unwrap()
       .then(() => {
-        window.history.go(-1);
+        navigate('/');
         enqueueSnackbar('Успешный вход!', {
           variant: 'success',
         });

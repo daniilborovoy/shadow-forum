@@ -20,6 +20,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', authRouter, usersRouter, discussionsRouter, messagesRouter);
-app.use('/static', express.static(path.resolve('uploads')));
+app.use('/static', express.static(path.resolve(__dirname, 'avatars/')));
 app.use(errorMiddleware);
 export default app;

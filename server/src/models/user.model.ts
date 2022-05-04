@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-export type userTheme = 'dark' | 'light' | 'none';
+export type userTheme = 'dark' | 'light' | 'system';
 
 export interface User {
   name: string;
@@ -38,7 +38,7 @@ const UserSchema = new Schema<User>({
   activationLink: { type: String },
   userTheme: {
     type: String,
-    default: 'none',
+    default: 'system',
   },
 });
 

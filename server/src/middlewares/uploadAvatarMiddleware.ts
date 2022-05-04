@@ -1,32 +1,20 @@
 import multer from 'multer';
-import path from 'path';
-import { NextFunction, Request } from 'express';
+import { Request } from 'express';
+import ApiError from '../exceptions/api.error';
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
-      cb(null, true);
-    } else {
-      cb(null, false);
-      return cb(new Error('Only .png, .jpg, .mp4 and .jpeg format allowed!'));
-    }
-  },
-}).single('avatar');
-
-export default (req: Request, res: any, next: NextFunction) => {
-  return upload(req, res, () => {
-    // Remember, the middleware will call it's next function
-    // so we can inject our controller manually as the next()
-    next();
-  });
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  callback: multer.FileFilterCallback,
+) => {
+  if (file.mimetype.startsWith('image')) {
+    callback(null, true);
+  } else {
+    callback(null, false);
+    return callback(ApiError.BadRequestError('Разрешено использовать только файлы изображений!'));
+  }
 };
+
+export default multer({
+  fileFilter,
+}).single('avatar');

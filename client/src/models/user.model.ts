@@ -1,7 +1,8 @@
-export type userTheme = 'dark' | 'light' | 'none';
+export type userTheme = 'dark' | 'light' | 'system';
 
 interface User {
-  id: string; //TODO
+  _id: string;
+  id: string; // TODO
   name: string;
   email: string;
   userTheme: userTheme;

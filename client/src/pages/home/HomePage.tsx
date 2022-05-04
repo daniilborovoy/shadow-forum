@@ -54,7 +54,6 @@ const HomePage: FC = () => {
       <Container>
         <Box component='section'>
           <Typography
-            component='h1'
             sx={{
               color: 'text.primary',
               fontSize: '2.5rem',
@@ -66,7 +65,7 @@ const HomePage: FC = () => {
           </Typography>
           <Typography
             mb={10}
-            component='h2'
+            component='h1'
             sx={{
               color: 'text.secondary',
               fontSize: '1.5rem',
@@ -87,7 +86,7 @@ const HomePage: FC = () => {
         <Box component='section'>
           <Typography
             mb={5}
-            component='h3'
+            component='h2'
             sx={{
               color: 'text.secondary',
               fontSize: '1.5rem',

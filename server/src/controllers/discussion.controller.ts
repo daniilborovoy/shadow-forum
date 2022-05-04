@@ -42,6 +42,16 @@ class DiscussionController {
     }
   }
 
+  async getMyDiscussions(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id: string = req.body.user.id;
+      const discussions = await DiscussionService.fetchMyDiscussions(id);
+      return res.status(200).json(discussions);
+    } catch (err: unknown) {
+      next(err);
+    }
+  }
+
   async createDiscussion(req: Request, res: Response, next: NextFunction) {
     try {
       const { title: discussionTitle, body: discussionBody } = req.body;

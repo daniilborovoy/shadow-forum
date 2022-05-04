@@ -1,6 +1,6 @@
 import React, { FC, useState, MouseEvent, ChangeEvent } from 'react';
 import { authApi } from '../../services/auth.service';
-import { useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useNavigate } from 'react-router-dom';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
@@ -24,6 +24,8 @@ import { styled, alpha } from '@mui/material/styles';
 import { getUser } from '../../store/selectors/authSelectors';
 import { CreateDiscussionDialog } from '../forms/create-discussion-dialog/CreateDiscussionDialog';
 import { stringAvatar } from '../../utils/Avatar';
+import { discussionsApi } from '../../services/discussions.service';
+import { userApi } from '../../services/user.service';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -69,7 +71,7 @@ const Header: FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
-
+  const dispatch = useAppDispatch();
   const [logout, { isLoading: logoutLoading, error: logoutError }] = authApi.useLogoutMutation();
 
   const user = useAppSelector(getUser);
@@ -96,11 +98,12 @@ const Header: FC = () => {
     closeMenuHandler();
     await logout();
     navigate('/authorize');
+    dispatch(discussionsApi.internalActions.resetApiState());
   };
 
   const goToMyDiscussionsHandler = () => {
     closeMenuHandler();
-    navigate('/settings/discussions');
+    navigate('/my-discussions');
   };
 
   const goToAuthorizeHandler = () => {
@@ -149,7 +152,10 @@ const Header: FC = () => {
             alignItems='center'
             sx={{ padding: '10px 15px', textAlign: 'center' }}
           >
-            <Avatar {...stringAvatar(user.name)} />
+            <Avatar
+              src={`http://localhost:5000/static/${user.id}.webp`}
+              {...stringAvatar(user.name)}
+            />
             <Typography sx={{ marginLeft: '15px' }}>{user.email}</Typography>
           </Box>
           <Divider flexItem />
@@ -226,7 +232,7 @@ const Header: FC = () => {
           <Typography
             fontSize='20px'
             noWrap
-            component='a'
+            component='span'
             onClick={goHomeHandler}
             sx={{
               display: {
@@ -270,8 +276,9 @@ const Header: FC = () => {
                   aria-haspopup='true'
                   onClick={openProfileMenuHandler}
                   color='inherit'
+                  sx={{ padding: '5px' }}
                 >
-                  <AccountCircle />
+                  <Avatar src={`http://localhost:5000/static/${user.id}.webp`} />
                 </IconButton>
               </>
             ) : window.location.pathname !== '/authorize' ? (

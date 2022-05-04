@@ -8,6 +8,8 @@ import ApiError from '../exceptions/api.error';
 import userModel from '../models/user.model';
 import { HydratedDocument } from 'mongoose';
 import { Token } from '../models/token.model';
+import sharp from 'sharp';
+import fs from 'fs';
 
 class UserService {
   async registration(email: string, name: string, password: string) {
@@ -120,20 +122,25 @@ class UserService {
     return userDto;
   }
 
-  async changeTheme(userId: string, theme: 'dark' | 'light') {
+  async changeTheme(userId: string, theme: 'dark' | 'light' | 'system') {
     const user: HydratedDocument<User> | null = await UserModel.findById(userId);
     if (!user) throw ApiError.BadRequestError(`user with id: ${userId} does not exist!`);
     user.userTheme = theme;
     await user.save();
-    return;
+    return theme;
   }
 
-  async uploadAvatar(userId: string, imageFile: any) {
-    const user: HydratedDocument<User> | null = await UserModel.findById(userId);
-    if (!user) throw ApiError.BadRequestError(`user with id: ${userId} does not exist!`);
-
-    await user.save();
-    return;
+  async saveUserAvatar(imageFile: Express.Multer.File | undefined, uploadPath: string) {
+    if (imageFile) {
+      await sharp(imageFile.buffer, { animated: true })
+        .resize(150, 150)
+        .webp({ quality: 90 })
+        .toBuffer((err, data, info) => {
+          fs.writeFileSync(uploadPath, data);
+        });
+    } else {
+      throw new Error('Ошибка при сохранении аватара!');
+    }
   }
 }
 

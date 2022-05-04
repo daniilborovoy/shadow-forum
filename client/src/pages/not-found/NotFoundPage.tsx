@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import NotFoundImg from './404.png';
+import NotFoundImg from './404.svg';
 import { useNavigate } from 'react-router-dom';
 
 const NotFoundPage: FC<{ message: string }> = ({ message }) => {

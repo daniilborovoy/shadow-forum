@@ -13,7 +13,7 @@ export default class ApiError extends Error {
   }
 
   static UnauthorizedError(message?: string, errors: any[] = []) {
-    return new ApiError(401, message || 'Error: not authorized!', errors);
+    return new ApiError(401, message || 'не авторизован!', errors);
   }
 
   static InternalServerError(message: string, errors: any[] = []) {

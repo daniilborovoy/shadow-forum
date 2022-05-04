@@ -29,12 +29,9 @@ export const discussionsApi = createApi({
         },
       }),
     }),
-    fetchMyDiscussions: build.query<DiscussionResponse[], number | void>({
-      query: (limit: number | void) => ({
+    fetchMyDiscussions: build.query<DiscussionResponse[], null>({
+      query: () => ({
         url: 'discussions/me',
-        params: {
-          _limit: limit,
-        },
       }),
     }),
     createDiscussion: build.mutation<DiscussionResponse, DiscussionRequest>({

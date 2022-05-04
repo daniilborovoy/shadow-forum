@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user.service';
 import { validationResult, ValidationError, Result } from 'express-validator';
 import ApiError from '../exceptions/api.error';
+import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
 
 class UserController {
   async registration(req: Request, res: Response, next: NextFunction) {
@@ -107,23 +110,24 @@ class UserController {
   async changeTheme(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.body.user.id;
-      const theme: 'dark' | 'light' = req.body.theme;
+      const theme: 'dark' | 'light' | 'system' = req.body.theme;
       if (!userId) throw ApiError.BadRequestError('user id missing!');
-      await userService.changeTheme(userId, theme);
-      return res.send();
+      const newTheme = await userService.changeTheme(userId, theme);
+      return res.status(200).json(newTheme);
     } catch (err: unknown) {
       next(err);
     }
   }
 
-  async updateAvatar(req: Request, res: Response, next: NextFunction) {
+  async updateUserAvatar(req: Request, res: Response, _next: NextFunction) {
+    const imageFile = req.file;
+    const fileName = req.body.user.id + '.webp';
+    const uploadPath = path.resolve(__dirname, '..', 'avatars', fileName);
     try {
-      console.log('ok');
-      res.send('OK');
-      // if (!userId) throw ApiError.BadRequestError('user id missing!');
-      // await userService.uploadAvatar(userId, imageFile);
-    } catch (err: unknown) {
-      next(err);
+      await userService.saveUserAvatar(imageFile, uploadPath);
+      res.status(200).json('Аватар успешно обновлён!');
+    } catch (err) {
+      res.status(500).send(err);
     }
   }
 }

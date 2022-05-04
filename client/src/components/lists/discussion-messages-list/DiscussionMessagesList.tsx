@@ -2,8 +2,18 @@ import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { MessageResponse } from '../../../models/message.model';
 import { Socket } from 'socket.io-client';
 import DiscussionMessage from '../../discussion-message/DiscussionMessage';
-import { Divider, Stack, Box, Typography, LinearProgress } from '@mui/material';
+import { Divider, Stack, Box, Typography, Skeleton, Collapse } from '@mui/material';
 import EmptyImg from './DiscussionEmpty.svg';
+import { TransitionGroup } from 'react-transition-group';
+import { styled } from '@mui/material/styles';
+
+const StyledTransitionGroup = styled(TransitionGroup)(({ theme }) => ({
+  alignItems: 'flex-start',
+  display: 'flex',
+  width: '100%',
+  flexDirection: 'column',
+  overflow: 'hidden',
+}));
 
 const DiscussionMessagesList: FC<{
   socket: Socket;
@@ -54,7 +64,12 @@ const DiscussionMessagesList: FC<{
 
   const discussionMessages =
     messages &&
-    messages.map((message) => <DiscussionMessage key={message.messageId} message={message} />);
+    messages.map((message) => (
+      <Collapse sx={{ width: '100%' }}>
+        <DiscussionMessage key={message.messageId} message={message} />
+        <Divider />
+      </Collapse>
+    ));
   const EmptyMessage = (
     <Box
       padding='15px'
@@ -87,22 +102,25 @@ const DiscussionMessagesList: FC<{
     }
   };
 
-  if (loading) {
+  if (loading || !discussionMessages) {
     return (
-      <LinearProgress sx={{ width: '90%', borderRadius: '5px', margin: '15px' }} color='info' />
+      <Stack
+        width='100%'
+        flexDirection='column'
+        overflow='hidden'
+        divider={<Divider color='#000' flexItem />}
+      >
+        <Skeleton animation='wave' variant='rectangular' width='100%' height={108} />
+        <Skeleton animation='wave' variant='rectangular' width='100%' height={108} />
+        <Skeleton animation='wave' variant='rectangular' width='100%' height={108} />
+      </Stack>
     );
   }
 
   return (
-    <Stack
-      alignItems={discussionMessages ? 'flex-start' : 'center'}
-      width='100%'
-      flexDirection='column'
-      overflow='hidden'
-      divider={<Divider flexItem />}
-    >
-      {showMessages()}
-    </Stack>
+    <StyledTransitionGroup>
+      {discussionMessages.length ? discussionMessages : EmptyMessage}
+    </StyledTransitionGroup>
   );
 };
 
