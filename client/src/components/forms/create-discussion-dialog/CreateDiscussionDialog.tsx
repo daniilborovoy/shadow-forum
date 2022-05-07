@@ -89,17 +89,15 @@ export const CreateDiscussionDialog: FC<{
   };
 
   const handleClickOpen = (): void => {
-    setOpen(true);
     setNewDiscussion({
       title: '',
       body: '',
     });
+    setOpen(true);
   };
 
   const handleClose = (): void => {
-    setOpen(() => {
-      return false;
-    });
+    setOpen(false);
   };
 
   const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({

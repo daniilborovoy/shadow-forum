@@ -130,23 +130,11 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
       uploadImageFile
     );
   }, [userEmail, userName, uploadImageFile]);
-
   const disableBtn = showUpdateButton();
-
-  const handleFileChange = (event: any) => {
-    const input = event.target.files[0];
-    if (!input) return;
-    setImageUrl(URL.createObjectURL(input));
-    const data = new FormData();
-    data.append('avatar', input);
-    setUploadImageFile(data);
-  };
   const [value, setValue] = useState(0);
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
   const cancelChangeAvatarHandler = () => {
     setImageUrl(`http://localhost:5000/static/${user.id}.webp`); // TODO value from server
     setUploadImageFile(null);
@@ -166,6 +154,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
 
   const { getRootProps, getInputProps, isDragAccept } = useDropzone({
     onDrop: onDropUploadAvatar,
+    accept: ['image/*'],
   });
 
   const isNewUserAvatar = currentAvatarUrl !== imageUrl;
@@ -267,7 +256,6 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                   width: '100%',
                   height: '100%',
                 }}
-                onChange={handleFileChange}
                 name='avatar'
                 accept='image/*'
                 type='file'

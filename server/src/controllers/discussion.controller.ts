@@ -69,11 +69,10 @@ class DiscussionController {
 
   async deleteDiscussion(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id: discussionId }: { id: string } = req.body;
+      const discussionId = req.query.id as string;
       const userId: string = req.body.user.id;
-      const discussion = await DiscussionService.deleteDiscussion(discussionId, userId);
-      const discussionDto = new DiscussionDto(discussion);
-      res.status(200).json(discussionDto);
+      const deletedDiscussion = await DiscussionService.deleteDiscussion(discussionId, userId);
+      res.status(200).json(deletedDiscussion);
     } catch (err: unknown) {
       next(err);
     }

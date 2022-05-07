@@ -13,7 +13,10 @@ const StyledTransitionGroup = styled(TransitionGroup)(({ theme }) => ({
   flexWrap: 'wrap',
   justifyContent: 'center',
 }));
-const MyDiscussionsList: FC<{ discussions: DiscussionResponse[] }> = ({ discussions }) => {
+const MyDiscussionsList: FC<{ discussions: DiscussionResponse[]; refetch: Function }> = ({
+  discussions,
+  refetch,
+}) => {
   if (!discussions.length) {
     return (
       <>
@@ -39,7 +42,7 @@ const MyDiscussionsList: FC<{ discussions: DiscussionResponse[] }> = ({ discussi
       {discussions.map((discussion) => (
         <Fade key={discussion.id}>
           <Box>
-            <MyDiscussionCard discussion={discussion} />
+            <MyDiscussionCard discussion={discussion} refetch={refetch} />
           </Box>
         </Fade>
       ))}

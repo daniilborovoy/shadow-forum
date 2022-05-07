@@ -5,6 +5,7 @@ import {
   DiscussionsListResponse,
 } from '../models/discussion.model';
 import { baseQueryWithRefresh } from '../http';
+import { FetchArgs } from '@reduxjs/toolkit/dist/query/react';
 
 interface IFetchAllDiscussions {
   limit: number | void;
@@ -54,13 +55,12 @@ export const discussionsApi = createApi({
         },
       }),
     }),
-    deleteDiscussion: build.mutation<DiscussionResponse, DiscussionRequest>({
-      query: (discussionData: DiscussionRequest) => ({
+    deleteDiscussion: build.mutation<DiscussionResponse, string>({
+      query: (discussionId: string) => ({
         url: 'discussions',
         method: 'DELETE',
-        body: {
-          title: discussionData.title,
-          body: discussionData.body,
+        params: {
+          id: discussionId,
         },
       }),
     }),

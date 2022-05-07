@@ -10,8 +10,12 @@ import MessageIcon from '@mui/icons-material/ChatBubble';
 import ViewIcon from '@mui/icons-material/Visibility';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import DeleteDiscussionDialog from '../delete-discussion-dialog/DeleteDiscussionDialog';
 
-const MyDiscussionCard: FC<{ discussion: DiscussionResponse }> = ({ discussion }) => {
+const MyDiscussionCard: FC<{ discussion: DiscussionResponse; refetch: Function }> = ({
+  discussion,
+  refetch,
+}) => {
   const navigate = useNavigate();
   const goToDiscussionHandler = () => {
     navigate(`/discussions/${discussion.id}`);
@@ -74,9 +78,11 @@ const MyDiscussionCard: FC<{ discussion: DiscussionResponse }> = ({ discussion }
         </CardContent>
       </CardActionArea>
       <CardActions sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
-        <IconButton title='Удалить обсуждение'>
-          <DeleteIcon />
-        </IconButton>
+        <DeleteDiscussionDialog
+          refetch={refetch}
+          discussionId={discussion.id}
+          title={discussion.title}
+        />
       </CardActions>
     </Card>
   );

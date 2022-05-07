@@ -6,10 +6,9 @@ import MyDiscussionsSkeleton from '../../components/my-discussions-skeleton/MyDi
 import setPageTitle from '../../utils/SetPageTitle';
 
 const MyDiscussionsPage = () => {
-  const { data: myDiscussions } = discussionsApi.useFetchMyDiscussionsQuery(null, {
+  const { data: myDiscussions, refetch } = discussionsApi.useFetchMyDiscussionsQuery(null, {
     refetchOnMountOrArgChange: true,
   });
-
   useEffect(() => {
     setPageTitle('Мои обсуждения');
   });
@@ -27,7 +26,7 @@ const MyDiscussionsPage = () => {
           Мои обсуждения
         </Typography>
         {myDiscussions ? (
-          <MyDiscussionsList discussions={myDiscussions} />
+          <MyDiscussionsList discussions={myDiscussions} refetch={refetch} />
         ) : (
           <MyDiscussionsSkeleton />
         )}
