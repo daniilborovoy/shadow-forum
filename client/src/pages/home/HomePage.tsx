@@ -1,8 +1,8 @@
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import { Box, Container, Typography, TextField, LinearProgress } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import sayDayTime from '../../utils/SayDayTime';
-import DiscussionsList from '../../components/lists/discussions-list/DiscussionsList';
+import DiscussionsList from '../../components/discussions-list/DiscussionsList';
 import setPageTitle from '../../utils/SetPageTitle';
 import { getUserName } from '../../store/selectors/authSelectors';
 import { discussionsApi } from '../../services/discussions.service';
@@ -50,10 +50,22 @@ const HomePage: FC = () => {
   };
 
   return (
-    <Box component='main' sx={{ width: '100%', minHeight: '100vh', padding: '64px 0 0 0' }}>
-      <Container>
+    <>
+      <Container
+        component='main'
+        sx={{
+          paddingTop: '64px',
+          paddingBottom: '15px',
+          width: '100%',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+        }}
+      >
         <Box component='section'>
           <Typography
+            fontWeight='bold'
             sx={{
               color: 'text.primary',
               fontSize: '2.5rem',
@@ -86,6 +98,7 @@ const HomePage: FC = () => {
         <Box component='section'>
           <Typography
             mb={5}
+            fontWeight='bold'
             component='h2'
             sx={{
               color: 'text.secondary',
@@ -105,9 +118,9 @@ const HomePage: FC = () => {
             />
           )}
         </Box>
-        <Footer />
       </Container>
-    </Box>
+      <Footer />
+    </>
   );
 };
 

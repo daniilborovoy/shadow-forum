@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { Box, Fade, Typography } from '@mui/material';
-import MyDiscussionCard from '../../my-discussion-card/MyDiscussionCard';
+import MyDiscussionCard from '../my-discussion-card/MyDiscussionCard';
 import MyDiscussionsEmptyImg from './getstarted.svg';
-import { DiscussionResponse } from '../../../models/discussion.model';
-import { CreateDiscussionDialog } from '../../forms/create-discussion-dialog/CreateDiscussionDialog';
+import { DiscussionResponse } from '../../models/discussion.model';
+import { CreateDiscussionDialog } from '../create-discussion-dialog/CreateDiscussionDialog';
 import { TransitionGroup } from 'react-transition-group';
 import { styled } from '@mui/material/styles';
 

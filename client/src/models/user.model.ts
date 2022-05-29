@@ -7,6 +7,7 @@ interface User {
   email: string;
   userTheme: userTheme;
   isActivated: boolean;
+  avatar?: string;
 }
 
 export type { User };

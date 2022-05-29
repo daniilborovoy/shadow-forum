@@ -120,11 +120,12 @@ class UserController {
   }
 
   async updateUserAvatar(req: Request, res: Response, _next: NextFunction) {
-    const imageFile = req.file;
-    const fileName = req.body.user.id + '.webp';
-    const uploadPath = path.resolve(__dirname, '..', 'avatars', fileName);
     try {
-      await userService.saveUserAvatar(imageFile, uploadPath);
+      const imageFile = req.file;
+      const fileName = req.body.user.id + '.webp';
+      const userId = req.body.user.id;
+      const uploadPath = path.resolve(__dirname, '..', 'avatars', fileName);
+      await userService.saveUserAvatar(imageFile, uploadPath, userId);
       res.status(200).json('Аватар успешно обновлён!');
     } catch (err) {
       res.status(500).send(err);

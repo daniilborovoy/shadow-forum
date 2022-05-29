@@ -2,11 +2,11 @@ import React, { FC } from 'react';
 import { Avatar, IconButton } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 
-const AvatarUpload: FC<{ imageUrl: string; userName: string; isDragAccept: boolean }> = ({
-  imageUrl,
-  userName,
-  isDragAccept,
-}) => (
+const AvatarUpload: FC<{
+  imageUrl: string;
+  userName: string;
+  isDragAccept: boolean;
+}> = ({ imageUrl, userName, isDragAccept }) => (
   <IconButton
     component='div'
     sx={{
@@ -26,7 +26,7 @@ const AvatarUpload: FC<{ imageUrl: string; userName: string; isDragAccept: boole
         width: 'inherit',
         height: 'inherit',
       }}
-      srcSet={imageUrl}
+      src={imageUrl}
       alt={userName}
     />
     <UploadIcon

@@ -11,10 +11,10 @@ import {
 } from '@mui/material';
 import { AccountCircle, AppRegistration, Visibility, VisibilityOff } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { RegistrationRequest } from '../../../models/auth.model';
-import { authApi } from '../../../services/auth.service';
+import { RegistrationRequest } from '../../models/auth.model';
+import { authApi } from '../../services/auth.service';
 import { useSnackbar } from 'notistack';
-import { useEnqueueSnackbar } from '../../../hooks/useEnqueueSnackbar';
+import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm: FC = () => {
@@ -139,7 +139,7 @@ const RegistrationForm: FC = () => {
             }}
           />
           <LoadingButton
-            sx={{ marginTop: '15px' }}
+            sx={{ marginTop: '15px', fontWeight: 700 }}
             loading={registrationLoading}
             loadingPosition='start'
             startIcon={<AppRegistration />}

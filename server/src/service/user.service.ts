@@ -12,6 +12,11 @@ import sharp from 'sharp';
 import fs from 'fs';
 
 class UserService {
+  private readonly apiUrl;
+  constructor() {
+    this.apiUrl = process.env.API_URL;
+  }
+
   async registration(email: string, name: string, password: string) {
     const candidateEmail = await UserModel.findOne({ email });
     const candidateName = await UserModel.findOne({ name });
@@ -130,13 +135,21 @@ class UserService {
     return theme;
   }
 
-  async saveUserAvatar(imageFile: Express.Multer.File | undefined, uploadPath: string) {
+  async saveUserAvatar(
+    imageFile: Express.Multer.File | undefined,
+    uploadPath: string,
+    userId: string,
+  ) {
+    const user: HydratedDocument<User> | null = await UserModel.findById(userId);
+    if (!user) throw ApiError.BadRequestError('пользователь не найден!');
     if (imageFile) {
-      await sharp(imageFile.buffer, { animated: true })
+      sharp(imageFile.buffer, { animated: true })
         .resize(150, 150)
         .webp({ quality: 90 })
-        .toBuffer((err, data, info) => {
+        .toBuffer(async (err, data, info) => {
           fs.writeFileSync(uploadPath, data);
+          user.avatar = `${this.apiUrl}/static/${userId}.webp`;
+          await user.save();
         });
     } else {
       throw new Error('Ошибка при сохранении аватара!');

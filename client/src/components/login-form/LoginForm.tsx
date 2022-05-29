@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import { Login, Visibility, VisibilityOff } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { authApi } from '../../../services/auth.service';
-import { LoginRequest } from '../../../models/auth.model';
-import { useEnqueueSnackbar } from '../../../hooks/useEnqueueSnackbar';
+import { authApi } from '../../services/auth.service';
+import { LoginRequest } from '../../models/auth.model';
+import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm: FC = () => {
@@ -105,7 +105,7 @@ const LoginForm: FC = () => {
             helperText={loginError && 'Неверный логин или пароль.'}
           />
           <LoadingButton
-            sx={{ marginTop: '15px' }}
+            sx={{ marginTop: '15px', fontWeight: 700 }}
             loading={loginLoading}
             loadingPosition='start'
             startIcon={<Login />}

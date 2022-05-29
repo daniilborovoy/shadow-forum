@@ -5,7 +5,6 @@ import {
   DiscussionsListResponse,
 } from '../models/discussion.model';
 import { baseQueryWithRefresh } from '../http';
-import { FetchArgs } from '@reduxjs/toolkit/dist/query/react';
 
 interface IFetchAllDiscussions {
   limit: number | void;
@@ -15,6 +14,8 @@ interface IFetchAllDiscussions {
 export const discussionsApi = createApi({
   reducerPath: 'discussionApi',
   baseQuery: baseQueryWithRefresh,
+  refetchOnReconnect: true,
+  refetchOnMountOrArgChange: true,
   endpoints: (build) => ({
     fetchDiscussionById: build.query<DiscussionResponse, string | null>({
       query: (id: string) => ({

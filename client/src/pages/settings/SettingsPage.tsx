@@ -67,15 +67,13 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   const [userEmail, setUserEmail] = useState<string>(user.email);
   const [userAccountAddress, setUserAccountAddress] = useState<string>(user.id);
   const [uploadImageFile, setUploadImageFile] = useState<FormData | null>(null);
-  let currentAvatarUrl = `http://localhost:5000/static/${user.id}.webp`;
-  const [imageUrl, setImageUrl] = useState<string>(currentAvatarUrl);
+  const [imageUrl, setImageUrl] = useState<string>(user.avatar || '');
   const activated = user.isActivated;
   const currentUserName = useRef(userName);
   const currentUserEmail = useRef(userEmail);
   const matches = useMediaQuery('(min-width:600px)');
   const [loading, setLoading] = useState<boolean>(false);
   const enqueueSnackbar = useEnqueueSnackbar();
-
   useEffect(() => {
     setPageTitle('Настройки аккаунта');
   }, []);
@@ -136,7 +134,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
     setValue(newValue);
   };
   const cancelChangeAvatarHandler = () => {
-    setImageUrl(`http://localhost:5000/static/${user.id}.webp`); // TODO value from server
+    setImageUrl(user.avatar || '');
     setUploadImageFile(null);
   };
 
@@ -157,7 +155,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
     accept: ['image/*'],
   });
 
-  const isNewUserAvatar = currentAvatarUrl !== imageUrl;
+  const isNewUserAvatar = user.avatar !== imageUrl;
 
   return (
     <Container>
@@ -192,6 +190,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
               '&.Mui-selected': {
                 color: '#1890ff',
               },
+              fontWeight: 'bold',
             }}
             label='Информация об аккануте'
           />
@@ -201,6 +200,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
               '&.Mui-selected': {
                 color: '#1890ff',
               },
+              fontWeight: 'bold',
             }}
             label='Изменение темы'
           />
@@ -266,7 +266,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 helperText='Ваше имя может отобразиться на ShadowForum, где вы участвуете или упоминаетесь. Вы можете изменить его в любое время.'
                 placeholder={userName}
                 value={userName}
-                onChange={changeNameHandler}
+                // onChange={changeNameHandler}
                 sx={{ marginBottom: '15px' }}
               />
               <Typography>Email:</Typography>
@@ -274,14 +274,14 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 sx={{ marginBottom: '15px' }}
                 fullWidth
                 value={userEmail}
-                onChange={changeEmailHandler}
+                // onChange={changeEmailHandler}
               />
               <Typography>Адрес аккаунта:</Typography>
               <TextField
                 sx={{ marginBottom: '15px' }}
                 helperText='Вы можете поменять адрес своей личной страницы на ShadowForum.'
                 value={userAccountAddress}
-                onChange={handleChangeAccountAddress}
+                // onChange={handleChangeAccountAddress}
               />
               <FormGroup sx={{ marginBottom: '15px' }}>
                 <FormControlLabel

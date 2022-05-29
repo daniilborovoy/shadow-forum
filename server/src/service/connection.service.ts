@@ -31,18 +31,26 @@ class Connection {
   }
 
   async getMessages(discussionId: string) {
-    await this.socket.join(discussionId);
-    const clientsCount = this.io.sockets.adapter.rooms.get(discussionId)!.size || 0;
-    const messages = await MessageService.getMessagesByDiscussionId(discussionId);
-    if (messages) {
-      this.socket.emit('old_msg', messages, clientsCount);
+    try {
+      await this.socket.join(discussionId);
+      const clientsCount = this.io.sockets.adapter.rooms.get(discussionId)!.size || 0;
+      const messages = await MessageService.getMessagesByDiscussionId(discussionId);
+      if (messages) {
+        this.socket.emit('old_msg', messages, clientsCount);
+      }
+    } catch (err) {
+      return;
     }
   }
 
   async handleMessage(value: string, userId: string, discussionId: string, callback: Function) {
-    const message = await MessageService.saveMessage(value, userId, discussionId);
-    this.sendMessage(message, discussionId);
-    callback();
+    try {
+      const message = await MessageService.saveMessage(value, userId, discussionId);
+      this.sendMessage(message, discussionId);
+      callback();
+    } catch (err) {
+      callback(err);
+    }
   }
 
   async deleteMessage(messageId: string) {

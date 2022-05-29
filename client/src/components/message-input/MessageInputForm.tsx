@@ -1,12 +1,12 @@
-import React, { FC, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FC, FormEvent, useState } from 'react';
 import { Avatar, Box, FormControl, FormGroup, TextField } from '@mui/material';
-import { stringAvatar } from '../../../utils/Avatar';
+import { stringAvatar } from '../../utils/Avatar';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Send } from '@mui/icons-material';
-import { MessageRequest } from '../../../models/message.model';
+import { MessageRequest } from '../../models/message.model';
 import { Socket } from 'socket.io-client';
-import { useAppSelector } from '../../../hooks/redux';
-import { getUser } from '../../../store/selectors/authSelectors';
+import { useAppSelector } from '../../hooks/redux';
+import { getUser } from '../../store/selectors/authSelectors';
 
 const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Socket }> = ({
   discussionId,
@@ -39,24 +39,25 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
     alert('Sending error!');
   };
 
-  const avatarUrl = `http://localhost:5000/static/${user?.id}.webp`;
+  const changeMessageHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setUserMessage((prev) => ({
+      ...prev,
+      message: e.target.value,
+    }));
+  };
+
   const isNotValidMessage = userMessage.message.trim().length === 0;
 
   return (
     <Box sx={{ width: '100%' }} component='form' method='POST' onSubmit={sendMessageHandler}>
       <FormControl variant='standard' sx={{ padding: '15px', width: '100%' }}>
         <FormGroup>
-          <Avatar src={avatarUrl} {...stringAvatar(userName)} />
+          <Avatar src={user?.avatar} {...stringAvatar(userName)} alt={userName} />
           <TextField
             title='Введите сообщение'
             fullWidth
             value={userMessage.message}
-            onChange={(e) => {
-              setUserMessage((prev) => ({
-                ...prev,
-                message: e.target.value,
-              }));
-            }}
+            onChange={changeMessageHandler}
             margin='normal'
             label='Сообщение'
             variant='outlined'
@@ -64,7 +65,7 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
           />
           <LoadingButton
             title='Отправить сообщение'
-            sx={{ marginTop: '15px' }}
+            sx={{ marginTop: '15px', fontWeight: 700 }}
             loading={sendLoading}
             loadingPosition='start'
             disabled={isNotValidMessage}
@@ -72,7 +73,7 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
             variant='contained'
             type='submit'
           >
-            {sendLoading ? 'Отправляем' : 'Отправить ответ'}
+            {sendLoading ? 'Отправляем' : 'Отправить'}
           </LoadingButton>
         </FormGroup>
       </FormControl>

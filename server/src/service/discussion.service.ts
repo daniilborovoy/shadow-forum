@@ -12,7 +12,7 @@ class DiscussionService {
     const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(
       discussionId,
     );
-    if (!discussion) throw ApiError.BadRequestError('Обсуждение не найдено!');
+    if (!discussion) throw ApiError.BadRequestError('Обсуждение не найдено или удалено!');
     const discussionDto = new DiscussionDto(discussion);
     if (userId) {
       const creatorId: string = discussion.creatorId.toString();

@@ -16,7 +16,7 @@ import {
   Collapse,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { DiscussionResponse } from '../../../models/discussion.model';
+import { DiscussionResponse } from '../../models/discussion.model';
 import dayjs from 'dayjs';
 import { TransitionGroup } from 'react-transition-group';
 import { styled } from '@mui/material/styles';
@@ -55,7 +55,6 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
       const goToDiscussionHandler = (): void => {
         navigate(`/discussions/${discussion.id}`);
       };
-      const avatarUrl = `http://localhost:5000/static/${discussion.creatorId}.webp`;
       return (
         <Collapse key={discussion.id}>
           <ListItemButton
@@ -75,19 +74,14 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
               marginBottom={{ xs: 2, sm: 0 }}
               flexDirection='row'
               width='100%'
-              justifyContent='space-around'
-              flexWrap='wrap'
               alignItems='center'
             >
-              <ListItemAvatar>
-                <Avatar src={avatarUrl} />
-              </ListItemAvatar>
               <ListItemText
                 sx={{ marginRight: '15px', wordBreak: 'break-word' }}
                 primary={discussion.title}
                 secondary={
                   <Typography
-                    sx={{ display: 'inline', wordBreak: 'break-word' }}
+                    sx={{ overflow: 'hidden' }}
                     component='span'
                     variant='body2'
                     color='text.secondary'

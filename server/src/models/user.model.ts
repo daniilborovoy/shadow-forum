@@ -8,6 +8,7 @@ export interface User {
   password: string;
   creationDate: Date;
   isActivated: boolean;
+  avatar?: string;
   activationLink?: string;
   userTheme: userTheme;
 }
@@ -36,6 +37,7 @@ const UserSchema = new Schema<User>({
     required: true,
   },
   activationLink: { type: String },
+  avatar: { type: String },
   userTheme: {
     type: String,
     default: 'system',

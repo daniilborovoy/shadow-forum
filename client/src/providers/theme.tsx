@@ -29,8 +29,46 @@ const createThemeHelper = (theme: 'dark' | 'light') => {
     },
     typography: {
       fontFamily: 'Montserrat',
+      fontWeightRegular: '700',
+    },
+    transitions: {
+      duration: {
+        shortest: 150,
+        shorter: 200,
+        short: 250,
+        // most basic recommended timing
+        standard: 500,
+        // this is to be used in complex animations
+        complex: 375,
+        // recommended when something is entering screen
+        enteringScreen: 155,
+        // recommended when something is leaving screen
+        leavingScreen: 255,
+      },
     },
     components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: '25px',
+            padding: '10px 15px',
+          },
+        },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            borderRadius: '25px',
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            borderRadius: '25px',
+          },
+        },
+      },
       MuiTextField: {
         defaultProps: {
           color: isDark ? 'secondary' : 'primary',

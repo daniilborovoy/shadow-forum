@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Box, Container, Typography } from '@mui/material';
-import MyDiscussionsList from '../../components/lists/my-discussions/MyDiscussionsList';
+import MyDiscussionsList from '../../components/my-discussions-list/MyDiscussionsList';
 import { discussionsApi } from '../../services/discussions.service';
 import MyDiscussionsSkeleton from '../../components/my-discussions-skeleton/MyDiscussionsSkeleton';
 import setPageTitle from '../../utils/SetPageTitle';
