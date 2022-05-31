@@ -120,6 +120,7 @@ const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
         <Container>
           <Box
             component='section'
+            marginBottom={5}
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -152,11 +153,8 @@ const DiscussionPage: FC<{ socket: Socket }> = ({ socket }) => {
             </Box>
           </Box>
           <Box component='section'>
-            <Typography component='h3' marginBottom={2} textAlign='center' fontSize={30}>
-              Ответы
-            </Typography>
             <Paper
-              elevation={1}
+              elevation={5}
               sx={{
                 display: 'flex',
                 justifyContent: 'center',

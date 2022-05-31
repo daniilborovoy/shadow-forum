@@ -50,7 +50,7 @@ const createThemeHelper = (theme: 'dark' | 'light') => {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: '25px',
+            borderRadius: '24px',
             padding: '10px 15px',
           },
         },
@@ -58,14 +58,14 @@ const createThemeHelper = (theme: 'dark' | 'light') => {
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
-            borderRadius: '25px',
+            borderRadius: '24px',
           },
         },
       },
       MuiPaper: {
         styleOverrides: {
           root: {
-            borderRadius: '25px',
+            borderRadius: '24px',
           },
         },
       },

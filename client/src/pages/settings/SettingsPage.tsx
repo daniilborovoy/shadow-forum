@@ -178,7 +178,6 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
             borderRight: matches ? 1 : 0,
             borderBottom: matches ? 0 : 1,
             borderColor: 'divider',
-            height: '100%',
             width: matches ? '250px' : '100%',
             marginRight: matches ? '15px' : '0',
             marginBottom: matches ? '0' : '15px',

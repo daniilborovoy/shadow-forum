@@ -40,7 +40,7 @@ const NotFoundPage: FC<{ message: string }> = ({ message }) => {
         loading='lazy'
         sx={{ width: { xs: 300, sm: 500 }, pointerEvents: 'none', userSelect: 'none' }}
       />
-      <Button color='inherit' onClick={goBackHandler} variant='outlined'>
+      <Button color='inherit' sx={{ fontWeight: 700 }} onClick={goBackHandler} variant='outlined'>
         Вернуться назад
       </Button>
     </Box>

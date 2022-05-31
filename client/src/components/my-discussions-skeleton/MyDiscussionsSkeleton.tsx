@@ -6,7 +6,7 @@ const MyDiscussionsSkeleton = () => (
     <Grid item>
       <Skeleton
         animation='wave'
-        sx={{ borderRadius: '25px', width: { sm: 345, xs: 260 } }}
+        sx={{ borderRadius: '24px', width: { sm: 345, xs: 260 } }}
         variant='rectangular'
         height={200}
       />
@@ -14,7 +14,7 @@ const MyDiscussionsSkeleton = () => (
     <Grid item>
       <Skeleton
         animation='wave'
-        sx={{ borderRadius: '25px', width: { sm: 345, xs: 260 } }}
+        sx={{ borderRadius: '24px', width: { sm: 345, xs: 260 } }}
         variant='rectangular'
         height={200}
       />
@@ -22,7 +22,7 @@ const MyDiscussionsSkeleton = () => (
     <Grid item>
       <Skeleton
         animation='wave'
-        sx={{ borderRadius: '25px', width: { sm: 345, xs: 260 } }}
+        sx={{ borderRadius: '24px', width: { sm: 345, xs: 260 } }}
         variant='rectangular'
         height={200}
       />
@@ -30,7 +30,7 @@ const MyDiscussionsSkeleton = () => (
     <Grid item>
       <Skeleton
         animation='wave'
-        sx={{ borderRadius: '25px', width: { sm: 345, xs: 260 } }}
+        sx={{ borderRadius: '24px', width: { sm: 345, xs: 260 } }}
         variant='rectangular'
         height={200}
       />

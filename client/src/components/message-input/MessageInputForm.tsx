@@ -56,6 +56,7 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
           <TextField
             title='Введите сообщение'
             fullWidth
+            multiline
             value={userMessage.message}
             onChange={changeMessageHandler}
             margin='normal'

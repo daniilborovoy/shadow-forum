@@ -18,19 +18,7 @@ const root = createRoot(app);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ChosenThemeProvider>
-        <ThemeProvider>
-          <SnackbarProvider
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            dense
-          >
-            <App />
-          </SnackbarProvider>
-        </ThemeProvider>
-      </ChosenThemeProvider>
+      <App />
     </Provider>
   </React.StrictMode>,
 );

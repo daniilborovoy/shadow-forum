@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  useFormControl,
 } from '@mui/material';
 import { Login, Visibility, VisibilityOff } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -78,6 +79,9 @@ const LoginForm: FC = () => {
                 password: e.target.value,
               }));
             }}
+            inputProps={{
+              maxLength: 32,
+            }}
             type={loginRequest.showPassword ? 'text' : 'password'}
             required
             InputProps={{
@@ -107,6 +111,7 @@ const LoginForm: FC = () => {
           <LoadingButton
             sx={{ marginTop: '15px', fontWeight: 700 }}
             loading={loginLoading}
+            disabled={loginRequest.password.length < 7}
             loadingPosition='start'
             startIcon={<Login />}
             variant='contained'
