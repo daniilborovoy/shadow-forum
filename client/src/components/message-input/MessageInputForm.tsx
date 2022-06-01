@@ -1,52 +1,39 @@
-import React, { ChangeEvent, FC, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FC, FormEvent, useContext, useState } from 'react';
 import { Avatar, Box, FormControl, FormGroup, TextField } from '@mui/material';
 import { stringAvatar } from '../../utils/Avatar';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Send } from '@mui/icons-material';
-import { MessageRequest } from '../../models/message.model';
-import { Socket } from 'socket.io-client';
 import { useAppSelector } from '../../hooks/redux';
 import { getUser } from '../../store/selectors/authSelectors';
+import { WebSocket } from '../../providers';
 
-const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Socket }> = ({
+const MessageInputForm: FC<{ discussionId: string; userName: string }> = ({
   discussionId,
   userName,
-  socket,
 }) => {
   const user = useAppSelector(getUser);
-
-  const [userMessage, setUserMessage] = useState<MessageRequest>({
-    message: '',
-    discussionId: discussionId,
-  });
-
+  const socket = useContext(WebSocket);
+  const [userMessage, setUserMessage] = useState<string>('');
   const [sendLoading, setSendLoading] = useState<boolean>(false);
 
-  const sendMessageHandler = (event: FormEvent): void => {
+  const sendMessageHandler = (event: FormEvent) => {
     event.preventDefault();
     setSendLoading(true);
-    const sendingMessage = userMessage.message.trim();
-    if (user) {
-      socket.emit('msg', sendingMessage, user.id, userMessage.discussionId, () => {
+    if (user && socket) {
+      socket.emit('message', userMessage.trim(), user.id, discussionId, () => {
         setSendLoading(false);
       });
-      setUserMessage({
-        message: '',
-        discussionId: discussionId,
-      });
+      setUserMessage('');
       return;
     }
     alert('Sending error!');
   };
 
   const changeMessageHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserMessage((prev) => ({
-      ...prev,
-      message: e.target.value,
-    }));
+    setUserMessage(e.target.value);
   };
 
-  const isNotValidMessage = userMessage.message.trim().length === 0;
+  const isNotValidMessage = userMessage.trim().length === 0;
 
   return (
     <Box sx={{ width: '100%' }} component='form' method='POST' onSubmit={sendMessageHandler}>
@@ -56,8 +43,8 @@ const MessageInputForm: FC<{ discussionId: string; userName: string; socket: Soc
           <TextField
             title='Введите сообщение'
             fullWidth
-            multiline
-            value={userMessage.message}
+            autoFocus
+            value={userMessage}
             onChange={changeMessageHandler}
             margin='normal'
             label='Сообщение'

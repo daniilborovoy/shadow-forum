@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import chat from '../service/connection.service';
+import chat from '../service/chat.service';
 import app from '../app';
 
 const PORT: number = Number(process.env.PORT) || 5000;

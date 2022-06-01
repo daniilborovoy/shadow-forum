@@ -2,11 +2,13 @@ import React, { FC } from 'react';
 import { Avatar, IconButton } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 
-const AvatarUpload: FC<{
+interface AvatarInputProps {
   imageUrl: string;
   userName: string;
   isDragAccept: boolean;
-}> = ({ imageUrl, userName, isDragAccept }) => (
+}
+
+const AvatarInput: FC<AvatarInputProps> = ({ imageUrl, userName, isDragAccept }) => (
   <IconButton
     component='div'
     sx={{
@@ -43,4 +45,4 @@ const AvatarUpload: FC<{
   </IconButton>
 );
 
-export default AvatarUpload;
+export default AvatarInput;

@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import React, { Dispatch, FC, MouseEventHandler, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -52,13 +52,16 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
       const publicationDate = dayjs(discussion.creationDate).format('DD MMMM YYYY');
       const discussionDescription: string =
         discussion.body.slice(0, 20) + (discussion.body.length > 20 ? '...' : '');
-      const goToDiscussionHandler = (): void => {
+      const goToDiscussionHandler = (e: any) => {
+        e.preventDefault();
         navigate(`/discussions/${discussion.id}`);
       };
       return (
         <Collapse key={discussion.id}>
           <ListItemButton
+            component={'a'}
             divider
+            href={`/discussions/${discussion.id}`}
             sx={{
               width: '100%',
               alignItems: { xs: 'flex-start', sm: 'center' },

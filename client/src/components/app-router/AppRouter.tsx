@@ -14,7 +14,7 @@ const AuthorizePage = lazy(() => import('../../pages/authorize/AuthorizePage'));
 const SettingsPage = lazy(() => import('../../pages/settings/SettingsPage'));
 const EmailActivationPage = lazy(() => import('../../pages/email-activation/EmailActivationPage'));
 
-const AppRouter: FC<{ socket: Socket }> = ({ socket }) => {
+const AppRouter: FC = () => {
   const user = useAppSelector(getUser);
 
   return (
@@ -23,7 +23,7 @@ const AppRouter: FC<{ socket: Socket }> = ({ socket }) => {
       <Suspense fallback={<AppLoader />}>
         <Routes>
           <Route path='/' element={<HomePage />} />
-          <Route path='/discussions/:id' element={<DiscussionPage socket={socket} />} />
+          <Route path='/discussions/:id' element={<DiscussionPage />} />
           {user ? (
             <>
               <Route path='/settings' element={<SettingsPage user={user} />} />

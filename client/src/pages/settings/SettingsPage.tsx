@@ -31,7 +31,7 @@ import { useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
-import AvatarUpload from '../../components/avatar-upload/AvatarUpload';
+import AvatarInput from '../../components/avatar-input/AvatarInput';
 import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useDropzone } from 'react-dropzone';
 import SelectThemeButtons from '../../components/select-theme-buttons/SelectThemeButtons';
@@ -241,7 +241,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                     borderRadius: '50%',
                   }}
                 >
-                  <AvatarUpload
+                  <AvatarInput
                     imageUrl={imageUrl}
                     userName={currentUserName.current}
                     isDragAccept={isDragAccept}
@@ -259,7 +259,6 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 accept='image/*'
                 type='file'
               />
-              <Typography mb={2}>id: {user.id}</Typography>
               <Typography>Имя:</Typography>
               <TextField
                 helperText='Ваше имя может отобразиться на ShadowForum, где вы участвуете или упоминаетесь. Вы можете изменить его в любое время.'
@@ -296,6 +295,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 </FormHelperText>
               </FormGroup>
               <LoadingButton
+                sx={{ fontWeight: 700 }}
                 fullWidth
                 startIcon={<SaveIcon />}
                 variant='contained'

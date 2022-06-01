@@ -99,7 +99,7 @@ const HomePage: FC = () => {
           <Typography
             mb={5}
             fontWeight='bold'
-            component='h2'
+            component='p'
             sx={{
               color: 'text.secondary',
               fontSize: '1.5rem',

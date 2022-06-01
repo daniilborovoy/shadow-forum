@@ -3,6 +3,10 @@
   src: url("./fonts/Montserrat.ttf");
 }
 
+#app {
+  padding-left: calc(100vw - 100%);
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
   monospace;

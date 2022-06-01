@@ -59,7 +59,7 @@ const DeleteDiscussionDialog: FC<{ discussionId: string; title: string; refetch:
         <DeleteIcon />
       </IconButton>
       <Dialog open={open} scroll='body' onClose={handleClose}>
-        <DialogTitle sx={{ wordWrap: 'break-word' }}>
+        <DialogTitle sx={{ wordWrap: 'break-word', fontWeight: 700 }}>
           Вы точно хотите удалить это обсуждение?
         </DialogTitle>
         <Box component='form'>
@@ -68,6 +68,7 @@ const DeleteDiscussionDialog: FC<{ discussionId: string; title: string; refetch:
           </DialogContent>
           <DialogActions>
             <Button
+              sx={{ fontWeight: 700 }}
               variant='text'
               color='inherit'
               type='reset'
@@ -77,6 +78,7 @@ const DeleteDiscussionDialog: FC<{ discussionId: string; title: string; refetch:
               Отмена
             </Button>
             <LoadingButton
+              sx={{ fontWeight: 700 }}
               variant='contained'
               color='error'
               type='submit'

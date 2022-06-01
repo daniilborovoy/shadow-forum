@@ -31,7 +31,11 @@ const MyDiscussionsList: FC<{ discussions: DiscussionResponse[]; refetch: Functi
           src={MyDiscussionsEmptyImg}
           alt='404'
           loading='lazy'
-          sx={{ width: { xs: 300, sm: 500 }, pointerEvents: 'none', userSelect: 'none' }}
+          sx={{
+            width: { xs: 300, sm: 500 },
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
         />
         <CreateDiscussionDialog type='desktop' />
       </>

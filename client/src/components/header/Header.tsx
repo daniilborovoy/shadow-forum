@@ -84,7 +84,8 @@ const Header: FC = () => {
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const goHomeHandler = () => {
+  const goHomeHandler = (e: any) => {
+    e.preventDefault();
     navigate('/');
   };
 
@@ -225,9 +226,12 @@ const Header: FC = () => {
             fontSize='20px'
             fontWeight='bold'
             noWrap
-            component='span'
+            color='secondary'
+            component='a'
+            href='/'
             onClick={goHomeHandler}
             sx={{
+              textDecoration: 'none',
               cursor: 'pointer',
               userSelect: 'none',
             }}

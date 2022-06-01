@@ -16,11 +16,9 @@ const app = document.getElementById('app');
 if (!app) throw new Error('Application component is missing in DOM.');
 const root = createRoot(app);
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
 );
 
 // If you want your hooks to work offline and load faster, you can change

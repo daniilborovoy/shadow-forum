@@ -112,7 +112,7 @@ export const CreateDiscussionDialog: FC<{
   return (
     <Box>
       {type === 'desktop' ? (
-        <ColorButton onClick={handleClickOpen}>
+        <ColorButton endIcon={<AddIcon fontSize='small' />} onClick={handleClickOpen}>
           <Typography fontWeight='bold' noWrap>
             Создать обсуждение
           </Typography>
@@ -147,7 +147,6 @@ export const CreateDiscussionDialog: FC<{
             />
             <TextField
               required
-              autoFocus
               margin='dense'
               label='Описание обсуждения'
               value={newDiscussion.body}
