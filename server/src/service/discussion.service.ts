@@ -2,12 +2,9 @@ import { HydratedDocument, Types } from 'mongoose';
 import DiscussionModel, { Discussion } from '../models/discussion.model';
 import { DiscussionDto } from '../dtos/discussion.dto';
 import ApiError from '../exceptions/api.error';
+import MessageModel, { Message } from '../models/message.model';
 
 class DiscussionService {
-  verifyCreator(userId: string, creatorId: string): boolean {
-    return userId === creatorId;
-  }
-
   async getDiscussion(discussionId: string, userId?: string) {
     const isValidDiscussionId = Types.ObjectId.isValid(discussionId);
     if (!isValidDiscussionId)
@@ -15,7 +12,7 @@ class DiscussionService {
     const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(
       discussionId,
     );
-    if (!discussion) throw ApiError.BadRequestError('Обсуждение не найдено!');
+    if (!discussion) throw ApiError.BadRequestError('Обсуждение не найдено или удалено!');
     const discussionDto = new DiscussionDto(discussion);
     if (userId) {
       const creatorId: string = discussion.creatorId.toString();
@@ -61,15 +58,20 @@ class DiscussionService {
   }
 
   async deleteDiscussion(discussionId: string, userId: string) {
-    const isCreator: boolean = this.verifyCreator(userId, discussionId);
-    if (!isCreator) {
-      throw ApiError.BadRequestError('you can not delete someone else`s discussion!');
-    }
-    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findByIdAndDelete(
+    const discussion: HydratedDocument<Discussion> | null = await DiscussionModel.findById(
       discussionId,
     );
-    if (!discussion) throw ApiError.BadRequestError('nothing to delete!');
-    return discussion;
+    if (!discussion) throw ApiError.BadRequestError('обсуждение не найдено!');
+    const isCreator: boolean = userId === discussion.creatorId.toString();
+    if (!isCreator) {
+      throw ApiError.BadRequestError('нельзя удалять чужое обсуждение!');
+    }
+    // delete discussion messages
+    await MessageModel.deleteMany({ discussionId });
+    // delete the discussion
+    await discussion.remove();
+    const discussionDto = new DiscussionDto(discussion);
+    return discussionDto;
   }
 
   async updateDiscussion(

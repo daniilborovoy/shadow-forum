@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction, useState, ReactNode } from 'react';
+import { createContext, ReactNode } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useAppSelector } from '../hooks/redux';
 import { getUserTheme } from '../store/selectors/authSelectors';

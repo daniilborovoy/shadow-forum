@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import React, { Dispatch, FC, MouseEventHandler, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -16,7 +16,7 @@ import {
   Collapse,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { DiscussionResponse } from '../../../models/discussion.model';
+import { DiscussionResponse } from '../../models/discussion.model';
 import dayjs from 'dayjs';
 import { TransitionGroup } from 'react-transition-group';
 import { styled } from '@mui/material/styles';
@@ -52,14 +52,16 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
       const publicationDate = dayjs(discussion.creationDate).format('DD MMMM YYYY');
       const discussionDescription: string =
         discussion.body.slice(0, 20) + (discussion.body.length > 20 ? '...' : '');
-      const goToDiscussionHandler = (): void => {
+      const goToDiscussionHandler = (e: any) => {
+        e.preventDefault();
         navigate(`/discussions/${discussion.id}`);
       };
-      const avatarUrl = `http://localhost:5000/static/${discussion.creatorId}.webp`;
       return (
         <Collapse key={discussion.id}>
           <ListItemButton
+            component={'a'}
             divider
+            href={`/discussions/${discussion.id}`}
             sx={{
               width: '100%',
               alignItems: { xs: 'flex-start', sm: 'center' },
@@ -75,19 +77,14 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
               marginBottom={{ xs: 2, sm: 0 }}
               flexDirection='row'
               width='100%'
-              justifyContent='space-around'
-              flexWrap='wrap'
               alignItems='center'
             >
-              <ListItemAvatar>
-                <Avatar src={avatarUrl} />
-              </ListItemAvatar>
               <ListItemText
                 sx={{ marginRight: '15px', wordBreak: 'break-word' }}
                 primary={discussion.title}
                 secondary={
                   <Typography
-                    sx={{ display: 'inline', wordBreak: 'break-word' }}
+                    sx={{ overflow: 'hidden' }}
                     component='span'
                     variant='body2'
                     color='text.secondary'

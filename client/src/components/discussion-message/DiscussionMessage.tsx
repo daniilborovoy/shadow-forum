@@ -5,8 +5,7 @@ import dayjs from 'dayjs';
 import { stringAvatar } from '../../utils/Avatar';
 
 const DiscussionMessage: FC<{ message: MessageResponse }> = ({ message }) => {
-  const creationDate = dayjs(message.creationDate).format('DD MMMM YYYY в H:mm');
-  const avatarUrl = `http://localhost:5000/static/${message.createdBy._id}.webp`;
+  const creationDate = dayjs(message.creationDate).format('H:mm DD.MM.YYYY');
 
   return (
     <Box
@@ -19,13 +18,25 @@ const DiscussionMessage: FC<{ message: MessageResponse }> = ({ message }) => {
         overflow: 'hidden',
       }}
     >
-      <Avatar src={avatarUrl} {...stringAvatar(message.createdBy.name)} />
+      <Avatar
+        src={message.createdBy.avatar}
+        {...stringAvatar(message.createdBy.name)}
+        alt={message.createdBy.name}
+      />
       <Box sx={{ marginLeft: '15px' }}>
-        <Typography fontSize={20}>Ответ от {message.createdBy.name}</Typography>
-        <Typography sx={{ wordBreak: 'break-word' }}>{message.body}</Typography>
-        <time dateTime={message.creationDate.toString()}>
-          <Typography>{creationDate}</Typography>
-        </time>
+        <Box display='flex' flexWrap='wrap' flexDirection='row' alignItems='center'>
+          <Typography mr={1} fontSize={20} fontWeight='bold'>
+            {message.createdBy.name}
+          </Typography>
+          <time dateTime={message.creationDate.toString()}>
+            <Typography sx={{ '&:hover': { textDecoration: 'underline' } }} color='text.secondary'>
+              {creationDate}
+            </Typography>
+          </time>
+        </Box>
+        <Typography sx={{ wordBreak: 'break-word' }} fontWeight='medium'>
+          {message.body}
+        </Typography>
       </Box>
     </Box>
   );

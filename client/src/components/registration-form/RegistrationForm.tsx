@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FC, FormEvent, useRef, useState } from 'react';
 import {
   Box,
   FormControl,
@@ -8,13 +8,13 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  useFormControl,
 } from '@mui/material';
 import { AccountCircle, AppRegistration, Visibility, VisibilityOff } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { RegistrationRequest } from '../../../models/auth.model';
-import { authApi } from '../../../services/auth.service';
-import { useSnackbar } from 'notistack';
-import { useEnqueueSnackbar } from '../../../hooks/useEnqueueSnackbar';
+import { RegistrationRequest } from '../../models/auth.model';
+import { authApi } from '../../services/auth.service';
+import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm: FC = () => {
@@ -22,7 +22,6 @@ const RegistrationForm: FC = () => {
   const navigate = useNavigate();
   const [registration, { isLoading: registrationLoading, error: registrationError }] =
     authApi.useRegistrationMutation();
-
   const [registrationRequest, setRegistrationRequest] = useState<RegistrationRequest>({
     name: '',
     email: '',
@@ -59,6 +58,13 @@ const RegistrationForm: FC = () => {
       });
   };
 
+  const changePasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setRegistrationRequest((prev) => ({
+      ...prev,
+      password: e.target.value.trim(),
+    }));
+  };
+
   return (
     <Box
       component='form'
@@ -72,6 +78,10 @@ const RegistrationForm: FC = () => {
           <TextField
             margin='normal'
             size='medium'
+            inputProps={{
+              maxLength: 30,
+              minLength: 4,
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position='start'>
@@ -89,7 +99,7 @@ const RegistrationForm: FC = () => {
             label='Имя'
             variant='outlined'
             type='text'
-            required={true}
+            required
           />
           <TextField
             value={registrationRequest.email}
@@ -103,22 +113,23 @@ const RegistrationForm: FC = () => {
             label='Email'
             variant='outlined'
             type='email'
-            required={true}
+            required
           />
           <FormHelperText>Мы никогда не передадим кому-либо вашу электронную почту.</FormHelperText>
           <TextField
             value={registrationRequest.password}
-            onChange={(e) => {
-              setRegistrationRequest((prev) => ({
-                ...prev,
-                password: e.target.value,
-              }));
-            }}
+            onChange={changePasswordHandler}
             margin='normal'
             label='Пароль'
+            aria-valuemax={32}
             variant='outlined'
             type={registrationRequest.showPassword ? 'text' : 'password'}
-            required={true}
+            required
+            helperText='Минимум 8 символов'
+            inputProps={{
+              maxLength: 32,
+              minLength: 8,
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
@@ -139,7 +150,8 @@ const RegistrationForm: FC = () => {
             }}
           />
           <LoadingButton
-            sx={{ marginTop: '15px' }}
+            sx={{ marginTop: '15px', fontWeight: 700 }}
+            disabled={registrationRequest.password.length < 7}
             loading={registrationLoading}
             loadingPosition='start'
             startIcon={<AppRegistration />}

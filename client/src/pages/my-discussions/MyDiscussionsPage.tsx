@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
 import { Box, Container, Typography } from '@mui/material';
-import MyDiscussionsList from '../../components/lists/my-discussions/MyDiscussionsList';
+import MyDiscussionsList from '../../components/my-discussions-list/MyDiscussionsList';
 import { discussionsApi } from '../../services/discussions.service';
 import MyDiscussionsSkeleton from '../../components/my-discussions-skeleton/MyDiscussionsSkeleton';
 import setPageTitle from '../../utils/SetPageTitle';
 
 const MyDiscussionsPage = () => {
-  const { data: myDiscussions } = discussionsApi.useFetchMyDiscussionsQuery(null, {
+  const { data: myDiscussions, refetch } = discussionsApi.useFetchMyDiscussionsQuery(null, {
     refetchOnMountOrArgChange: true,
   });
-
   useEffect(() => {
     setPageTitle('Мои обсуждения');
   });
@@ -27,7 +26,7 @@ const MyDiscussionsPage = () => {
           Мои обсуждения
         </Typography>
         {myDiscussions ? (
-          <MyDiscussionsList discussions={myDiscussions} />
+          <MyDiscussionsList discussions={myDiscussions} refetch={refetch} />
         ) : (
           <MyDiscussionsSkeleton />
         )}

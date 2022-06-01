@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 
-const AppLoader = () => (
+const AppLoader: FC = () => (
   <Box
     sx={{
       width: '100%',

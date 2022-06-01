@@ -2,11 +2,13 @@ import React, { FC } from 'react';
 import { Avatar, IconButton } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 
-const AvatarUpload: FC<{ imageUrl: string; userName: string; isDragAccept: boolean }> = ({
-  imageUrl,
-  userName,
-  isDragAccept,
-}) => (
+interface AvatarInputProps {
+  imageUrl: string;
+  userName: string;
+  isDragAccept: boolean;
+}
+
+const AvatarInput: FC<AvatarInputProps> = ({ imageUrl, userName, isDragAccept }) => (
   <IconButton
     component='div'
     sx={{
@@ -26,12 +28,12 @@ const AvatarUpload: FC<{ imageUrl: string; userName: string; isDragAccept: boole
         width: 'inherit',
         height: 'inherit',
       }}
-      srcSet={imageUrl}
+      src={imageUrl}
       alt={userName}
     />
     <UploadIcon
       id='upload-icon'
-      color='inherit'
+      color='info'
       sx={{
         position: 'absolute',
         width: '50px',
@@ -43,4 +45,4 @@ const AvatarUpload: FC<{ imageUrl: string; userName: string; isDragAccept: boole
   </IconButton>
 );
 
-export default AvatarUpload;
+export default AvatarInput;

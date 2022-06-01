@@ -5,6 +5,7 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -31,7 +32,7 @@ import { useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
-import AvatarUpload from '../../components/avatar-upload/AvatarUpload';
+import AvatarInput from '../../components/avatar-input/AvatarInput';
 import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useDropzone } from 'react-dropzone';
 import SelectThemeButtons from '../../components/select-theme-buttons/SelectThemeButtons';
@@ -67,15 +68,14 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   const [userEmail, setUserEmail] = useState<string>(user.email);
   const [userAccountAddress, setUserAccountAddress] = useState<string>(user.id);
   const [uploadImageFile, setUploadImageFile] = useState<FormData | null>(null);
-  let currentAvatarUrl = `http://localhost:5000/static/${user.id}.webp`;
-  const [imageUrl, setImageUrl] = useState<string>(currentAvatarUrl);
+  const [imageUrl, setImageUrl] = useState<string>(user.avatar || '');
+  const [isNewAvatar, setIsNewAvatar] = useState<boolean>(false);
   const activated = user.isActivated;
   const currentUserName = useRef(userName);
   const currentUserEmail = useRef(userEmail);
   const matches = useMediaQuery('(min-width:600px)');
   const [loading, setLoading] = useState<boolean>(false);
   const enqueueSnackbar = useEnqueueSnackbar();
-
   useEffect(() => {
     setPageTitle('Настройки аккаунта');
   }, []);
@@ -107,6 +107,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
       uploadUserAvatar(uploadImageFile)
         .unwrap()
         .then((res) => {
+          setIsNewAvatar(false);
           enqueueSnackbar(res, {
             variant: 'success',
           });
@@ -123,33 +124,14 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
     }
   };
 
-  const showUpdateButton = useCallback(() => {
-    return !(
-      currentUserEmail.current !== userEmail ||
-      currentUserName.current !== userName ||
-      uploadImageFile
-    );
-  }, [userEmail, userName, uploadImageFile]);
-
-  const disableBtn = showUpdateButton();
-
-  const handleFileChange = (event: any) => {
-    const input = event.target.files[0];
-    if (!input) return;
-    setImageUrl(URL.createObjectURL(input));
-    const data = new FormData();
-    data.append('avatar', input);
-    setUploadImageFile(data);
-  };
   const [value, setValue] = useState(0);
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
   const cancelChangeAvatarHandler = () => {
-    setImageUrl(`http://localhost:5000/static/${user.id}.webp`); // TODO value from server
+    setImageUrl(user.avatar || '');
     setUploadImageFile(null);
+    setIsNewAvatar(false);
   };
 
   const onDropUploadAvatar = useCallback(
@@ -160,15 +142,15 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
       const data = new FormData();
       data.append('avatar', input);
       setUploadImageFile(data);
+      setIsNewAvatar(true);
     },
     [uploadImageFile],
   );
 
   const { getRootProps, getInputProps, isDragAccept } = useDropzone({
     onDrop: onDropUploadAvatar,
+    accept: ['image/*'],
   });
-
-  const isNewUserAvatar = currentAvatarUrl !== imageUrl;
 
   return (
     <Container>
@@ -191,7 +173,6 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
             borderRight: matches ? 1 : 0,
             borderBottom: matches ? 0 : 1,
             borderColor: 'divider',
-            height: '100%',
             width: matches ? '250px' : '100%',
             marginRight: matches ? '15px' : '0',
             marginBottom: matches ? '0' : '15px',
@@ -203,6 +184,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
               '&.Mui-selected': {
                 color: '#1890ff',
               },
+              fontWeight: 'bold',
             }}
             label='Информация об аккануте'
           />
@@ -212,6 +194,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
               '&.Mui-selected': {
                 color: '#1890ff',
               },
+              fontWeight: 'bold',
             }}
             label='Изменение темы'
           />
@@ -237,7 +220,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 overlap='circular'
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 badgeContent={
-                  isNewUserAvatar && (
+                  isNewAvatar && (
                     <IconButton onClick={cancelChangeAvatarHandler}>
                       <CloseIcon />
                     </IconButton>
@@ -253,7 +236,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                     borderRadius: '50%',
                   }}
                 >
-                  <AvatarUpload
+                  <AvatarInput
                     imageUrl={imageUrl}
                     userName={currentUserName.current}
                     isDragAccept={isDragAccept}
@@ -267,18 +250,16 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                   width: '100%',
                   height: '100%',
                 }}
-                onChange={handleFileChange}
                 name='avatar'
                 accept='image/*'
                 type='file'
               />
-              <Typography mb={2}>id: {user.id}</Typography>
               <Typography>Имя:</Typography>
               <TextField
                 helperText='Ваше имя может отобразиться на ShadowForum, где вы участвуете или упоминаетесь. Вы можете изменить его в любое время.'
                 placeholder={userName}
                 value={userName}
-                onChange={changeNameHandler}
+                // onChange={changeNameHandler}
                 sx={{ marginBottom: '15px' }}
               />
               <Typography>Email:</Typography>
@@ -286,14 +267,14 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 sx={{ marginBottom: '15px' }}
                 fullWidth
                 value={userEmail}
-                onChange={changeEmailHandler}
+                // onChange={changeEmailHandler}
               />
               <Typography>Адрес аккаунта:</Typography>
               <TextField
                 sx={{ marginBottom: '15px' }}
                 helperText='Вы можете поменять адрес своей личной страницы на ShadowForum.'
                 value={userAccountAddress}
-                onChange={handleChangeAccountAddress}
+                // onChange={handleChangeAccountAddress}
               />
               <FormGroup sx={{ marginBottom: '15px' }}>
                 <FormControlLabel
@@ -309,12 +290,13 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 </FormHelperText>
               </FormGroup>
               <LoadingButton
+                sx={{ fontWeight: 700 }}
                 fullWidth
                 startIcon={<SaveIcon />}
                 variant='contained'
                 type='submit'
                 loading={loading}
-                disabled={disableBtn}
+                disabled={!uploadImageFile}
               >
                 Обновить аккаунт
               </LoadingButton>

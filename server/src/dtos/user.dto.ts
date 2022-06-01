@@ -8,6 +8,7 @@ export class UserDto {
   readonly isActivated: boolean;
   readonly registrationDate: Date;
   readonly name: string;
+  readonly avatar?: string;
   readonly userTheme: userTheme;
 
   constructor(model: HydratedDocument<User>) {
@@ -17,5 +18,6 @@ export class UserDto {
     this.isActivated = model.isActivated;
     this.registrationDate = model.creationDate;
     this.userTheme = model.userTheme;
+    this.avatar = model.avatar;
   }
 }

@@ -5,6 +5,8 @@ import { MessageResponse, MessageRequest } from '../models/message.model';
 export const messagesApi = createApi({
   reducerPath: 'messageApi',
   baseQuery: baseQueryWithRefresh,
+  refetchOnReconnect: true,
+  refetchOnMountOrArgChange: true,
   endpoints: (build) => ({
     fetchMessagesByDiscussionId: build.query<MessageResponse[] | null, string | null>({
       query: (discussionId: string | null) => ({

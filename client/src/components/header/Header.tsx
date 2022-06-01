@@ -18,14 +18,14 @@ import {
   ListItemIcon,
   Avatar,
   Divider,
+  Dialog,
 } from '@mui/material';
 import { Search as SearchIcon, AccountCircle, MoreVert as MoreIcon } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import { getUser } from '../../store/selectors/authSelectors';
-import { CreateDiscussionDialog } from '../forms/create-discussion-dialog/CreateDiscussionDialog';
+import { CreateDiscussionDialog } from '../create-discussion-dialog/CreateDiscussionDialog';
 import { stringAvatar } from '../../utils/Avatar';
 import { discussionsApi } from '../../services/discussions.service';
-import { userApi } from '../../services/user.service';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -57,7 +57,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -85,7 +84,8 @@ const Header: FC = () => {
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const goHomeHandler = () => {
+  const goHomeHandler = (e: any) => {
+    e.preventDefault();
     navigate('/');
   };
 
@@ -129,57 +129,56 @@ const Header: FC = () => {
   };
 
   const menu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      disableScrollLock
-      open={isMenuOpen}
-      onClose={closeMenuHandler}
-    >
-      {user && (
-        <Box>
-          <Box
-            display='flex'
-            flexDirection='row'
-            justifyContent='center'
-            alignItems='center'
-            sx={{ padding: '10px 15px', textAlign: 'center' }}
-          >
-            <Avatar
-              src={`http://localhost:5000/static/${user.id}.webp`}
-              {...stringAvatar(user.name)}
-            />
-            <Typography sx={{ marginLeft: '15px' }}>{user.email}</Typography>
+    <Dialog open={isMenuOpen}>
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        disableScrollLock
+        open={isMenuOpen}
+        onClose={closeMenuHandler}
+      >
+        {user && (
+          <Box>
+            <Box
+              display='flex'
+              flexDirection='row'
+              justifyContent='center'
+              alignItems='center'
+              sx={{ padding: '10px 15px', textAlign: 'center' }}
+            >
+              <Avatar src={user.avatar} {...stringAvatar(user.name)} alt={user.name} />
+              <Typography sx={{ marginLeft: '15px' }}>{user.email}</Typography>
+            </Box>
+            <Divider flexItem />
+            <MenuItem onClick={goToSettingsHandler}>
+              <ListItemIcon>
+                <Settings fontSize='small' />
+              </ListItemIcon>
+              Настройки аккаунта
+            </MenuItem>
+            <MenuItem onClick={goToMyDiscussionsHandler}>
+              <ListItemIcon>
+                <FeaturedPlayListIcon fontSize='small' />
+              </ListItemIcon>
+              Мои обсуждения
+            </MenuItem>
+            <MenuItem onClick={logoutHandler}>
+              <ListItemIcon>
+                <Logout fontSize='small' />
+              </ListItemIcon>
+              Выйти из аккаунта
+            </MenuItem>
           </Box>
-          <Divider flexItem />
-          <MenuItem onClick={goToSettingsHandler}>
-            <ListItemIcon>
-              <Settings fontSize='small' />
-            </ListItemIcon>
-            Настройки аккаунта
-          </MenuItem>
-          <MenuItem onClick={goToMyDiscussionsHandler}>
-            <ListItemIcon>
-              <FeaturedPlayListIcon fontSize='small' />
-            </ListItemIcon>
-            Мои обсуждения
-          </MenuItem>
-          <MenuItem onClick={logoutHandler}>
-            <ListItemIcon>
-              <Logout fontSize='small' />
-            </ListItemIcon>
-            Выйти из аккаунта
-          </MenuItem>
-        </Box>
-      )}
-    </Menu>
+        )}
+      </Menu>
+    </Dialog>
   );
 
   const mobileMenu = (
@@ -201,13 +200,7 @@ const Header: FC = () => {
       {user ? (
         <Box>
           <MenuItem onClick={openProfileMenuHandler}>
-            <IconButton
-              size='large'
-              aria-label='account of current user'
-              aria-controls='primary-search-account-menu'
-              aria-haspopup='true'
-              color='inherit'
-            >
+            <IconButton size='large' aria-haspopup='true' color='inherit'>
               <AccountCircle />
             </IconButton>
             <p>Профиль</p>
@@ -227,35 +220,24 @@ const Header: FC = () => {
       component='header'
       sx={{ flexGrow: 1, position: 'fixed', width: '100vw', top: '0', left: 0, zIndex: '100' }}
     >
-      <AppBar component='div' position='relative' sx={{ padding: '0 15px' }}>
+      <AppBar component='div' position='relative' sx={{ padding: '0 15px', borderRadius: 0 }}>
         <Toolbar>
           <Typography
             fontSize='20px'
+            fontWeight='bold'
             noWrap
-            component='span'
+            color='secondary'
+            component='a'
+            href='/'
             onClick={goHomeHandler}
             sx={{
-              display: {
-                xs: 'none',
-                sm: 'block',
-              },
+              textDecoration: 'none',
               cursor: 'pointer',
               userSelect: 'none',
             }}
           >
             SHADOW FORUM
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder='Поиск…'
-              type='search'
-              value={settingsSearch}
-              onChange={changeSettingsSearchHandler}
-            />
-          </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex', marginRight: '15px' } }}>
             {user && <CreateDiscussionDialog type='desktop' />}
@@ -278,11 +260,16 @@ const Header: FC = () => {
                   color='inherit'
                   sx={{ padding: '5px' }}
                 >
-                  <Avatar src={`http://localhost:5000/static/${user.id}.webp`} />
+                  <Avatar src={user.avatar} {...stringAvatar(user.name)} alt={user.name} />
                 </IconButton>
               </>
             ) : window.location.pathname !== '/authorize' ? (
-              <Button variant='contained' color='secondary' onClick={goToAuthorizeHandler}>
+              <Button
+                variant='contained'
+                sx={{ fontWeight: 700 }}
+                color='secondary'
+                onClick={goToAuthorizeHandler}
+              >
                 Войти
               </Button>
             ) : null}

@@ -9,6 +9,8 @@ const Footer = () => {
     <Box
       component='footer'
       display='flex'
+      justifySelf='flex-end'
+      borderTop={({ palette }) => `1px solid ${palette.divider}`}
       flexDirection={{ xs: 'column', sm: 'row' }}
       justifyContent='space-around'
       alignItems='center'
@@ -27,6 +29,7 @@ const Footer = () => {
           component='img'
           loading='lazy'
           src={iMac}
+          alt='iMac'
           sx={{ width: { xs: 50, sm: 70 }, pointerEvents: 'none', userSelect: 'none' }}
         />
       </Box>

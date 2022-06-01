@@ -1,8 +1,7 @@
-import React, { ChangeEvent, useContext, useState } from 'react';
-import { Box, Card, CircularProgress, Grid } from '@mui/material';
+import React, { useState } from 'react';
+import { Card, CircularProgress, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import DoneIcon from '@mui/icons-material/Done';
-import { ChosenTheme } from '../../providers';
 import { userApi } from '../../services/user.service';
 import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useAppSelector } from '../../hooks/redux';
@@ -54,6 +53,7 @@ const SelectThemeButtons = () => {
               display: 'flex',
               flexDirection: 'column',
               bgcolor: '#fff',
+              fontWeight: 700,
             }}
           >
             Светлая
@@ -69,7 +69,13 @@ const SelectThemeButtons = () => {
             onClick={changeThemeHandler('dark')}
             color={theme === 'dark' ? 'success' : 'secondary'}
             variant={theme === 'dark' ? 'outlined' : 'text'}
-            sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              fontWeight: 700,
+            }}
           >
             Тёмная
             {theme === 'dark' && <DoneIcon color='success' />}
@@ -95,6 +101,7 @@ const SelectThemeButtons = () => {
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
+              fontWeight: 700,
             }}
           >
             Системная

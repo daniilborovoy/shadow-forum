@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
-import { discussionsApi } from '../../../services/discussions.service';
-import { DiscussionRequest } from '../../../models/discussion.model';
+import { discussionsApi } from '../../services/discussions.service';
+import { DiscussionRequest } from '../../models/discussion.model';
 import CreateIcon from '@mui/icons-material/Create';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import {
@@ -24,7 +24,7 @@ import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import { blue, grey } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
-import { useEnqueueSnackbar } from '../../../hooks/useEnqueueSnackbar';
+import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useNavigate } from 'react-router-dom';
 
 type CreateDiscussionFormDialogType = 'mobile' | 'desktop';
@@ -89,17 +89,15 @@ export const CreateDiscussionDialog: FC<{
   };
 
   const handleClickOpen = (): void => {
-    setOpen(true);
     setNewDiscussion({
       title: '',
       body: '',
     });
+    setOpen(true);
   };
 
   const handleClose = (): void => {
-    setOpen(() => {
-      return false;
-    });
+    setOpen(false);
   };
 
   const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -114,8 +112,10 @@ export const CreateDiscussionDialog: FC<{
   return (
     <Box>
       {type === 'desktop' ? (
-        <ColorButton onClick={handleClickOpen}>
-          <Typography noWrap>Создать обсуждение</Typography>
+        <ColorButton endIcon={<AddIcon fontSize='small' />} onClick={handleClickOpen}>
+          <Typography fontWeight='bold' noWrap>
+            Создать обсуждение
+          </Typography>
         </ColorButton>
       ) : (
         <MenuItem onClick={handleClickOpen}>
@@ -126,7 +126,7 @@ export const CreateDiscussionDialog: FC<{
         </MenuItem>
       )}
       <Dialog open={open} scroll='body' onClose={handleClose}>
-        <DialogTitle sx={{ wordWrap: 'break-word' }}>
+        <DialogTitle sx={{ wordWrap: 'break-word', fontWeight: 700 }}>
           {newDiscussion.title.length ? newDiscussion.title : 'Новое обсуждение'}
         </DialogTitle>
         <Box component='form'>
@@ -135,7 +135,7 @@ export const CreateDiscussionDialog: FC<{
               Введите короткое название темы и подробное описание для вашего будущего обсуждения.
             </DialogContentText>
             <TextField
-              required={true}
+              required
               autoFocus
               margin='dense'
               value={newDiscussion.title}
@@ -146,8 +146,7 @@ export const CreateDiscussionDialog: FC<{
               variant='standard'
             />
             <TextField
-              required={true}
-              autoFocus
+              required
               margin='dense'
               label='Описание обсуждения'
               value={newDiscussion.body}
@@ -159,7 +158,8 @@ export const CreateDiscussionDialog: FC<{
           </DialogContent>
           <DialogActions>
             <Button
-              variant='outlined'
+              sx={{ fontWeight: 700 }}
+              variant='text'
               color='inherit'
               type='reset'
               startIcon={<DoDisturbAltIcon fontSize='small' />}
@@ -169,7 +169,9 @@ export const CreateDiscussionDialog: FC<{
             </Button>
             <LoadingButton
               disabled={disableCreateButton}
+              sx={{ fontWeight: 700 }}
               variant='contained'
+              color='info'
               type='submit'
               onClick={createDiscussion}
               loading={createDiscussionLoading}

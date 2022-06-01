@@ -14,6 +14,8 @@ interface IFetchAllDiscussions {
 export const discussionsApi = createApi({
   reducerPath: 'discussionApi',
   baseQuery: baseQueryWithRefresh,
+  refetchOnReconnect: true,
+  refetchOnMountOrArgChange: true,
   endpoints: (build) => ({
     fetchDiscussionById: build.query<DiscussionResponse, string | null>({
       query: (id: string) => ({
@@ -54,13 +56,12 @@ export const discussionsApi = createApi({
         },
       }),
     }),
-    deleteDiscussion: build.mutation<DiscussionResponse, DiscussionRequest>({
-      query: (discussionData: DiscussionRequest) => ({
+    deleteDiscussion: build.mutation<DiscussionResponse, string>({
+      query: (discussionId: string) => ({
         url: 'discussions',
         method: 'DELETE',
-        body: {
-          title: discussionData.title,
-          body: discussionData.body,
+        params: {
+          id: discussionId,
         },
       }),
     }),
