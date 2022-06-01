@@ -33,7 +33,7 @@ const AvatarInput: FC<AvatarInputProps> = ({ imageUrl, userName, isDragAccept })
     />
     <UploadIcon
       id='upload-icon'
-      color='inherit'
+      color='info'
       sx={{
         position: 'absolute',
         width: '50px',

@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import userService from '../service/user.service';
 import { validationResult, ValidationError, Result } from 'express-validator';
 import ApiError from '../exceptions/api.error';
-import sharp from 'sharp';
-import fs from 'fs';
 import path from 'path';
 
 class UserController {
@@ -119,16 +117,16 @@ class UserController {
     }
   }
 
-  async updateUserAvatar(req: Request, res: Response, _next: NextFunction) {
+  async updateUserAvatar(req: Request, res: Response, next: NextFunction) {
     try {
       const imageFile = req.file;
       const fileName = req.body.user.id + '.webp';
       const userId = req.body.user.id;
       const uploadPath = path.resolve(__dirname, '..', 'avatars', fileName);
       await userService.saveUserAvatar(imageFile, uploadPath, userId);
-      res.status(200).json('Аватар успешно обновлён!');
-    } catch (err) {
-      res.status(500).send(err);
+      return res.status(200).json('Аватар успешно обновлён!');
+    } catch (err: unknown) {
+      next(err);
     }
   }
 }

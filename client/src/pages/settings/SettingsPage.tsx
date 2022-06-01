@@ -5,6 +5,7 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -68,6 +69,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   const [userAccountAddress, setUserAccountAddress] = useState<string>(user.id);
   const [uploadImageFile, setUploadImageFile] = useState<FormData | null>(null);
   const [imageUrl, setImageUrl] = useState<string>(user.avatar || '');
+  const [isNewAvatar, setIsNewAvatar] = useState<boolean>(false);
   const activated = user.isActivated;
   const currentUserName = useRef(userName);
   const currentUserEmail = useRef(userEmail);
@@ -105,6 +107,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
       uploadUserAvatar(uploadImageFile)
         .unwrap()
         .then((res) => {
+          setIsNewAvatar(false);
           enqueueSnackbar(res, {
             variant: 'success',
           });
@@ -121,14 +124,6 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
     }
   };
 
-  const showUpdateButton = useCallback(() => {
-    return !(
-      currentUserEmail.current !== userEmail ||
-      currentUserName.current !== userName ||
-      uploadImageFile
-    );
-  }, [userEmail, userName, uploadImageFile]);
-  const disableBtn = showUpdateButton();
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -136,6 +131,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   const cancelChangeAvatarHandler = () => {
     setImageUrl(user.avatar || '');
     setUploadImageFile(null);
+    setIsNewAvatar(false);
   };
 
   const onDropUploadAvatar = useCallback(
@@ -146,6 +142,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
       const data = new FormData();
       data.append('avatar', input);
       setUploadImageFile(data);
+      setIsNewAvatar(true);
     },
     [uploadImageFile],
   );
@@ -154,8 +151,6 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
     onDrop: onDropUploadAvatar,
     accept: ['image/*'],
   });
-
-  const isNewUserAvatar = user.avatar !== imageUrl;
 
   return (
     <Container>
@@ -225,7 +220,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 overlap='circular'
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 badgeContent={
-                  isNewUserAvatar && (
+                  isNewAvatar && (
                     <IconButton onClick={cancelChangeAvatarHandler}>
                       <CloseIcon />
                     </IconButton>
@@ -301,7 +296,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 variant='contained'
                 type='submit'
                 loading={loading}
-                disabled={disableBtn}
+                disabled={!uploadImageFile}
               >
                 Обновить аккаунт
               </LoadingButton>
