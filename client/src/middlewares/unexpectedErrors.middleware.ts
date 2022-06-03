@@ -1,8 +1,4 @@
-import {
-  MiddlewareAPI,
-  isRejectedWithValue,
-  Middleware,
-} from '@reduxjs/toolkit';
+import { isRejectedWithValue, Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
 
 export const unexpectedErrorMiddleware: Middleware =
   (_api: MiddlewareAPI) => (next) => async (action) => {
