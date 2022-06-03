@@ -148,7 +148,11 @@ class UserService {
         .resize(150, 150)
         .webp({ quality: 90 })
         .toBuffer(async (err, data, info) => {
+          if (!fs.existsSync('avatars')) {
+            fs.mkdirSync('avatars', { recursive: true });
+          }
           fs.writeFileSync(uploadPath, data);
+          if (!this.apiUrl) throw ApiError.InternalServerError('API_URL missing in .env!');
           user.avatar = `${this.apiUrl}/static/${userId}.webp`;
           await user.save();
         });

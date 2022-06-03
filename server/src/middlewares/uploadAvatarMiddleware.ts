@@ -7,10 +7,15 @@ const fileFilter = (
   file: Express.Multer.File,
   callback: multer.FileFilterCallback,
 ) => {
-  if (file.mimetype.startsWith('image')) {
+  if ((file.mimetype.startsWith('image'), file.mimetype !== 'image/x-icon')) {
     callback(null, true);
   } else {
     callback(null, false);
+    if (file.mimetype === 'image/x-icon') {
+      return callback(
+        ApiError.BadRequestError('Использовать изображения типа ico для аватара запрещено!'),
+      );
+    }
     return callback(ApiError.BadRequestError('Разрешено использовать только файлы изображений!'));
   }
 };
