@@ -11,11 +11,11 @@ import path from 'path';
 
 const app = express();
 app.use(
-    cors({
-        origin: process.env.ORIGIN,
-        credentials: true,
-        optionsSuccessStatus: 200,
-    }),
+  cors({
+    origin: process.env.ORIGIN,
+    credentials: true,
+    optionsSuccessStatus: 200,
+  }),
 );
 app.use(express.json());
 app.use(cookieParser());
