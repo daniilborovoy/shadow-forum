@@ -2,8 +2,6 @@ import React, { FC } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton } from '@mui/material';
 import { Box, CardActionArea, CardActions } from '@mui/material';
 import { DiscussionResponse } from '../../models/discussion.model';
 import MessageIcon from '@mui/icons-material/ChatBubble';

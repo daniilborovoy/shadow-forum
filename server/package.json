@@ -21,10 +21,9 @@
     "exec": "npm run start:dev",
     "ext": "ts"
   },
-  "author": "daniil-borovoy (daniil-borovoy@mail.ru)",
+  "author": "Daniil Borovoy <daniil-borovoy42@gmail.ru>",
   "license": "ISC",
   "dependencies": {
-    "@types/multer": "^1.4.7",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -50,6 +49,7 @@
     "@types/express": "^4.17.13",
     "@types/express-validator": "^3.0.0",
     "@types/jsonwebtoken": "^8.5.8",
+    "@types/multer": "^1.4.7",
     "@types/node": "^17.0.13",
     "@types/nodemailer": "^6.4.4",
     "@types/sharp": "^0.30.2",

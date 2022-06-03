@@ -4,7 +4,6 @@ import HomePage from '../../pages/home/HomePage';
 import DiscussionPage from '../../pages/discussion/DiscussionPage';
 import Header from '../header/Header';
 import AppLoader from '../app-loader/AppLoader';
-import { Socket } from 'socket.io-client';
 import { useAppSelector } from '../../hooks/redux';
 import { getUser } from '../../store/selectors/authSelectors';
 import MyDiscussionsPage from '../../pages/my-discussions/MyDiscussionsPage';

@@ -5,7 +5,6 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -135,7 +134,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   };
 
   const onDropUploadAvatar = useCallback(
-    (acceptedFiles: any) => {
+    (acceptedFiles: File[]) => {
       const input = acceptedFiles[0];
       if (!input) return;
       setImageUrl(URL.createObjectURL(input));

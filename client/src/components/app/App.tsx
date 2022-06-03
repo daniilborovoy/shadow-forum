@@ -7,7 +7,7 @@ import { ChosenThemeProvider, ThemeProvider, WebSocketProvider } from '../../pro
 import { SnackbarProvider } from 'notistack';
 
 const App: FC = () => {
-  const [checkAuth, { isLoading: checkAuthLoading }] = authApi.useRefreshMutation();
+  const [checkAuth, { isLoading: checkAuthLoading, error }] = authApi.useRefreshMutation();
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {

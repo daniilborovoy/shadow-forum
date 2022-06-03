@@ -15,7 +15,7 @@ interface AuthState {
 
 interface AuthResponseError {
   message: string;
-  error: any;
+  error: unknown;
 }
 
 const initialState: AuthState = {
