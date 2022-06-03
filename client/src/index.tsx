@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import * as dayjs from 'dayjs';
 import 'dayjs/locale/ru';
+
 dayjs.locale('ru');
 
 const app = document.getElementById('app');

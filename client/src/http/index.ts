@@ -1,9 +1,4 @@
-import {
-  BaseQueryFn,
-  FetchArgs,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-} from '@reduxjs/toolkit/dist/query/react';
+import { BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
 import { authApi } from '../services/auth.service';
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
@@ -21,11 +16,9 @@ const baseQuery = fetchBaseQuery({
   credentials: 'include',
 });
 
-export const baseQueryWithRefresh: BaseQueryFn<
-  string | FetchArgs,
+export const baseQueryWithRefresh: BaseQueryFn<string | FetchArgs,
   unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
+  FetchBaseQueryError> = async (args, api, extraOptions) => {
   let request = await baseQuery(args, api, extraOptions);
   if (request.error && request.error.status === 401) {
     type refreshRequest = QueryReturnValue<AuthResponse, FetchBaseQueryError, FetchBaseQueryMeta>;
