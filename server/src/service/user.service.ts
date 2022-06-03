@@ -1,4 +1,4 @@
-import UserModel, { User, userTheme } from '../models/user.model';
+import UserModel, { User } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import mailService from './mail.service';
@@ -13,6 +13,7 @@ import fs from 'fs';
 
 class UserService {
   private readonly apiUrl;
+
   constructor() {
     this.apiUrl = process.env.API_URL;
   }
@@ -93,7 +94,7 @@ class UserService {
   async refresh(refreshToken: string) {
     if (!refreshToken) throw ApiError.UnauthorizedError();
 
-    const userData: any = tokenService.validateRefreshToken(refreshToken);
+    const userData = tokenService.validateRefreshToken(refreshToken);
     const tokenFromDb: HydratedDocument<Token> | null = await tokenService.findToken(refreshToken);
 
     if (!userData || !tokenFromDb) throw ApiError.UnauthorizedError();

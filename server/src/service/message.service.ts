@@ -1,5 +1,5 @@
 import ApiError from '../exceptions/api.error';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument} from 'mongoose';
 import MessageModel, { Message } from '../models/message.model';
 import { MessageDto } from '../dtos/message.dto';
 import DiscussionModel, { Discussion } from '../models/discussion.model';

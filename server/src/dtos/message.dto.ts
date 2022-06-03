@@ -1,9 +1,10 @@
 import { HydratedDocument, Types } from 'mongoose';
 import { Message } from '../models/message.model';
+import { User } from '../models/user.model';
 
 export class MessageDto {
   readonly messageId: Types.ObjectId;
-  readonly createdBy: any;
+  readonly createdBy: Types.ObjectId | User;
   readonly body: string;
   readonly creationDate: Date;
 

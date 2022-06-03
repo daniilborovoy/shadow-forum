@@ -13,7 +13,7 @@ const SelectThemeButtons = () => {
   const [changeThemeQuery] = userApi.useChangeUserThemeMutation();
   const enqueueSnackbar = useEnqueueSnackbar();
 
-  const changeThemeHandler = (newTheme: 'dark' | 'light' | 'system') => (event: any) => {
+  const changeThemeHandler = (newTheme: 'dark' | 'light' | 'system') => () => {
     if (newTheme === theme) return;
     if (newTheme === 'light') {
       setLoading(1);

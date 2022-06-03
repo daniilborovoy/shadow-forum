@@ -1,13 +1,11 @@
-import React, { Dispatch, FC, MouseEventHandler, SetStateAction } from 'react';
+import React, { Dispatch, FC, MouseEvent, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import AddIcon from '@mui/icons-material/Add';
 import {
-  Avatar,
   List,
-  ListItemAvatar,
   ListItemText,
   Typography,
   ListItemButton,
@@ -52,7 +50,7 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
       const publicationDate = dayjs(discussion.creationDate).format('DD MMMM YYYY');
       const discussionDescription: string =
         discussion.body.slice(0, 20) + (discussion.body.length > 20 ? '...' : '');
-      const goToDiscussionHandler = (e: any) => {
+      const goToDiscussionHandler = (e: MouseEvent<HTMLElement>) => {
         e.preventDefault();
         navigate(`/discussions/${discussion.id}`);
       };

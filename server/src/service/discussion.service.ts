@@ -2,7 +2,7 @@ import { HydratedDocument, Types } from 'mongoose';
 import DiscussionModel, { Discussion } from '../models/discussion.model';
 import { DiscussionDto } from '../dtos/discussion.dto';
 import ApiError from '../exceptions/api.error';
-import MessageModel, { Message } from '../models/message.model';
+import MessageModel from '../models/message.model';
 
 class DiscussionService {
   async getDiscussion(discussionId: string, userId?: string) {

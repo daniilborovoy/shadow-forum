@@ -7,11 +7,13 @@ import setPageTitle from '../../utils/SetPageTitle';
 import { getUserName } from '../../store/selectors/authSelectors';
 import { discussionsApi } from '../../services/discussions.service';
 import Footer from '../../components/footer/Footer';
+import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 
 const HomePage: FC = () => {
   const userName: string | null = useAppSelector(getUserName);
   const [searchDiscussion, setSearchDiscussion] = useState<string>('');
   const [limit, setLimit] = useState<number>(5);
+  const enqueueSnackbar = useEnqueueSnackbar();
 
   const changeSearchDiscussionHandler = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length) {
@@ -41,6 +43,12 @@ const HomePage: FC = () => {
     }
     if (discussionsFetching) {
       return 'Ищем...';
+    }
+    if (discussionsLoadingError) {
+      enqueueSnackbar('Ошибка сети!', {
+        variant: 'error',
+      });
+      return 'Ошибка!';
     }
     return searchDiscussion.length
       ? discussions?.length

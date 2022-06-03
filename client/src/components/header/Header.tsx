@@ -20,7 +20,7 @@ import {
   Divider,
   Dialog,
 } from '@mui/material';
-import { Search as SearchIcon, AccountCircle, MoreVert as MoreIcon } from '@mui/icons-material';
+import { AccountCircle, MoreVert as MoreIcon } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import { getUser } from '../../store/selectors/authSelectors';
 import { CreateDiscussionDialog } from '../create-discussion-dialog/CreateDiscussionDialog';
@@ -84,7 +84,7 @@ const Header: FC = () => {
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const goHomeHandler = (e: any) => {
+  const goHomeHandler = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     navigate('/');
   };
@@ -102,8 +102,8 @@ const Header: FC = () => {
   };
 
   const goToMyDiscussionsHandler = () => {
-    closeMenuHandler();
     navigate('/my-discussions');
+    closeMenuHandler();
   };
 
   const goToAuthorizeHandler = () => {
