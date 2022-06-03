@@ -122,7 +122,7 @@ class UserController {
       const imageFile = req.file;
       const fileName = req.body.user.id + '.webp';
       const userId = req.body.user.id;
-      const uploadPath = path.resolve(__dirname, '..', 'avatars', fileName);
+      const uploadPath = path.resolve('avatars', fileName);
       await userService.saveUserAvatar(imageFile, uploadPath, userId);
       return res.status(200).json('Аватар успешно обновлён!');
     } catch (err: unknown) {
