@@ -5,10 +5,10 @@
 
 # testing
 /coverage
-src/avatars/
 
 # production
 /build
+/avatars
 .env
 
 # misc
