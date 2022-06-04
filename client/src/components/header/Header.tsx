@@ -1,4 +1,4 @@
-import React, { FC, useState, MouseEvent, ChangeEvent } from 'react';
+import React, { ChangeEvent, FC, MouseEvent, useState } from 'react';
 import { authApi } from '../../services/auth.service';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useNavigate } from 'react-router-dom';
@@ -7,21 +7,21 @@ import Logout from '@mui/icons-material/Logout';
 import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
 import {
   AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  InputBase,
-  MenuItem,
-  Button,
-  Menu,
-  ListItemIcon,
   Avatar,
-  Divider,
+  Box,
+  Button,
   Dialog,
+  Divider,
+  IconButton,
+  InputBase,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
 } from '@mui/material';
 import { AccountCircle, MoreVert as MoreIcon } from '@mui/icons-material';
-import { styled, alpha } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { getUser } from '../../store/selectors/authSelectors';
 import { CreateDiscussionDialog } from '../create-discussion-dialog/CreateDiscussionDialog';
 import { stringAvatar } from '../../utils/Avatar';
@@ -153,7 +153,7 @@ const Header: FC = () => {
               alignItems='center'
               sx={{ padding: '10px 15px', textAlign: 'center' }}
             >
-              <Avatar src={user.avatar} {...stringAvatar(user.name)} alt={user.name} />
+              <Avatar src={user.avatar} {...stringAvatar(user.name)} alt={user.name} sx={{ pointerEvents: 'none' }} />
               <Typography sx={{ marginLeft: '15px' }}>{user.email}</Typography>
             </Box>
             <Divider flexItem />
@@ -260,7 +260,8 @@ const Header: FC = () => {
                   color='inherit'
                   sx={{ padding: '5px' }}
                 >
-                  <Avatar src={user.avatar} {...stringAvatar(user.name)} alt={user.name} />
+                  <Avatar src={user.avatar} {...stringAvatar(user.name)} alt={user.name}
+                          sx={{ pointerEvents: 'none' }} />
                 </IconButton>
               </>
             ) : window.location.pathname !== '/authorize' ? (

@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { ReportGmailerrorred, Done } from '@mui/icons-material';
+import { Done, ReportGmailerrorred } from '@mui/icons-material';
 import { Button, CircularProgress, Dialog, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { setEmailActivationState } from '../../store/reducers/AuthSlice';
 
 const EmailActivationPage = () => {
   const params = useParams();
   const activationLink = params.activationLink;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [error, setError] = useState<null | string>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [userEmail, setUserEmail] = useState<string>('');
 
   const activate = async () => {
     return await axios.get(
@@ -17,8 +24,7 @@ const EmailActivationPage = () => {
       }:5000/api/activate/${activationLink}`,
     );
   };
-  const [error, setError] = useState<null | string>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+
 
   const goToHomeHandler = () => {
     navigate('/');
@@ -26,8 +32,10 @@ const EmailActivationPage = () => {
 
   useEffect(() => {
     activate()
-      .then(() => {
+      .then((res: AxiosResponse<{ email: string }>) => {
         setError(null);
+        setUserEmail(res.data.email);
+        dispatch(setEmailActivationState(true));
       })
       .catch((err) => {
         setError(err.response.data.message);
@@ -89,7 +97,7 @@ const EmailActivationPage = () => {
           >
             <Done color='success' />
             <Typography mb={5} fontSize='20px' color='text.success' textAlign='center'>
-              Почта успешно активирована!
+              Аккаунт {userEmail} успешно активирован!
             </Typography>
             <Button variant='contained' onClick={goToHomeHandler}>
               Вернуться

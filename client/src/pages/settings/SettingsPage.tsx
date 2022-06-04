@@ -1,33 +1,24 @@
-import React, {
-  ChangeEvent,
-  FC,
-  FormEvent,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { ChangeEvent, FC, FormEvent, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Box,
-  Container,
-  Typography,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-  TextField,
-  Tabs,
-  Tab,
-  IconButton,
   Badge,
-  InputLabel,
+  Box,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  FormGroup,
   FormHelperText,
+  IconButton,
+  InputLabel,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../models/user.model';
 import { userApi } from '../../services/user.service';
 import setPageTitle from '../../utils/SetPageTitle';
-import { useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
@@ -35,6 +26,7 @@ import AvatarInput from '../../components/avatar-input/AvatarInput';
 import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useDropzone } from 'react-dropzone';
 import SelectThemeButtons from '../../components/select-theme-buttons/SelectThemeButtons';
+import Settings from './Settings.svg';
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -197,6 +189,17 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
             }}
             label='Изменение темы'
           />
+          <Box
+            component='img'
+            src={Settings}
+            alt='Settings'
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              width: '100%',
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+          />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Box
@@ -233,6 +236,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                     width: 'inherit',
                     height: 'inherit',
                     borderRadius: '50%',
+                    userSelect: 'none',
                   }}
                 >
                   <AvatarInput

@@ -1,11 +1,11 @@
-import UserModel, { User } from '../models/user.model';
+import UserModel from '../models/user.model';
+import userModel, { User } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 import mailService from './mail.service';
 import tokenService from './token.service';
 import { UserDto } from '../dtos/user.dto';
 import ApiError from '../exceptions/api.error';
-import userModel from '../models/user.model';
 import { HydratedDocument } from 'mongoose';
 import { Token } from '../models/token.model';
 import sharp from 'sharp';
@@ -62,6 +62,7 @@ class UserService {
       user.isActivated = true;
       await user.save();
     }
+    return user.email;
   }
 
   async login(email: string, password: string) {

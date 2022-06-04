@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, isAnyOf } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf, PayloadAction } from '@reduxjs/toolkit';
 import { User, userTheme } from '../../models/user.model';
 import { AuthResponse } from '../../models/auth.model';
 import { authApi } from '../../services/auth.service';
@@ -30,7 +30,11 @@ const initialState: AuthState = {
 const AuthSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setEmailActivationState: (state, action: PayloadAction<boolean>) => {
+      if (state.user) state.user.isActivated = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     const isSuccessAuthAction = isAnyOf(
       authApi.endpoints.login.matchFulfilled,
@@ -60,4 +64,5 @@ const AuthSlice = createSlice({
   },
 });
 
+export const { setEmailActivationState } = AuthSlice.actions;
 export default AuthSlice.reducer;

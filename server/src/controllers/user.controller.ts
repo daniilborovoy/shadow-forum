@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import userService from '../service/user.service';
-import { validationResult, ValidationError, Result } from 'express-validator';
+import { Result, ValidationError, validationResult } from 'express-validator';
 import ApiError from '../exceptions/api.error';
 import path from 'path';
 
@@ -77,9 +77,8 @@ class UserController {
     try {
       const activationLink = req.params.link;
       if (!activationLink) throw ApiError.BadRequestError('activation link missing!');
-      await userService.activate(activationLink);
-      if (!process.env.ORIGIN) throw ApiError.InternalServerError('origin missing!');
-      return res.redirect(process.env.ORIGIN);
+      const userEmail = await userService.activate(activationLink);
+      return res.status(200).json({ email: userEmail });
     } catch (err: unknown) {
       next(err);
     }

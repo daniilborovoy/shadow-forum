@@ -24,7 +24,7 @@ const App: FC = () => {
     }
   }, []);
 
-  if (!checkAuthLoading && socket) {
+  if (!checkAuthLoading) {
     return (
       <WebSocketProvider socket={socket}>
         <ChosenThemeProvider>
