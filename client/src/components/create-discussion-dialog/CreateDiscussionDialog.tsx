@@ -1,25 +1,22 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FC, FormEvent, useState } from 'react';
 import { discussionsApi } from '../../services/discussions.service';
 import { DiscussionRequest } from '../../models/discussion.model';
 import CreateIcon from '@mui/icons-material/Create';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import {
+  Box,
+  Button,
+  ButtonProps,
+  Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Dialog,
-  TextField,
-  Button,
-  MenuItem,
-  ButtonProps,
-  Box,
-  Typography,
   IconButton,
-
-
+  MenuItem,
+  TextField,
+  Typography,
 } from '@mui/material';
-import { FC } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import { blue, grey } from '@mui/material/colors';
@@ -169,7 +166,7 @@ export const CreateDiscussionDialog: FC<{
             </Button>
             <LoadingButton
               disabled={disableCreateButton}
-              sx={{ fontWeight: 700 }}
+              sx={{ fontWeight: 700, color: '#fff' }}
               variant='contained'
               color='info'
               type='submit'

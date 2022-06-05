@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import userService from '../service/user.service';
-import { validationResult, ValidationError, Result } from 'express-validator';
+import { Result, ValidationError, validationResult } from 'express-validator';
 import ApiError from '../exceptions/api.error';
 import path from 'path';
 
@@ -77,9 +77,8 @@ class UserController {
     try {
       const activationLink = req.params.link;
       if (!activationLink) throw ApiError.BadRequestError('activation link missing!');
-      await userService.activate(activationLink);
-      if (!process.env.ORIGIN) throw ApiError.InternalServerError('origin missing!');
-      return res.redirect(process.env.ORIGIN);
+      const userEmail = await userService.activate(activationLink);
+      return res.status(200).json({ email: userEmail });
     } catch (err: unknown) {
       next(err);
     }
@@ -111,7 +110,7 @@ class UserController {
       const theme: 'dark' | 'light' | 'system' = req.body.theme;
       if (!userId) throw ApiError.BadRequestError('user id missing!');
       const newTheme = await userService.changeTheme(userId, theme);
-      return res.status(200).json(newTheme);
+      return res.status(200).json({ theme: newTheme });
     } catch (err: unknown) {
       next(err);
     }
@@ -124,7 +123,19 @@ class UserController {
       const userId = req.body.user.id;
       const uploadPath = path.resolve('avatars', fileName);
       await userService.saveUserAvatar(imageFile, uploadPath, userId);
-      return res.status(200).json('Аватар успешно обновлён!');
+      return res.status(200).json({ message: 'Аватар успешно обновлён!' });
+    } catch (err: unknown) {
+      next(err);
+    }
+  }
+
+  async deleteUserAccount(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId: string = req.body.user.id;
+      const { refreshToken }: { refreshToken: string } = req.cookies;
+      await userService.deleteUserAccount(userId, refreshToken);
+      res.clearCookie('refreshToken');
+      return res.status(200).json({ message: 'Аккаунт удалён!' });
     } catch (err: unknown) {
       next(err);
     }

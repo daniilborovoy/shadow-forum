@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
-import { Box, Container, Typography, TextField, LinearProgress } from '@mui/material';
+import { Box, Container, LinearProgress, TextField, Typography } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import sayDayTime from '../../utils/SayDayTime';
 import DiscussionsList from '../../components/discussions-list/DiscussionsList';
@@ -8,6 +8,7 @@ import { getUserName } from '../../store/selectors/authSelectors';
 import { discussionsApi } from '../../services/discussions.service';
 import Footer from '../../components/footer/Footer';
 import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
+import ErrorConnectionCat from './ErrorConnectionCat.svg';
 
 const HomePage: FC = () => {
   const userName: string | null = useAppSelector(getUserName);
@@ -48,7 +49,12 @@ const HomePage: FC = () => {
       enqueueSnackbar('Ошибка сети!', {
         variant: 'error',
       });
-      return 'Ошибка!';
+      return <Box
+        component='img'
+        src={ErrorConnectionCat}
+        alt='ErrorConnectionCat'
+        sx={{ width: 250, pointerEvents: 'none', userSelect: 'none' }}
+      />;
     }
     return searchDiscussion.length
       ? discussions?.length

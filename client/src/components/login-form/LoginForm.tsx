@@ -1,14 +1,5 @@
-import React, { FC, FormEvent, useState } from 'react';
-import {
-  Box,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  IconButton,
-  InputAdornment,
-  TextField,
-
-} from '@mui/material';
+import React, { ChangeEvent, FC, FormEvent, useState } from 'react';
+import { Box, FormControl, FormGroup, FormLabel, IconButton, InputAdornment, TextField } from '@mui/material';
 import { Login, Visibility, VisibilityOff } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { authApi } from '../../services/auth.service';
@@ -26,6 +17,27 @@ const LoginForm: FC = () => {
     showPassword: false,
   });
 
+  const changeEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setLoginRequest((prev) => ({
+      ...prev,
+      email: e.target.value,
+    }));
+  };
+
+  const changePasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setLoginRequest((prev) => ({
+      ...prev,
+      password: e.target.value,
+    }));
+  };
+
+  const showPasswordHandler = () => {
+    setLoginRequest((prev) => ({
+      ...prev,
+      showPassword: !prev.showPassword,
+    }));
+  };
+
   const loginHandler = (event: FormEvent): void => {
     event.preventDefault();
     const userData: LoginRequest = {
@@ -40,9 +52,11 @@ const LoginForm: FC = () => {
           variant: 'success',
         });
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         setLoginRequest((prevState) => ({ ...prevState, password: '' }));
-        enqueueSnackbar('Ошибка входа!', {
+        const message = err.status === 'FETCH_ERROR' ? 'Ошибка сети!' : 'Ошибка входа!';
+        enqueueSnackbar(message, {
           variant: 'error',
         });
       });
@@ -56,13 +70,7 @@ const LoginForm: FC = () => {
           <TextField
             id='login-email'
             value={loginRequest.email}
-            onChange={(e) => {
-              setLoginRequest((prev) => ({
-                ...prev,
-                email: e.target.value,
-              }));
-            }}
-            error={Boolean(loginError)}
+            onChange={changeEmailHandler}
             margin='normal'
             label='Email'
             variant='outlined'
@@ -73,14 +81,11 @@ const LoginForm: FC = () => {
           <TextField
             value={loginRequest.password}
             id='login-password'
-            onChange={(e) => {
-              setLoginRequest((prev) => ({
-                ...prev,
-                password: e.target.value,
-              }));
-            }}
+            onChange={changePasswordHandler}
+            aria-valuemax={32}
             inputProps={{
               maxLength: 32,
+              minLength: 8,
             }}
             type={loginRequest.showPassword ? 'text' : 'password'}
             required
@@ -89,12 +94,7 @@ const LoginForm: FC = () => {
                 <InputAdornment position='end'>
                   <IconButton
                     aria-label='toggle password visibility'
-                    onClick={() =>
-                      setLoginRequest((prev) => ({
-                        ...prev,
-                        showPassword: !prev.showPassword,
-                      }))
-                    }
+                    onClick={showPasswordHandler}
                     edge='end'
                   >
                     {loginRequest.showPassword ? <VisibilityOff /> : <Visibility />}
@@ -105,8 +105,6 @@ const LoginForm: FC = () => {
             margin='dense'
             label='Пароль'
             variant='outlined'
-            error={Boolean(loginError)}
-            helperText={loginError && 'Неверный логин или пароль.'}
           />
           <LoadingButton
             sx={{ marginTop: '15px', fontWeight: 700 }}

@@ -43,6 +43,10 @@ class MailService {
       html: htmlToSend,
     });
   }
+
+  async sendDeleteAccountNotify() {
+    
+  }
 }
 
 export default new MailService();

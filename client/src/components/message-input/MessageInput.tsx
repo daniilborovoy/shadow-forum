@@ -7,10 +7,17 @@ import { useAppSelector } from '../../hooks/redux';
 import { getUser } from '../../store/selectors/authSelectors';
 import { WebSocket } from '../../providers';
 
-const MessageInputForm: FC<{ discussionId: string; userName: string }> = ({
-  discussionId,
-  userName,
-}) => {
+interface MessageInputProps {
+  discussionId: string;
+  userName: string;
+}
+
+interface MessageSendResponse {
+  status: 'OK' | 'NOK';
+  error?: string;
+}
+
+const MessageInput: FC<MessageInputProps> = ({ discussionId, userName }) => {
   const user = useAppSelector(getUser);
   const socket = useContext(WebSocket);
   const [userMessage, setUserMessage] = useState<string>('');
@@ -19,14 +26,17 @@ const MessageInputForm: FC<{ discussionId: string; userName: string }> = ({
   const sendMessageHandler = (event: FormEvent) => {
     event.preventDefault();
     setSendLoading(true);
-    if (user && socket) {
-      socket.emit('message', userMessage.trim(), user.id, discussionId, () => {
-        setSendLoading(false);
-      });
-      setUserMessage('');
-      return;
+    try {
+      if (user && socket) {
+        socket.emit('message', userMessage.trim(), user.id, discussionId, (res: MessageSendResponse) => {
+          setSendLoading(false);
+          if (res.status === 'NOK') throw new Error(res.error);
+        });
+        setUserMessage('');
+      }
+    } catch (err) {
+      console.error(err);
     }
-    alert('Sending error!');
   };
 
   const changeMessageHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,4 +79,4 @@ const MessageInputForm: FC<{ discussionId: string; userName: string }> = ({
   );
 };
 
-export default MessageInputForm;
+export default MessageInput;

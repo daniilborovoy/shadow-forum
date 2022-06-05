@@ -8,7 +8,6 @@ import {
   IconButton,
   InputAdornment,
   TextField,
-
 } from '@mui/material';
 import { AccountCircle, AppRegistration, Visibility, VisibilityOff } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -44,15 +43,17 @@ const RegistrationForm: FC = () => {
           variant: 'success',
         });
         enqueueSnackbar(
-          `Письмо с ссылкой для активации было отправлено на почту ${userData.email}.`,
+          `Письмо с ссылкой для активации было отправлено на почту ${userData.email}`,
           {
             variant: 'info',
           },
         );
       })
-      .catch(() => {
-        console.log(registrationError);
-        enqueueSnackbar('Ошибка при регистрации!', {
+      .catch((err) => {
+        console.error(err);
+        setRegistrationRequest(prevState => ({ ...prevState, password: '' }));
+        const message = err.status === 'FETCH_ERROR' ? 'Ошибка сети!' : 'Ошибка регистрации!';
+        enqueueSnackbar(message, {
           variant: 'error',
         });
       });
@@ -62,6 +63,27 @@ const RegistrationForm: FC = () => {
     setRegistrationRequest((prev) => ({
       ...prev,
       password: e.target.value.trim(),
+    }));
+  };
+
+  const changeNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setRegistrationRequest((prev) => ({
+      ...prev,
+      name: e.target.value.trim(),
+    }));
+  };
+
+  const changeEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setRegistrationRequest((prev) => ({
+      ...prev,
+      email: e.target.value,
+    }));
+  };
+
+  const showPasswordHandler = () => {
+    setRegistrationRequest((prev) => ({
+      ...prev,
+      showPassword: !prev.showPassword,
     }));
   };
 
@@ -90,12 +112,7 @@ const RegistrationForm: FC = () => {
               ),
             }}
             value={registrationRequest.name}
-            onChange={(e) => {
-              setRegistrationRequest((prev) => ({
-                ...prev,
-                name: e.target.value,
-              }));
-            }}
+            onChange={changeNameHandler}
             label='Имя'
             variant='outlined'
             type='text'
@@ -103,12 +120,7 @@ const RegistrationForm: FC = () => {
           />
           <TextField
             value={registrationRequest.email}
-            onChange={(e) => {
-              setRegistrationRequest((prev) => ({
-                ...prev,
-                email: e.target.value,
-              }));
-            }}
+            onChange={changeEmailHandler}
             margin='normal'
             label='Email'
             variant='outlined'
@@ -135,12 +147,7 @@ const RegistrationForm: FC = () => {
                 <InputAdornment position='end'>
                   <IconButton
                     aria-label='toggle password visibility'
-                    onClick={() =>
-                      setRegistrationRequest((prev) => ({
-                        ...prev,
-                        showPassword: !prev.showPassword,
-                      }))
-                    }
+                    onClick={showPasswordHandler}
                     edge='end'
                   >
                     {registrationRequest.showPassword ? <VisibilityOff /> : <Visibility />}

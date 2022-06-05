@@ -3,48 +3,45 @@ import AppRouter from '../app-router/AppRouter';
 import { authApi } from '../../services/auth.service';
 import { io, Socket } from 'socket.io-client';
 import AppLoader from '../app-loader/AppLoader';
-import { ChosenThemeProvider, ThemeProvider, WebSocketProvider } from '../../providers';
+import { WebSocketProvider } from '../../providers';
 import { SnackbarProvider } from 'notistack';
 
 const App: FC = () => {
-  const [checkAuth, { isLoading: checkAuthLoading, error }] = authApi.useRefreshMutation();
+  const [checkAuth, { isLoading: checkAuthLoading }] = authApi.useRefreshMutation();
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     try {
+      // check user authorization
       if (localStorage.getItem('shadow-forum/access_token')) {
-        checkAuth();
+        checkAuth().catch((err) => console.warn(err));
       }
       // websocket server connection
       const webSocketServerUrl: string = `${window.location.protocol}//${window.location.hostname}:5000`;
       const newSocket = io(webSocketServerUrl);
       setSocket(newSocket);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
     }
   }, []);
 
-  if (!checkAuthLoading && socket) {
-    return (
-      <WebSocketProvider socket={socket}>
-        <ChosenThemeProvider>
-          <ThemeProvider>
-            <SnackbarProvider
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              dense
-            >
-              <AppRouter />
-            </SnackbarProvider>
-          </ThemeProvider>
-        </ChosenThemeProvider>
-      </WebSocketProvider>
-    );
+  if (checkAuthLoading) {
+    return <AppLoader />;
   }
 
-  return <AppLoader />;
+  return (
+    <WebSocketProvider socket={socket}>
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        dense
+      >
+        <AppRouter />
+      </SnackbarProvider>
+    </WebSocketProvider>
+  );
 };
 
 export default App;

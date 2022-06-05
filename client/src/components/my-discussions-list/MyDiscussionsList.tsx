@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Box, Fade, Typography } from '@mui/material';
 import MyDiscussionCard from '../my-discussion-card/MyDiscussionCard';
-import MyDiscussionsEmptyImg from './getstarted.svg';
+import MyDiscussionsEmpty from './MyDiscussionsEmpty.svg';
 import { DiscussionResponse } from '../../models/discussion.model';
 import { CreateDiscussionDialog } from '../create-discussion-dialog/CreateDiscussionDialog';
 import { TransitionGroup } from 'react-transition-group';
@@ -13,10 +13,13 @@ const StyledTransitionGroup = styled(TransitionGroup)(({ theme }) => ({
   flexWrap: 'wrap',
   justifyContent: 'center',
 }));
-const MyDiscussionsList: FC<{ discussions: DiscussionResponse[]; refetch: Function }> = ({
-  discussions,
-  refetch,
-}) => {
+
+interface MyDiscussionsListProps {
+  discussions: DiscussionResponse[];
+  refetch: Function;
+}
+
+const MyDiscussionsList: FC<MyDiscussionsListProps> = ({ discussions, refetch }) => {
   if (!discussions.length) {
     return (
       <>
@@ -28,9 +31,8 @@ const MyDiscussionsList: FC<{ discussions: DiscussionResponse[]; refetch: Functi
         </Typography>
         <Box
           component='img'
-          src={MyDiscussionsEmptyImg}
-          alt='404'
-          loading='lazy'
+          src={MyDiscussionsEmpty}
+          alt='MyDiscussionsEmpty'
           sx={{
             width: { xs: 300, sm: 500 },
             pointerEvents: 'none',

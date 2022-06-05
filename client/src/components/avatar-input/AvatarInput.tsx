@@ -27,6 +27,7 @@ const AvatarInput: FC<AvatarInputProps> = ({ imageUrl, userName, isDragAccept })
       sx={{
         width: 'inherit',
         height: 'inherit',
+        pointerEvents: 'none',
       }}
       src={imageUrl}
       alt={userName}

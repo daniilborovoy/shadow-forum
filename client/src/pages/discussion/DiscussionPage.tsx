@@ -1,27 +1,20 @@
-import { FC, lazy, Suspense, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { discussionsApi } from '../../services/discussions.service';
-import {
-  Box,
-  Container,
-  Divider,
-  LinearProgress,
-  Paper,
-  Skeleton,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Container, Divider, LinearProgress, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import { getUserName } from '../../store/selectors/authSelectors';
-import setPageTitle from '../../utils/SetPageTitle';
-import MessageInputForm from '../../components/message-input/MessageInputForm';
+import MessageInput from '../../components/message-input/MessageInput';
 import MessagesList from '../../components/discussion-messages-list/DiscussionMessagesList';
 import dayjs from 'dayjs';
-import AppLoader from '../../components/app-loader/AppLoader';
 import { MessageResponse } from '../../models/message.model';
-const NotFoundPage = lazy(() => import('../not-found/NotFoundPage'));
 import { WebSocket } from '../../providers';
 import { Socket } from 'socket.io-client';
+import ScrollTopButton from '../../components/scroll-to-top-button/ScrollToTopButton';
+import Astronaut from './Astronaut.svg';
+import ReplayIcon from '@mui/icons-material/Replay';
+import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
+import setPageTitle from '../../utils/SetPageTitle';
 
 interface ChatConnectionResponse {
   status: 'OK' | 'NOK';
@@ -56,6 +49,7 @@ const DiscussionPage: FC = () => {
   const [messages, setMessages] = useState<MessageResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const socket = useContext(WebSocket);
+  const enqueueSnackbar = useEnqueueSnackbar();
 
   const {
     data: discussion,
@@ -101,6 +95,7 @@ const DiscussionPage: FC = () => {
     const userLeavedListener = () => {
       setClientsSize((prevState) => prevState - 1);
     };
+
     // TODO
     // const deleteMessageListener = (messageID: string) => {
     //
@@ -148,12 +143,27 @@ const DiscussionPage: FC = () => {
   //   addViewHandler(8000);
   // }, [discussion]);
 
-  if (discussionLoadingError) {
+  const reloadPageHandler = () => {
+    window.location.reload();
+  };
+
+  if (discussionLoadingError || !socket) {
+    enqueueSnackbar('Ошибка сети!', {
+      variant: 'error',
+    });
     return (
-      <Suspense fallback={<AppLoader />}>
-        {/* @ts-ignore */}
-        <NotFoundPage message={discussionLoadingError.data.message} />
-      </Suspense>
+      <Box width='100%' height='100vh' display='flex' flexDirection='column' justifyContent='center'
+           alignItems='center'>
+        <Box
+          component='img'
+          src={Astronaut}
+          alt='Connection Error'
+          sx={{ width: 300, pointerEvents: 'none', userSelect: 'none' }}
+        />
+        <Typography mb={2} fontSize='1.5rem'>Ошибка соединения!</Typography>
+        <Button sx={{ fontWeight: 700 }} variant='contained' endIcon={<ReplayIcon />} onClick={reloadPageHandler}>Перезагрузить
+          страницу</Button>
+      </Box>
     );
   }
 
@@ -192,14 +202,15 @@ const DiscussionPage: FC = () => {
                   </Typography>
                 </time>
               </Typography>
-              <Typography color='text.secondary' component='p'>
-                Сейчас просматривают: {clientsSize}
-              </Typography>
+              {clientsSize > 0 && (
+                <Typography color='text.secondary' component='p'>
+                  Сейчас просматривают: {clientsSize}
+                </Typography>
+              )}
             </Box>
           </Box>
           <Box component='section'>
             <Paper
-              elevation={5}
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -220,12 +231,13 @@ const DiscussionPage: FC = () => {
                   MessagesSkeleton
                 )}
                 {socket && discussionId && userName && (
-                  <MessageInputForm discussionId={discussionId} userName={userName} />
+                  <MessageInput discussionId={discussionId} userName={userName} />
                 )}
               </Box>
             </Paper>
           </Box>
         </Container>
+        <ScrollTopButton />
       </Box>
     );
   }

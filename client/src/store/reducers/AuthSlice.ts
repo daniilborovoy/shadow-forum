@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, isAnyOf } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf, PayloadAction } from '@reduxjs/toolkit';
 import { User, userTheme } from '../../models/user.model';
 import { AuthResponse } from '../../models/auth.model';
 import { authApi } from '../../services/auth.service';
@@ -30,12 +30,21 @@ const initialState: AuthState = {
 const AuthSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setEmailActivationState: (state, action: PayloadAction<boolean>) => {
+      if (state.user) state.user.isActivated = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     const isSuccessAuthAction = isAnyOf(
       authApi.endpoints.login.matchFulfilled,
       authApi.endpoints.registration.matchFulfilled,
       authApi.endpoints.refresh.matchFulfilled,
+    );
+
+    const isLogoutAction = isAnyOf(
+      authApi.endpoints.logout.matchFulfilled,
+      userApi.endpoints.deleteUserAccount.matchFulfilled,
     );
     builder
       .addMatcher(isSuccessAuthAction, (state: AuthState, action: PayloadAction<AuthResponse>) => {
@@ -44,7 +53,7 @@ const AuthSlice = createSlice({
         state.user = action.payload.user;
         state.userTheme = action.payload.user.userTheme;
       })
-      .addMatcher(authApi.endpoints.logout.matchFulfilled, (state: AuthState) => {
+      .addMatcher(isLogoutAction, (state: AuthState) => {
         localStorage.removeItem('shadow-forum/access_token');
         state.refreshToken = null;
         state.accessToken = null;
@@ -53,11 +62,12 @@ const AuthSlice = createSlice({
       })
       .addMatcher(
         userApi.endpoints.changeUserTheme.matchFulfilled,
-        (state: AuthState, action: PayloadAction<userTheme>) => {
-          state.userTheme = action.payload;
+        (state: AuthState, action: PayloadAction<{ theme: userTheme }>) => {
+          state.userTheme = action.payload.theme;
         },
       );
   },
 });
 
+export const { setEmailActivationState } = AuthSlice.actions;
 export default AuthSlice.reducer;

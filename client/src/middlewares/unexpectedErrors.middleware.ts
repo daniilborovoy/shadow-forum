@@ -6,7 +6,7 @@ export const unexpectedErrorMiddleware: Middleware =
       if (action.payload.status === 400) {
         console.warn('Неккоректный запрос!', action.payload);
       } else if (action.payload.status === 'FETCH_ERROR') {
-        console.warn('Ошибка отправки запроса к серверу!', action.payload);
+        console.warn('Ошибка сети!', action.payload);
       } else {
         console.warn('Непредвиденная ошибка!', action.payload);
       }
