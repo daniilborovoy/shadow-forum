@@ -5,7 +5,7 @@ import { FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
 import { AuthResponse } from '../models/auth.model';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${window.location.protocol}//${window.location.hostname}:5000/api/`,
+  baseUrl: process.env.REACT_APP_API_URL,
   prepareHeaders: (headers, { endpoint }) => {
     const token = localStorage.getItem('shadow-forum/access_token');
     if (token && endpoint !== 'refresh') {

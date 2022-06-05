@@ -18,11 +18,7 @@ const EmailActivationPage = () => {
   const [userEmail, setUserEmail] = useState<string>('');
 
   const activate = async () => {
-    return await axios.get(
-      `${
-        window.location.protocol + '//' + window.location.hostname
-      }:5000/api/activate/${activationLink}`,
-    );
+    return await axios.get(`${process.env.REACT_APP_API_URL}/activate/${activationLink}`);
   };
 
 

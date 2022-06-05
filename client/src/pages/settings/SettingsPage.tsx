@@ -18,7 +18,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../models/user.model';
 import { userApi } from '../../services/user.service';
 import setPageTitle from '../../utils/SetPageTitle';
-import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import AvatarInput from '../../components/avatar-input/AvatarInput';
@@ -33,10 +32,6 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
-
-const Input = styled('input')({
-  display: 'none',
-});
 
 const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;

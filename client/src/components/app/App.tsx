@@ -17,7 +17,7 @@ const App: FC = () => {
         checkAuth().catch((err) => console.warn(err));
       }
       // websocket server connection
-      const webSocketServerUrl: string = `${window.location.protocol}//${window.location.hostname}:5000`;
+      const webSocketServerUrl: string = process.env.REACT_APP_SOCKET_CONNECT_URL;
       const newSocket = io(webSocketServerUrl);
       setSocket(newSocket);
     } catch (err) {
