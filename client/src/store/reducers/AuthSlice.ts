@@ -41,6 +41,11 @@ const AuthSlice = createSlice({
       authApi.endpoints.registration.matchFulfilled,
       authApi.endpoints.refresh.matchFulfilled,
     );
+
+    const isLogoutAction = isAnyOf(
+      authApi.endpoints.logout.matchFulfilled,
+      userApi.endpoints.deleteUserAccount.matchFulfilled,
+    );
     builder
       .addMatcher(isSuccessAuthAction, (state: AuthState, action: PayloadAction<AuthResponse>) => {
         localStorage.setItem('shadow-forum/access_token', action.payload.accessToken);
@@ -48,7 +53,7 @@ const AuthSlice = createSlice({
         state.user = action.payload.user;
         state.userTheme = action.payload.user.userTheme;
       })
-      .addMatcher(authApi.endpoints.logout.matchFulfilled, (state: AuthState) => {
+      .addMatcher(isLogoutAction, (state: AuthState) => {
         localStorage.removeItem('shadow-forum/access_token');
         state.refreshToken = null;
         state.accessToken = null;
@@ -57,8 +62,8 @@ const AuthSlice = createSlice({
       })
       .addMatcher(
         userApi.endpoints.changeUserTheme.matchFulfilled,
-        (state: AuthState, action: PayloadAction<userTheme>) => {
-          state.userTheme = action.payload;
+        (state: AuthState, action: PayloadAction<{ theme: userTheme }>) => {
+          state.userTheme = action.payload.theme;
         },
       );
   },

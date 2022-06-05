@@ -8,7 +8,6 @@ import {
   FormGroup,
   FormHelperText,
   IconButton,
-  InputLabel,
   Tab,
   Tabs,
   TextField,
@@ -27,6 +26,7 @@ import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useDropzone } from 'react-dropzone';
 import SelectThemeButtons from '../../components/select-theme-buttons/SelectThemeButtons';
 import Settings from './Settings.svg';
+import DeleteAccountDialog from '../../components/delete-account-dialog/DeleteAccountDialog';
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -67,6 +67,7 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
   const matches = useMediaQuery('(min-width:600px)');
   const [loading, setLoading] = useState<boolean>(false);
   const enqueueSnackbar = useEnqueueSnackbar();
+
   useEffect(() => {
     setPageTitle('Настройки аккаунта');
   }, []);
@@ -93,13 +94,13 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
 
   const updateAccountHandler = (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     if (uploadImageFile) {
-      setLoading(true);
       uploadUserAvatar(uploadImageFile)
         .unwrap()
         .then((res) => {
           setIsNewAvatar(false);
-          enqueueSnackbar(res, {
+          enqueueSnackbar(res.message, {
             variant: 'success',
           });
           enqueueSnackbar('Изменения аватара будет доступно после перезагрузки страницы.', {
@@ -110,9 +111,9 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
           enqueueSnackbar(`Ошибка при загрузке аватара: ${err.data.message}`, {
             variant: 'error',
           });
-        })
-        .finally(() => setLoading(false));
+        });
     }
+    setLoading(false);
   };
 
   const [value, setValue] = useState(0);
@@ -229,9 +230,8 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                   )
                 }
               >
-                <InputLabel
+                <Box
                   {...getRootProps()}
-                  htmlFor='user-avatar-input'
                   sx={{
                     width: 'inherit',
                     height: 'inherit',
@@ -244,15 +244,12 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                     userName={currentUserName.current}
                     isDragAccept={isDragAccept}
                   />
-                </InputLabel>
+                </Box>
               </Badge>
-              <Input
+              <input
                 id='user-avatar-input'
                 {...getInputProps()}
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                }}
+                hidden
                 name='avatar'
                 accept='image/*'
                 type='file'
@@ -293,16 +290,17 @@ const SettingsPage: FC<{ user: User }> = ({ user }) => {
                 </FormHelperText>
               </FormGroup>
               <LoadingButton
-                sx={{ fontWeight: 700 }}
+                sx={{ fontWeight: 700, mb: 4 }}
                 fullWidth
-                startIcon={<SaveIcon />}
+                endIcon={<SaveIcon />}
                 variant='contained'
                 type='submit'
                 loading={loading}
-                disabled={!uploadImageFile}
+                disabled={!isNewAvatar}
               >
                 Обновить аккаунт
               </LoadingButton>
+              <DeleteAccountDialog />
             </Box>
           </Box>
         </TabPanel>

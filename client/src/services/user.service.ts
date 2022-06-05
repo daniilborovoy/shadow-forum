@@ -16,7 +16,7 @@ export const userApi = createApi({
         url: 'users',
       }),
     }),
-    changeUserTheme: build.mutation<userTheme, userTheme>({
+    changeUserTheme: build.mutation<{ theme: userTheme }, userTheme>({
       query: (theme: userTheme) => ({
         url: 'change-theme',
         method: 'PUT',
@@ -25,11 +25,17 @@ export const userApi = createApi({
         },
       }),
     }),
-    updateUserAvatar: build.mutation<string, FormData>({
+    updateUserAvatar: build.mutation<{ message: string }, FormData>({
       query: (imageFile) => ({
         url: 'avatar',
         method: 'PUT',
         body: imageFile,
+      }),
+    }),
+    deleteUserAccount: build.mutation<{ message: string }, void>({
+      query: () => ({
+        url: 'delete-user-account',
+        method: 'DELETE',
       }),
     }),
   }),

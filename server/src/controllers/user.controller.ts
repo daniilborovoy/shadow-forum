@@ -110,7 +110,7 @@ class UserController {
       const theme: 'dark' | 'light' | 'system' = req.body.theme;
       if (!userId) throw ApiError.BadRequestError('user id missing!');
       const newTheme = await userService.changeTheme(userId, theme);
-      return res.status(200).json(newTheme);
+      return res.status(200).json({ theme: newTheme });
     } catch (err: unknown) {
       next(err);
     }
@@ -123,7 +123,19 @@ class UserController {
       const userId = req.body.user.id;
       const uploadPath = path.resolve('avatars', fileName);
       await userService.saveUserAvatar(imageFile, uploadPath, userId);
-      return res.status(200).json('Аватар успешно обновлён!');
+      return res.status(200).json({ message: 'Аватар успешно обновлён!' });
+    } catch (err: unknown) {
+      next(err);
+    }
+  }
+
+  async deleteUserAccount(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId: string = req.body.user.id;
+      const { refreshToken }: { refreshToken: string } = req.cookies;
+      await userService.deleteUserAccount(userId, refreshToken);
+      res.clearCookie('refreshToken');
+      return res.status(200).json({ message: 'Аккаунт удалён!' });
     } catch (err: unknown) {
       next(err);
     }

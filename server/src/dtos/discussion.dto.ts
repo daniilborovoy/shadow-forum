@@ -1,22 +1,22 @@
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { Discussion } from '../models/discussion.model';
 
 export class DiscussionDto {
-  readonly id: Types.ObjectId;
+  readonly id: string;
   readonly title: string;
   readonly body: string;
   readonly creationDate: Date;
-  readonly creatorId: Types.ObjectId;
+  readonly creatorId: string;
   readonly viewsCount: number;
   readonly messagesCount: number;
   readonly isCreator: boolean = false;
 
   constructor(model: HydratedDocument<Discussion>) {
-    this.id = model._id;
+    this.id = model._id.toString();
     this.title = model.title;
     this.body = model.body;
     this.creationDate = model.creationDate;
-    this.creatorId = model.creatorId;
+    this.creatorId = model.creatorId.toString();
     this.viewsCount = model.viewsCount;
     this.messagesCount = model.messagesCount;
   }

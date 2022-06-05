@@ -10,6 +10,9 @@ import { HydratedDocument } from 'mongoose';
 import { Token } from '../models/token.model';
 import sharp from 'sharp';
 import fs from 'fs';
+import MessageModel from '../models/message.model';
+import DiscussionModel from '../models/discussion.model';
+import path from 'path';
 
 class UserService {
   private readonly apiUrl;
@@ -160,6 +163,24 @@ class UserService {
     } else {
       throw new Error('Ошибка при сохранении аватара!');
     }
+  }
+
+  async deleteUserAccount(userId: string, refreshToken: string) {
+    const user = await UserModel.findById(userId);
+    if (!user) throw ApiError.BadRequestError('Пользователь не найден!');
+    await tokenService.removeToken(refreshToken);
+    await MessageModel.deleteMany({ createdBy: userId });
+    await DiscussionModel.deleteMany({ creatorId: userId });
+    if (user.avatar && user.avatar.length) {
+      const avatarPath = path.resolve('avatars', `${userId}.webp`);
+      fs.stat(avatarPath, (err) => {
+        if (err) {
+          throw ApiError.InternalServerError(err.message);
+        }
+        fs.unlinkSync(avatarPath);
+      });
+    }
+    await user.remove();
   }
 }
 
