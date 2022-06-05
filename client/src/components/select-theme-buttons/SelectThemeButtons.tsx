@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Card, CircularProgress, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import DoneIcon from '@mui/icons-material/Done';
@@ -7,7 +7,7 @@ import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
 import { useAppSelector } from '../../hooks/redux';
 import { getUserTheme } from '../../store/selectors/authSelectors';
 
-const SelectThemeButtons = () => {
+const SelectThemeButtons: FC = () => {
   const theme = useAppSelector(getUserTheme);
   const [loading, setLoading] = useState<number>(0);
   const [changeThemeQuery] = userApi.useChangeUserThemeMutation();

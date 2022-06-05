@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, MouseEvent, useState } from 'react';
+import React, { FC, MouseEvent, useState } from 'react';
 import { authApi } from '../../services/auth.service';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,6 @@ import {
   Dialog,
   Divider,
   IconButton,
-  InputBase,
   ListItemIcon,
   Menu,
   MenuItem,
@@ -21,67 +20,20 @@ import {
   Typography,
 } from '@mui/material';
 import { AccountCircle, MoreVert as MoreIcon } from '@mui/icons-material';
-import { alpha, styled } from '@mui/material/styles';
 import { getUser } from '../../store/selectors/authSelectors';
 import { CreateDiscussionDialog } from '../create-discussion-dialog/CreateDiscussionDialog';
 import { stringAvatar } from '../../utils/Avatar';
 import { discussionsApi } from '../../services/discussions.service';
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
 
 const Header: FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
   const dispatch = useAppDispatch();
-  const [logout, { isLoading: logoutLoading, error: logoutError }] = authApi.useLogoutMutation();
+  const [logout] = authApi.useLogoutMutation();
 
   const user = useAppSelector(getUser);
-  const [settingsSearch, setSettingsSearch] = useState<string>('');
-
-  const changeSettingsSearchHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setSettingsSearch(event.target.value);
-  };
-
   const isMenuOpen = Boolean(anchorEl);
-
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const goHomeHandler = (e: MouseEvent<HTMLAnchorElement>) => {

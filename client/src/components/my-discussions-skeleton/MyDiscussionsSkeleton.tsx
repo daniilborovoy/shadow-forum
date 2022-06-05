@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 
-const MyDiscussionsSkeleton = () => (
+const MyDiscussionsSkeleton: FC = () => (
   <Grid justifyContent='center' container gap={5}>
     <Grid item>
       <Skeleton

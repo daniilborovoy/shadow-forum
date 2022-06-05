@@ -80,7 +80,7 @@ class ChatConnection {
       const message = await MessageService.saveMessage(value, userId, discussionId);
       // send message all clients in discussion room
       this.io.to(discussionId).emit('message', message);
-      callback();
+      callback({ status: 'OK' });
     } catch (e) {
       callback({
         status: 'NOK',

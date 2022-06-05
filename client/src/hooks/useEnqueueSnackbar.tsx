@@ -1,5 +1,5 @@
-import { useSnackbar as useDefaultSnackbar, OptionsObject } from 'notistack';
-import { Snackbar } from '../components/snackbar/Snackbar';
+import { OptionsObject, useSnackbar as useDefaultSnackbar } from 'notistack';
+import Snackbar from '../components/snackbar/Snackbar';
 
 export const useEnqueueSnackbar = () => {
   const { enqueueSnackbar } = useDefaultSnackbar();

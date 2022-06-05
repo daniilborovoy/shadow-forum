@@ -4,15 +4,7 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import AddIcon from '@mui/icons-material/Add';
-import {
-  List,
-  ListItemText,
-  Typography,
-  ListItemButton,
-  Box,
-  Paper,
-  Collapse,
-} from '@mui/material';
+import { Box, Collapse, List, ListItemButton, ListItemText, Paper, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { DiscussionResponse } from '../../models/discussion.model';
 import dayjs from 'dayjs';
@@ -32,12 +24,12 @@ const StyledTransitionGroup = styled(TransitionGroup)(({ theme }) => ({
 }));
 
 const DiscussionsList: FC<DiscussionsListProps> = ({
-  discussions,
-  searchDiscussion,
-  discussionsFetching,
-  discussionsLoadingError,
-  setLimit,
-}) => {
+                                                     discussions,
+                                                     searchDiscussion,
+                                                     discussionsFetching,
+                                                     discussionsLoadingError,
+                                                     setLimit,
+                                                   }) => {
   const navigate = useNavigate();
 
   const changeLimitHandler = () => {
@@ -159,7 +151,6 @@ const DiscussionsList: FC<DiscussionsListProps> = ({
 
   return (
     <Paper
-      elevation={1}
       sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', overflow: 'hidden' }}
     >
       <List

@@ -4,8 +4,6 @@ import setPageTitle from '../../utils/SetPageTitle';
 import RegistrationForm from '../../components/registration-form/RegistrationForm';
 import LoginForm from '../../components/login-form/LoginForm';
 
-// const StyledBox = styled(({}) => ({}));
-
 const AuthorizePage: FC = () => {
   useEffect(() => {
     setPageTitle('Авторизация');

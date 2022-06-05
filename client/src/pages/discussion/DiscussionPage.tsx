@@ -4,8 +4,7 @@ import { discussionsApi } from '../../services/discussions.service';
 import { Box, Button, Container, Divider, LinearProgress, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import { getUserName } from '../../store/selectors/authSelectors';
-import setPageTitle from '../../utils/SetPageTitle';
-import MessageInputForm from '../../components/message-input/MessageInputForm';
+import MessageInput from '../../components/message-input/MessageInput';
 import MessagesList from '../../components/discussion-messages-list/DiscussionMessagesList';
 import dayjs from 'dayjs';
 import { MessageResponse } from '../../models/message.model';
@@ -15,6 +14,7 @@ import ScrollTopButton from '../../components/scroll-to-top-button/ScrollToTopBu
 import Astronaut from './Astronaut.svg';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { useEnqueueSnackbar } from '../../hooks/useEnqueueSnackbar';
+import setPageTitle from '../../utils/SetPageTitle';
 
 interface ChatConnectionResponse {
   status: 'OK' | 'NOK';
@@ -95,6 +95,7 @@ const DiscussionPage: FC = () => {
     const userLeavedListener = () => {
       setClientsSize((prevState) => prevState - 1);
     };
+
     // TODO
     // const deleteMessageListener = (messageID: string) => {
     //
@@ -141,6 +142,7 @@ const DiscussionPage: FC = () => {
   // useEffect(() => {
   //   addViewHandler(8000);
   // }, [discussion]);
+
   const reloadPageHandler = () => {
     window.location.reload();
   };
@@ -209,7 +211,6 @@ const DiscussionPage: FC = () => {
           </Box>
           <Box component='section'>
             <Paper
-              elevation={5}
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -230,7 +231,7 @@ const DiscussionPage: FC = () => {
                   MessagesSkeleton
                 )}
                 {socket && discussionId && userName && (
-                  <MessageInputForm discussionId={discussionId} userName={userName} />
+                  <MessageInput discussionId={discussionId} userName={userName} />
                 )}
               </Box>
             </Paper>

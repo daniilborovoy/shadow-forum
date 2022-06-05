@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import * as dayjs from 'dayjs';
 import 'dayjs/locale/ru';
+import { ChosenThemeProvider, ThemeProvider } from './providers';
 
 dayjs.locale('ru');
 
@@ -15,7 +16,11 @@ if (!app) throw new Error('Application component is missing in DOM.');
 const root = createRoot(app);
 root.render(
   <Provider store={store}>
-    <App />
+    <ChosenThemeProvider>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </ChosenThemeProvider>
   </Provider>,
 );
 
