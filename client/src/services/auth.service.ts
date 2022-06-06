@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { AuthResponse, RegistrationRequest, LoginRequest } from '../models/auth.model';
+import { AuthResponse, LoginRequest, RegistrationRequest } from '../models/auth.model';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${window.location.protocol}//${window.location.hostname}:5000/api/`,
+    baseUrl: process.env.REACT_APP_API_URL,
     credentials: 'include',
     prepareHeaders: (headers, { endpoint }) => {
       const token = localStorage.getItem('shadow-forum/access_token');
